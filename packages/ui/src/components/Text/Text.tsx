@@ -76,7 +76,7 @@ const fontFamilyValues: Readonly<Record<TextFontFamily, string>> = {
 export const textVariantDefinitions: Readonly<Record<TextVariant, TextVariantDefinition>> = {
   display: {
     size: "5xl",
-    weight: "medium",
+    weight: "regular",
     lineHeight: "tight",
     fontFamily: "notch",
   },
@@ -190,7 +190,7 @@ export function Text({
   const textClassName = [
     "text-(--color-text)",
     textSizeClassNames[resolvedSize],
-    variant === "display" ? "text-[clamp(3.25rem,9vw,7rem)]" : "",
+    variant === "display" ? "text-[clamp(6.25rem,10vw,10rem)]" : "",
     textWeightClassNames[resolvedWeight],
     lineHeightClassNames[resolvedLineHeight],
     className,
