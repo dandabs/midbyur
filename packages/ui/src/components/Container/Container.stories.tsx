@@ -5,6 +5,7 @@ import { Text } from "../Text/Text";
 const meta = {
   title: "Components/Container",
   component: Container,
+  tags: ['autodocs'],
   args: {
     maxWidth: "xl",
   },

@@ -4,6 +4,7 @@ import { Text } from "./Text";
 const meta = {
   title: "Components/Text",
   component: Text,
+  tags: ['autodocs'],
   args: {
     children: "The quick brown fox jumps over the lazy dog.",
     variant: "body",

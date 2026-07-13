@@ -19,6 +19,38 @@ export type TextLineHeight = "tight" | "snug" | "normal" | "relaxed";
 
 export type TextFontFamily = "text" | "notch" | "headline" | "mono";
 
+export type TextColor =
+  | "background"
+  | "backgroundAccent"
+  | "surface"
+  | "surfaceAccent"
+  | "primary"
+  | "primaryHover"
+  | "primaryForeground"
+  | "secondary"
+  | "secondaryHover"
+  | "secondaryForeground"
+  | "text"
+  | "textMuted"
+  | "muted"
+  | "border"
+  | "borderStrong"
+  | "success"
+  | "successHover"
+  | "successForeground"
+  | "warning"
+  | "warningHover"
+  | "warningForeground"
+  | "danger"
+  | "dangerHover"
+  | "dangerForeground"
+  | "info"
+  | "infoHover"
+  | "infoForeground"
+  | "disabled"
+  | "disabledText"
+  | "current";
+
 export type TextVariant =
   | "display"
   | "h1"
@@ -71,6 +103,39 @@ const fontFamilyValues: Readonly<Record<TextFontFamily, string>> = {
   notch: '"Stack Sans Notch", ui-sans-serif, system-ui, sans-serif',
   headline: '"Stack Sans Headline", ui-sans-serif, system-ui, sans-serif',
   mono: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+};
+
+const textColorClassNames: Readonly<Record<TextColor, string>> = {
+  background: "text-(--color-background)",
+  backgroundAccent: "text-(--color-backgroundAccent)",
+  surface: "text-(--color-surface)",
+  surfaceAccent: "text-(--color-surfaceAccent)",
+  primary: "text-(--color-primary)",
+  primaryHover: "text-(--color-primaryHover)",
+  primaryForeground: "text-(--color-primaryForeground)",
+  secondary: "text-(--color-secondary)",
+  secondaryHover: "text-(--color-secondaryHover)",
+  secondaryForeground: "text-(--color-secondaryForeground)",
+  text: "text-(--color-text)",
+  textMuted: "text-(--color-textMuted)",
+  muted: "text-(--color-textMuted)",
+  border: "text-(--color-border)",
+  borderStrong: "text-(--color-borderStrong)",
+  success: "text-(--color-success)",
+  successHover: "text-(--color-successHover)",
+  successForeground: "text-(--color-successForeground)",
+  warning: "text-(--color-warning)",
+  warningHover: "text-(--color-warningHover)",
+  warningForeground: "text-(--color-warningForeground)",
+  danger: "text-(--color-danger)",
+  dangerHover: "text-(--color-dangerHover)",
+  dangerForeground: "text-(--color-dangerForeground)",
+  info: "text-(--color-info)",
+  infoHover: "text-(--color-infoHover)",
+  infoForeground: "text-(--color-infoForeground)",
+  disabled: "text-(--color-disabled)",
+  disabledText: "text-(--color-disabledText)",
+  current: "text-current",
 };
 
 export const textVariantDefinitions: Readonly<Record<TextVariant, TextVariantDefinition>> = {
@@ -159,6 +224,7 @@ const variantElementTagMap: Readonly<Record<TextVariant, ElementType>> = {
 export type TextProps = Readonly<{
   children: ReactNode;
   variant?: TextVariant;
+  color?: TextColor;
   size?: TextSize;
   weight?: TextWeight;
   lineHeight?: TextLineHeight;
@@ -169,6 +235,7 @@ export type TextProps = Readonly<{
 export function Text({
   children,
   variant = "body",
+  color = "text",
   size,
   weight,
   lineHeight,
@@ -181,6 +248,7 @@ export function Text({
   const definition = textVariantDefinitions[variant];
 
   const resolvedSize = size ?? definition.size;
+  const resolvedColor = color;
   const resolvedWeight = weight ?? definition.weight;
   const resolvedLineHeight = lineHeight ?? definition.lineHeight;
   const resolvedFontFamily = fontFamily ?? definition.fontFamily;
@@ -188,7 +256,7 @@ export function Text({
   const Component = (as ?? variantElementTagMap[variant]) as ElementType;
 
   const textClassName = [
-    "text-(--color-text)",
+    textColorClassNames[resolvedColor],
     textSizeClassNames[resolvedSize],
     variant === "display" ? "text-[clamp(6.25rem,10vw,10rem)]" : "",
     textWeightClassNames[resolvedWeight],
