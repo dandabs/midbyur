@@ -52,7 +52,7 @@ const textSizeClassNames: Readonly<Record<TextSize, string>> = {
 };
 
 const textWeightClassNames: Readonly<Record<TextWeight, string>> = {
-  regular: "font-normal",
+  regular: "font-light",
   medium: "font-medium",
   semibold: "font-semibold",
   bold: "font-bold",

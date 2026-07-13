@@ -7,11 +7,16 @@ const meta = {
   args: {
     children: "Continue",
     variant: "primary",
+    type: "solid",
   },
   argTypes: {
     variant: {
       control: "select",
       options: ["primary", "secondary", "success", "danger", "warning", "info"],
+    },
+    type: {
+      control: "select",
+      options: ["solid", "outline", "link"],
     },
   },
 } satisfies Meta<typeof Button>;
@@ -27,6 +32,22 @@ export const Default: Story = {
 export const Secondary: Story = {
   args: {
     variant: "secondary",
+  },
+};
+
+export const Outline: Story = {
+  args: {
+    type: "outline",
+    variant: "primary",
+    children: "Outline",
+  },
+};
+
+export const Link: Story = {
+  args: {
+    type: "link",
+    variant: "info",
+    children: "Read More",
   },
 };
 
