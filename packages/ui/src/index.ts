@@ -9,6 +9,8 @@ export { Card } from "./components/Card/Card";
 export type { CardProps } from "./components/Card/Card";
 export { Container } from "./components/Container/Container";
 export type { ContainerProps } from "./components/Container/Container";
+export { Grid } from "./components/Grid/Grid";
+export type { GridProps } from "./components/Grid/Grid";
 export { Hero } from "./components/Hero/Hero";
 export type { HeroHeightPreset, HeroProps } from "./components/Hero/Hero";
 export { Section } from "./components/Section/Section";
