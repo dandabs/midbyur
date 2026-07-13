@@ -5,6 +5,8 @@ export type { ThemeMode } from "@midbyur/theme";
 
 export { Button } from "./components/Button/Button";
 export type { ButtonProps, ButtonType, ButtonVariant } from "./components/Button/Button";
+export { ButtonGroup } from "./components/ButtonGroup/ButtonGroup";
+export type { ButtonGroupDirection, ButtonGroupProps } from "./components/ButtonGroup/ButtonGroup";
 export { Card } from "./components/Card/Card";
 export type { CardProps } from "./components/Card/Card";
 export { Container } from "./components/Container/Container";

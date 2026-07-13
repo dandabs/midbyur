@@ -17,6 +17,7 @@ export type ButtonProps = Readonly<{
   children: ReactNode;
   variant?: ButtonVariant;
   type?: ButtonType;
+  fluid?: boolean;
   htmlType?: ButtonHTMLAttributes<HTMLButtonElement>["type"];
 }> & Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children" | "type">;
 
@@ -75,6 +76,7 @@ export function Button({
   children,
   variant = "primary",
   type = "solid",
+  fluid = true,
   htmlType = "button",
   className,
   style,
@@ -82,6 +84,7 @@ export function Button({
 }: ButtonProps) {
   const rootClassName = [
     "inline-flex cursor-pointer items-center justify-center rounded-none text-sm font-medium transition-colors duration-150",
+    fluid ? "w-full" : "w-auto",
     type === "link" ? "focus-visible:outline-none" : "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-borderStrong)",
     "disabled:cursor-not-allowed",
     buttonTypeClassNames[type],

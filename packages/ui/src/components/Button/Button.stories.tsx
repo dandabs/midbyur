@@ -9,6 +9,7 @@ const meta = {
     children: "Continue",
     variant: "primary",
     type: "solid",
+    fluid: true,
   },
   argTypes: {
     variant: {
@@ -18,6 +19,9 @@ const meta = {
     type: {
       control: "select",
       options: ["solid", "outline", "link"],
+    },
+    fluid: {
+      control: "boolean",
     },
   },
 } satisfies Meta<typeof Button>;
@@ -83,5 +87,12 @@ export const Info: Story = {
 export const Disabled: Story = {
   args: {
     disabled: true,
+  },
+};
+
+export const InlineButton: Story = {
+  args: {
+    fluid: false,
+    children: "Inline Action",
   },
 };
