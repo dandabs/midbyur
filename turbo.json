@@ -21,6 +21,13 @@
     },
     "clean": {
       "cache": false
+    },
+    "storybook": {
+      "dependsOn": [
+        "^storybook"
+      ],
+      "cache": false,
+      "persistent": true
     }
   }
 }

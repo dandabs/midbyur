@@ -2,4 +2,4 @@
 
 export { MidbyurProvider } from "./provider";
 
-export { Button } from "./components/Button";
+export { Button } from "./components/Button/Button";
