@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
+import { useEffect, useMemo, useState, type CSSProperties, type HTMLAttributes, type ReactNode } from "react";
 import { Text, type TextVariant } from "../Text/Text";
 
 export type HeroHeightPreset = "full" | "twoThirds" | "oneThird";
@@ -10,6 +10,7 @@ export type HeroProps = Readonly<{
   subtitle?: ReactNode;
   titleVariant?: TextVariant;
   backgroundImageUrl?: string;
+  backgroundImageUrls?: string[];
   overlayOpacity?: number;
   heightPreset?: HeroHeightPreset;
   height?: number | string;
@@ -42,6 +43,7 @@ export function Hero({
   subtitle,
   titleVariant = "display",
   backgroundImageUrl,
+  backgroundImageUrls,
   overlayOpacity = 0.45,
   heightPreset = "full",
   height,
@@ -49,6 +51,32 @@ export function Hero({
   style,
   ...props
 }: HeroProps) {
+  const images = useMemo(() => {
+    if (backgroundImageUrls && backgroundImageUrls.length > 0) {
+      return backgroundImageUrls;
+    }
+
+    return backgroundImageUrl ? [backgroundImageUrl] : [];
+  }, [backgroundImageUrl, backgroundImageUrls]);
+
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  useEffect(() => {
+    setActiveImageIndex(0);
+
+    if (images.length <= 1) {
+      return;
+    }
+
+    const intervalId = window.setInterval(() => {
+      setActiveImageIndex((currentIndex) => (currentIndex + 1) % images.length);
+    }, 6000);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [images]);
+
   const hasSubtitle = Boolean(subtitle);
   const useVerticalTextLayout =
     height === undefined && (heightPreset === "oneThird" || heightPreset === "twoThirds");
@@ -79,7 +107,7 @@ export function Hero({
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: backgroundImageUrl ? `url(${backgroundImageUrl})` : undefined }}
+        style={{ backgroundImage: images[activeImageIndex] ? `url(${images[activeImageIndex]})` : undefined }}
       />
       <div
         aria-hidden="true"

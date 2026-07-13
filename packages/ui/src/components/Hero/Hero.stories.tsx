@@ -13,6 +13,7 @@ const meta = {
     heightPreset: "full",
     backgroundImageUrl:
       "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1600&q=80",
+    backgroundImageUrls: undefined,
   },
   argTypes: {
     titleVariant: {
@@ -29,6 +30,9 @@ const meta = {
     height: {
       control: "text",
     },
+    backgroundImageUrls: {
+      control: "object",
+    },
   },
 } satisfies Meta<typeof Hero>;
 
@@ -43,5 +47,18 @@ export const Default: Story = {
 export const NoSubtitle: Story = {
   args: {
     subtitle: undefined,
+  },
+};
+
+export const Slideshow: Story = {
+  args: {
+    title: "Stories in Motion",
+    subtitle: "The hero rotates through multiple background images automatically.",
+    backgroundImageUrl: undefined,
+    backgroundImageUrls: [
+      "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80",
+    ],
   },
 };
