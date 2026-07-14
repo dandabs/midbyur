@@ -14,6 +14,7 @@ export type NavigationProps = Readonly<{
   items: NavigationItem[];
   color?: TextColor;
   gap?: number | string;
+  fullWidth?: boolean;
 }> & Omit<ViewProps, "children">;
 
 function resolveGapValue(gap: number | string): string {
@@ -24,11 +25,14 @@ export function Navigation({
   items,
   color = "text",
   gap = 16,
+  fullWidth = true,
   className,
   style,
   ...props
 }: NavigationProps) {
-  const rootClassName = ["w-full", className].filter(Boolean).join(" ");
+  const rootClassName = [fullWidth ? "w-full" : "w-auto", className]
+    .filter(Boolean)
+    .join(" ");
 
   const listStyle: ViewStyle = {
     gap: resolveGapValue(gap),
@@ -40,7 +44,7 @@ export function Navigation({
       {...props}
     >
       <View
-        style={withClassName("flex w-full flex-row items-center", listStyle) as ViewStyle}
+        style={withClassName(fullWidth ? "flex w-full flex-row items-center" : "flex w-auto flex-row items-center", listStyle) as ViewStyle}
       >
         {items.map((item) => (
           <View key={`${item.href}-${item.title}`}>

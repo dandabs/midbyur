@@ -269,6 +269,7 @@ export function Text({
   const resolvedFontFamily = fontFamily ?? definition.fontFamily;
 
   const textClassName = [
+    "block",
     textColorClassNames[resolvedColor],
     textSizeClassNames[resolvedSize],
     variant === "display" ? "text-[clamp(6.25rem,10vw,10rem)]" : "",

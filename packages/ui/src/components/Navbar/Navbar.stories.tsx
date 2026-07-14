@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Navbar } from "./Navbar";
+import { Text } from "../Text/Text";
 
 const meta = {
   title: "Components/Navbar",
@@ -39,11 +40,11 @@ export const Default: Story = {
 
       <div className="px-4 pt-28 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl space-y-8 py-10 text-(--color-text)">
-          <h2 className="text-3xl font-medium">Scroll To See Navbar Transition</h2>
-          <p className="text-lg text-(--color-textMuted)">
+          <Text variant="h3">Scroll To See Navbar Transition</Text>
+          <Text variant="body" color="textMuted">
             The navbar starts with a liquid glass translucency effect and becomes
             solid black after scrolling beyond one viewport height.
-          </p>
+          </Text>
         </div>
       </div>
     </div>

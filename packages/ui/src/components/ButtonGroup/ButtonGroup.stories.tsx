@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "../Button/Button";
+import { Text } from "../Text/Text";
 import { ButtonGroup } from "./ButtonGroup";
 
 const meta = {
@@ -28,9 +29,9 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = {
   render: (args) => (
     <ButtonGroup {...args}>
-      <Button variant="primary">Primary</Button>
-      <Button variant="secondary">Secondary</Button>
-      <Button variant="danger">Danger</Button>
+      <Button variant="primary"><Text variant="label">Primary</Text></Button>
+      <Button variant="secondary"><Text variant="label">Secondary</Text></Button>
+      <Button variant="danger"><Text variant="label">Danger</Text></Button>
     </ButtonGroup>
   ),
 };
@@ -41,9 +42,9 @@ export const Vertical: Story = {
   },
   render: (args) => (
     <ButtonGroup {...args}>
-      <Button variant="primary">Save</Button>
-      <Button variant="secondary">Cancel</Button>
-      <Button variant="info" type="link">Learn More</Button>
+      <Button variant="primary"><Text variant="label">Save</Text></Button>
+      <Button variant="secondary"><Text variant="label">Cancel</Text></Button>
+      <Button variant="info" type="link"><Text variant="label">Learn More</Text></Button>
     </ButtonGroup>
   ),
 };
