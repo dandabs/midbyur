@@ -17,6 +17,8 @@ export { Hero } from "./components/Hero/Hero";
 export type { HeroHeightPreset, HeroProps } from "./components/Hero/Hero";
 export { Navigation } from "./components/Navigation/Navigation";
 export type { NavigationItem, NavigationProps } from "./components/Navigation/Navigation";
+export { Navbar } from "./components/Navbar/Navbar";
+export type { NavbarProps } from "./components/Navbar/Navbar";
 export { Section } from "./components/Section/Section";
 export type { SectionProps, SectionType } from "./components/Section/Section";
 export { Text } from "./components/Text/Text";
