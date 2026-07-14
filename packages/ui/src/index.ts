@@ -25,6 +25,8 @@ export { Navbar } from "./components/Navbar/Navbar";
 export type { NavbarProps } from "./components/Navbar/Navbar";
 export { Section } from "./components/Section/Section";
 export type { SectionProps, SectionType } from "./components/Section/Section";
+export { Spinner } from "./components/Spinner/Spinner";
+export type { SpinnerProps } from "./components/Spinner/Spinner";
 export { Text } from "./components/Text/Text";
 export type {
 	TextColor,
