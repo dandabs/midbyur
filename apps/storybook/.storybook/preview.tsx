@@ -27,7 +27,7 @@ const preview: Preview = {
   decorators: [
     (Story, context) => (
       <MidbyurProvider theme={(context.globals.theme ?? "light") as "light" | "dark"}>
-        <div className="min-h-screen bg-(--color-background) p-6 text-(--color-text)">
+        <div className="bg-(--color-background) p-6 text-(--color-text)">
           <Story />
         </div>
       </MidbyurProvider>

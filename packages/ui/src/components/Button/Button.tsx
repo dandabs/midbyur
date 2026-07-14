@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { Children, cloneElement, isValidElement, type ReactElement, type ReactNode } from "react";
 import { Pressable, type PressableProps, type ViewStyle } from "react-native";
 import { Text } from "../Text/Text";
 import { withClassName } from "../../cssInterop";
@@ -23,6 +23,32 @@ export type ButtonProps = Readonly<{
   htmlType?: "button" | "submit" | "reset";
   className?: string;
 }> & Omit<PressableProps, "children">;
+
+function normalizeButtonChildren(children: ReactNode): ReactNode {
+  return Children.map(children, (child) => {
+    if (typeof child === "string" || typeof child === "number") {
+      return (
+        <Text
+          variant="label"
+          color="current"
+        >
+          {child}
+        </Text>
+      );
+    }
+
+    if (isValidElement(child) && child.type === Text) {
+      const textChild = child as ReactElement<{ color?: "current" }>;
+
+      return cloneElement(textChild, {
+        ...textChild.props,
+        color: "current",
+      });
+    }
+
+    return child;
+  });
+}
 
 const variantColorVariables: Readonly<
   Record<
@@ -108,12 +134,7 @@ export function Button({
       // htmlType is accepted for API compatibility but unused in RN primitives.
       {...props}
     >
-      <Text
-        variant="body"
-        color="current"
-      >
-        {children}
-      </Text>
+      {normalizeButtonChildren(children)}
     </Pressable>
   );
 }
