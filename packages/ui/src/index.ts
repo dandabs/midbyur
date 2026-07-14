@@ -23,10 +23,14 @@ export { Navigation } from "./components/Navigation/Navigation";
 export type { NavigationItem, NavigationProps } from "./components/Navigation/Navigation";
 export { Navbar } from "./components/Navbar/Navbar";
 export type { NavbarProps } from "./components/Navbar/Navbar";
+export { Page } from "./components/Page/Page";
+export type { PageProps } from "./components/Page/Page";
 export { Section } from "./components/Section/Section";
 export type { SectionProps, SectionType } from "./components/Section/Section";
 export { Spinner } from "./components/Spinner/Spinner";
 export type { SpinnerProps } from "./components/Spinner/Spinner";
+export { Stack } from "./components/Stack/Stack";
+export type { StackDirection, StackProps } from "./components/Stack/Stack";
 export { Text } from "./components/Text/Text";
 export type {
 	TextColor,
