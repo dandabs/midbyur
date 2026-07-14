@@ -1,8 +1,8 @@
 "use client";
 
-import { Moon, Sun } from "lucide-react";
+import { Menu, Moon, Sun, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { View, type ViewProps, type ViewStyle } from "react-native";
+import { Pressable, View, type ViewProps, type ViewStyle } from "react-native";
 import { themeModes, type ThemeMode } from "@midbyur/theme";
 import { withClassName } from "../../cssInterop";
 import { Container } from "../Container/Container";
@@ -81,6 +81,7 @@ export function Navbar({
   const rootRef = useRef<HTMLElement | null>(null);
   const [isPastFirstViewport, setIsPastFirstViewport] = useState(false);
   const [theme, setTheme] = useState<ThemeMode>("light");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -155,7 +156,7 @@ export function Navbar({
             {brand}
           </Text>
 
-          <View style={withClassName("ml-auto flex flex-row items-center gap-4") as ViewStyle}>
+          <View style={withClassName("ml-auto hidden md:flex flex-row items-center gap-4") as ViewStyle}>
             <Navigation
               items={links}
               gap={linksGap}
@@ -174,7 +175,64 @@ export function Navbar({
               accessibilityLabel={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
             />
           </View>
+
+          <View style={withClassName("ml-auto md:hidden flex flex-row items-center gap-2") as ViewStyle}>
+            <IconButton
+              icon={theme === "dark" ? Sun : Moon}
+              color="current"
+              size={18}
+              strokeWidth={2}
+              onPress={handleThemeToggle}
+              className="text-white"
+              accessibilityLabel={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            />
+
+            <IconButton
+              icon={isMenuOpen ? X : Menu}
+              color="current"
+              size={24}
+              strokeWidth={2}
+              onPress={() => setIsMenuOpen(!isMenuOpen)}
+              className="text-white"
+              accessibilityLabel={isMenuOpen ? "Close menu" : "Open menu"}
+            />
+          </View>
         </View>
+
+        {isMenuOpen && (
+          <View
+            style={withClassName(
+              "flex md:hidden flex-col border-t border-white/15 bg-black/45 backdrop-blur-xl",
+            ) as ViewStyle}
+          >
+            <View style={withClassName("flex flex-col py-4 px-0") as ViewStyle}>
+              {links.map((item) => (
+                <Pressable
+                  key={`${item.href}-${item.title}`}
+                  accessibilityRole="link"
+                  accessibilityState={{ selected: item.active }}
+                  onPress={() => {
+                    setIsMenuOpen(false);
+                    if (typeof window !== "undefined") {
+                      window.location.href = item.href;
+                    }
+                  }}
+                  style={withClassName(
+                    "flex px-6 py-3 transition-colors duration-150 hover:bg-white/10",
+                  ) as ViewStyle}
+                >
+                  <Text
+                    variant="body"
+                    color="current"
+                    className="text-white"
+                  >
+                    {item.title}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+          </View>
+        )}
       </Container>
     </View>
   );
