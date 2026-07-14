@@ -26,7 +26,9 @@ export function ButtonGroup({
 }: ButtonGroupProps) {
   const rootClassName = [
     "flex w-full",
-    direction === "horizontal" ? "flex-row items-center" : "flex-col",
+    direction === "horizontal"
+      ? "flex-row items-center [&>*]:min-w-0 [&>*]:flex-1"
+      : "flex-col",
     className,
   ]
     .filter(Boolean)

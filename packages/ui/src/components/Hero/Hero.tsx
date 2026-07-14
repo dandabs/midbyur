@@ -13,6 +13,7 @@ export type HeroProps = Readonly<{
   titleVariant?: TextVariant;
   backgroundImageUrl?: string;
   backgroundImageUrls?: string[];
+  slideshowIntervalMs?: number;
   overlayOpacity?: number;
   heightPreset?: HeroHeightPreset;
   height?: number | string;
@@ -46,6 +47,7 @@ export function Hero({
   titleVariant = "display",
   backgroundImageUrl,
   backgroundImageUrls,
+  slideshowIntervalMs = 6000,
   overlayOpacity = 0.45,
   heightPreset = "full",
   height,
@@ -72,22 +74,22 @@ export function Hero({
 
     const intervalId = window.setInterval(() => {
       setActiveImageIndex((currentIndex) => (currentIndex + 1) % images.length);
-    }, 6000);
+    }, Math.max(1000, slideshowIntervalMs));
 
     return () => {
       window.clearInterval(intervalId);
     };
-  }, [images]);
+  }, [images, slideshowIntervalMs]);
 
   const hasSubtitle = Boolean(subtitle);
   const useVerticalTextLayout =
-    height === undefined && (heightPreset === "oneThird" || heightPreset === "twoThirds");
+    heightPreset === "twoThirds" || heightPreset === "oneThird";
   const titleStyle: TextStyle | undefined =
     titleVariant === "display" ? { lineHeight: 0.90 } : undefined;
-  const titleClassName = hasSubtitle && !useVerticalTextLayout ? "inline-block text-white" : "text-white";
+  const titleClassName = "text-white";
 
   const rootClassName = [
-    "relative flex items-end overflow-hidden pt-24 pb-2",
+    "relative flex h-full w-full flex-col justify-end overflow-hidden pt-24 pb-2",
     className,
   ]
     .filter(Boolean)
@@ -115,8 +117,22 @@ export function Hero({
       />
 
       <View style={withClassName("relative z-10 w-full px-4 sm:px-6 lg:px-8") as any}>
-        <View style={withClassName(useVerticalTextLayout ? "w-full flex flex-col gap-4" : "w-full sm:flex sm:items-end sm:gap-8") as any}>
-          <View style={withClassName(hasSubtitle && !useVerticalTextLayout ? "sm:w-fit sm:max-w-[40%] sm:flex-none" : "w-full") as any}>
+        <View
+          style={withClassName(
+            hasSubtitle
+              ? useVerticalTextLayout
+                ? "w-full flex flex-col gap-4"
+                : "w-full flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-start sm:gap-8"
+              : "w-full"
+          ) as any}
+        >
+          <View
+            style={withClassName(
+              hasSubtitle && !useVerticalTextLayout
+                ? "w-full sm:w-fit sm:max-w-[40%] sm:flex-none"
+                : "w-full"
+            ) as any}
+          >
             <Text
               variant={titleVariant}
               className={titleClassName}
@@ -128,9 +144,7 @@ export function Hero({
           {hasSubtitle ? (
             <View
               style={withClassName(
-                useVerticalTextLayout
-                  ? "w-full"
-                  : "mt-6 sm:mt-0 sm:w-fit sm:max-w-[40%] sm:flex-none"
+                useVerticalTextLayout ? "w-full" : "w-full sm:w-fit sm:max-w-[40%] sm:flex-none"
               ) as any}
             >
               <Text className="text-white/90">{subtitle}</Text>

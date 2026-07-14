@@ -12,7 +12,23 @@ const meta = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["display", "h1", "h2", "h3", "h4", "h5", "button", "body", "bodySm", "label", "caption"],
+      options: [
+        "display",
+        "h1",
+        "h1Subheading",
+        "h2",
+        "h2Subheading",
+        "h3",
+        "h3Subheading",
+        "h4",
+        "h4Subheading",
+        "h5",
+        "h5Subheading",
+        "body",
+        "bodySm",
+        "label",
+        "caption",
+      ],
     },
     size: {
       control: "select",
@@ -46,11 +62,15 @@ export const VariantScale: Story = {
     <div className="grid gap-3">
       <Text variant="display">Display</Text>
       <Text variant="h1">Heading 1</Text>
+      <Text variant="h1Subheading">Heading 1 Subheading</Text>
       <Text variant="h2">Heading 2</Text>
+      <Text variant="h2Subheading">Heading 2 Subheading</Text>
       <Text variant="h3">Heading 3</Text>
+      <Text variant="h3Subheading">Heading 3 Subheading</Text>
       <Text variant="h4">Heading 4</Text>
+      <Text variant="h4Subheading">Heading 4 Subheading</Text>
       <Text variant="h5">Heading 5</Text>
-      <Text variant="button">Button Label</Text>
+      <Text variant="h5Subheading">Heading 5 Subheading</Text>
       <Text variant="body">Body text for longer reading content.</Text>
       <Text variant="bodySm">Small body text for compact layouts.</Text>
       <Text variant="label">Field Label</Text>

@@ -56,11 +56,15 @@ export type TextColor =
 export type TextVariant =
   | "display"
   | "h1"
+  | "h1Subheading"
   | "h2"
+  | "h2Subheading"
   | "h3"
+  | "h3Subheading"
   | "h4"
+  | "h4Subheading"
   | "h5"
-  | "button"
+  | "h5Subheading"
   | "body"
   | "bodySm"
   | "label"
@@ -153,9 +157,21 @@ export const textVariantDefinitions: Readonly<Record<TextVariant, TextVariantDef
     lineHeight: "tight",
     fontFamily: "headline",
   },
+  h1Subheading: {
+    size: "4xl",
+    weight: "regular",
+    lineHeight: "tight",
+    fontFamily: "headline",
+  },
   h2: {
     size: "4xl",
     weight: "medium",
+    lineHeight: "tight",
+    fontFamily: "headline",
+  },
+  h2Subheading: {
+    size: "3xl",
+    weight: "regular",
     lineHeight: "tight",
     fontFamily: "headline",
   },
@@ -165,9 +181,21 @@ export const textVariantDefinitions: Readonly<Record<TextVariant, TextVariantDef
     lineHeight: "snug",
     fontFamily: "headline",
   },
+  h3Subheading: {
+    size: "2xl",
+    weight: "regular",
+    lineHeight: "snug",
+    fontFamily: "headline",
+  },
   h4: {
     size: "2xl",
     weight: "medium",
+    lineHeight: "snug",
+    fontFamily: "notch",
+  },
+  h4Subheading: {
+    size: "xl",
+    weight: "regular",
     lineHeight: "snug",
     fontFamily: "notch",
   },
@@ -177,9 +205,9 @@ export const textVariantDefinitions: Readonly<Record<TextVariant, TextVariantDef
     lineHeight: "normal",
     fontFamily: "notch",
   },
-  button: {
-    size: "sm",
-    weight: "medium",
+  h5Subheading: {
+    size: "lg",
+    weight: "regular",
     lineHeight: "normal",
     fontFamily: "notch",
   },
