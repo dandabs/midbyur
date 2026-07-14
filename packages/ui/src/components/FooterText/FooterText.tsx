@@ -16,10 +16,10 @@ export function FooterText({ className, style, ...props }: FooterTextProps) {
       style={withClassName(className ?? "", style as ViewStyle) as ViewStyle}
       {...props}
     >
-      <Text variant="bodySm" color="current">
+      <Text variant="caption" color="current">
         © 2011-{currentYear} Daniel Adams. All rights reserved. Rekstur á Íslandi er starfræktur á kt. 050705-3660. Educatr® and the Educatr® logo are registered trademarks of dandabs, a limited company by guarantee registered in Northern Ireland (no. NI737161). Registered office: 103 BT42 4PP. Airline logos provided by{" "}
         <Text
-          variant="bodySm"
+          variant="caption"
           color="current"
           inline
           className="underline"
