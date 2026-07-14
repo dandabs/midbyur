@@ -1,6 +1,8 @@
 "use client";
 
-import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
+import type { ReactNode } from "react";
+import { View, type ViewProps, type ViewStyle } from "react-native";
+import { withClassName } from "../../cssInterop";
 
 export type ButtonGroupDirection = "horizontal" | "vertical";
 
@@ -8,7 +10,7 @@ export type ButtonGroupProps = Readonly<{
   children?: ReactNode;
   direction?: ButtonGroupDirection;
   gap?: number | string;
-}> & Omit<HTMLAttributes<HTMLDivElement>, "children">;
+}> & Omit<ViewProps, "children">;
 
 function resolveGapValue(gap: number | string): string {
   return typeof gap === "number" ? `${gap}px` : gap;
@@ -30,18 +32,17 @@ export function ButtonGroup({
     .filter(Boolean)
     .join(" ");
 
-  const rootStyle: CSSProperties = {
+  const rootStyle: ViewStyle = {
     gap: resolveGapValue(gap),
-    ...style,
+    ...(style as ViewStyle),
   };
 
   return (
-    <div
-      className={rootClassName}
-      style={rootStyle}
+    <View
+      style={withClassName(rootClassName, rootStyle) as ViewStyle}
       {...props}
     >
       {children}
-    </div>
+    </View>
   );
 }

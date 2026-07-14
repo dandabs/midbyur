@@ -1,6 +1,8 @@
 import type { StorybookConfig } from '@storybook/nextjs-vite';
 
 import { dirname } from "path"
+import { mergeConfig, defineConfig } from "vite"
+import tailwindcss from "@tailwindcss/vite"
 
 import { fileURLToPath } from "url"
 
@@ -24,6 +26,24 @@ const config: StorybookConfig = {
   "framework": getAbsolutePath('@storybook/nextjs-vite'),
   "staticDirs": [
     "../public"
-  ]
+  ],
+  viteFinal: async (viteConfig) => {
+    return mergeConfig(viteConfig, {
+      plugins: [
+        tailwindcss(),
+      ],
+      define: {
+        __DEV__: JSON.stringify(process.env.NODE_ENV !== "production"),
+      },
+      resolve: {
+        alias: {
+          "react-native": "react-native-web",
+        },
+      },
+      optimizeDeps: {
+        exclude: ["react-native", "nativewind", "react-native-css-interop"],
+      },
+    });
+  },
 };
 export default config;

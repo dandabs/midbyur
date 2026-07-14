@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState, type CSSProperties, type HTMLAttributes, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { ImageBackground, View, type ImageStyle, type TextStyle, type ViewProps, type ViewStyle } from "react-native";
 import { Text, type TextVariant } from "../Text/Text";
+import { withClassName } from "../../cssInterop";
 
 export type HeroHeightPreset = "full" | "twoThirds" | "oneThird";
 
@@ -14,7 +16,7 @@ export type HeroProps = Readonly<{
   overlayOpacity?: number;
   heightPreset?: HeroHeightPreset;
   height?: number | string;
-}> & Omit<HTMLAttributes<HTMLElement>, "children">;
+}> & Omit<ViewProps, "children">;
 
 const heroHeightPresetValues: Readonly<Record<HeroHeightPreset, string>> = {
   full: "100vh",
@@ -80,7 +82,7 @@ export function Hero({
   const hasSubtitle = Boolean(subtitle);
   const useVerticalTextLayout =
     height === undefined && (heightPreset === "oneThird" || heightPreset === "twoThirds");
-  const titleStyle: CSSProperties | undefined =
+  const titleStyle: TextStyle | undefined =
     titleVariant === "display" ? { lineHeight: 0.90 } : undefined;
   const titleClassName = hasSubtitle && !useVerticalTextLayout ? "inline-block text-white" : "text-white";
 
@@ -93,31 +95,28 @@ export function Hero({
 
   const resolvedHeight = height ?? heroHeightPresetValues[heightPreset];
 
-  const rootStyle: CSSProperties = {
-    minHeight: resolveHeightValue(resolvedHeight),
-    ...style,
+  const rootStyle: ViewStyle = {
+    minHeight: resolveHeightValue(resolvedHeight) as any,
+    ...(style as ViewStyle),
   };
 
   return (
-    <section
-      className={rootClassName}
-      style={rootStyle}
+    <View
+      style={withClassName(rootClassName, rootStyle) as ViewStyle}
       {...props}
     >
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: images[activeImageIndex] ? `url(${images[activeImageIndex]})` : undefined }}
+      <ImageBackground
+        source={images[activeImageIndex] ? { uri: images[activeImageIndex] } : undefined}
+        style={withClassName("absolute inset-0") as any}
+        imageStyle={{ resizeMode: "cover" } as ImageStyle}
       />
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 bg-black"
-        style={{ opacity: clampOpacity(overlayOpacity) }}
+      <View
+        style={withClassName("absolute inset-0 bg-black", { opacity: clampOpacity(overlayOpacity) }) as ViewStyle}
       />
 
-      <div className="relative z-10 w-full px-4 sm:px-6 lg:px-8">
-        <div className={useVerticalTextLayout ? "w-full flex flex-col gap-4" : "w-full sm:flex sm:items-end sm:gap-8"}>
-          <div className={hasSubtitle && !useVerticalTextLayout ? "sm:w-fit sm:max-w-[40%] sm:flex-none" : "w-full"}>
+      <View style={withClassName("relative z-10 w-full px-4 sm:px-6 lg:px-8") as any}>
+        <View style={withClassName(useVerticalTextLayout ? "w-full flex flex-col gap-4" : "w-full sm:flex sm:items-end sm:gap-8") as any}>
+          <View style={withClassName(hasSubtitle && !useVerticalTextLayout ? "sm:w-fit sm:max-w-[40%] sm:flex-none" : "w-full") as any}>
             <Text
               variant={titleVariant}
               className={titleClassName}
@@ -125,20 +124,20 @@ export function Hero({
             >
               {title}
             </Text>
-          </div>
+          </View>
           {hasSubtitle ? (
-            <div
-              className={
+            <View
+              style={withClassName(
                 useVerticalTextLayout
                   ? "w-full"
                   : "mt-6 sm:mt-0 sm:w-fit sm:max-w-[40%] sm:flex-none"
-              }
+              ) as any}
             >
               <Text className="text-white/90">{subtitle}</Text>
-            </div>
+            </View>
           ) : null}
-        </div>
-      </div>
-    </section>
+        </View>
+      </View>
+    </View>
   );
 }

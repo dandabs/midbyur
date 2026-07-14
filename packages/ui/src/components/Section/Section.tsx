@@ -1,6 +1,8 @@
 "use client";
 
-import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
+import type { ReactNode } from "react";
+import { ImageBackground, View, type ImageStyle, type ViewProps, type ViewStyle } from "react-native";
+import { withClassName } from "../../cssInterop";
 
 export type SectionType = "default" | "image";
 
@@ -10,7 +12,7 @@ export type SectionProps = Readonly<{
   imageUrl?: string;
   overlayOpacity?: number;
   height?: number | string;
-}> & Omit<HTMLAttributes<HTMLElement>, "children">;
+}> & Omit<ViewProps, "children">;
 
 function resolveHeightValue(height: number | string): string {
   return typeof height === "number" ? `${height}px` : height;
@@ -51,34 +53,31 @@ export function Section({
     .filter(Boolean)
     .join(" ");
 
-  const sectionStyle: CSSProperties = {
-    ...(resolvedHeight ? { minHeight: resolveHeightValue(resolvedHeight) } : {}),
-    ...style,
+  const sectionStyle: ViewStyle = {
+    ...(resolvedHeight ? { minHeight: resolveHeightValue(resolvedHeight) as any } : {}),
+    ...(style as ViewStyle),
   };
 
   return (
-    <section
-      className={rootClassName}
-      style={sectionStyle}
+    <View
+      style={withClassName(rootClassName, sectionStyle) as ViewStyle}
       {...props}
     >
       {isImage ? (
         <>
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: imageUrl ? `url(${imageUrl})` : undefined }}
+          <ImageBackground
+            source={imageUrl ? { uri: imageUrl } : undefined}
+            style={withClassName("absolute inset-0") as any}
+            imageStyle={{ resizeMode: "cover" } as ImageStyle}
           />
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 bg-black"
-            style={{ opacity: clampOpacity(overlayOpacity) }}
+          <View
+            style={withClassName("absolute inset-0 bg-black", { opacity: clampOpacity(overlayOpacity) }) as ViewStyle}
           />
-          <div className="relative z-10 w-full text-white">{children}</div>
+          <View style={withClassName("relative z-10 w-full") as any}>{children}</View>
         </>
       ) : (
         children
       )}
-    </section>
+    </View>
   );
 }

@@ -1,6 +1,8 @@
 "use client";
 
-import type { CSSProperties, ElementType, HTMLAttributes, ReactNode } from "react";
+import type { ReactNode } from "react";
+import { Text as RNText, type TextProps as RNTextProps, type TextStyle } from "react-native";
+import { withClassName } from "../../cssInterop";
 
 export type TextSize =
   | "xs"
@@ -207,20 +209,6 @@ export const textVariantDefinitions: Readonly<Record<TextVariant, TextVariantDef
   },
 };
 
-const variantElementTagMap: Readonly<Record<TextVariant, ElementType>> = {
-  display: "h1",
-  h1: "h1",
-  h2: "h2",
-  h3: "h3",
-  h4: "h4",
-  h5: "h5",
-  button: "span",
-  body: "p",
-  bodySm: "p",
-  label: "label",
-  caption: "small",
-};
-
 export type TextProps = Readonly<{
   children: ReactNode;
   variant?: TextVariant;
@@ -229,8 +217,8 @@ export type TextProps = Readonly<{
   weight?: TextWeight;
   lineHeight?: TextLineHeight;
   fontFamily?: TextFontFamily;
-  as?: ElementType;
-}> & Omit<HTMLAttributes<HTMLElement>, "children">;
+  className?: string;
+}> & Omit<RNTextProps, "children">;
 
 export function Text({
   children,
@@ -240,7 +228,6 @@ export function Text({
   weight,
   lineHeight,
   fontFamily,
-  as,
   className,
   style,
   ...props
@@ -253,8 +240,6 @@ export function Text({
   const resolvedLineHeight = lineHeight ?? definition.lineHeight;
   const resolvedFontFamily = fontFamily ?? definition.fontFamily;
 
-  const Component = (as ?? variantElementTagMap[variant]) as ElementType;
-
   const textClassName = [
     textColorClassNames[resolvedColor],
     textSizeClassNames[resolvedSize],
@@ -266,18 +251,17 @@ export function Text({
     .filter(Boolean)
     .join(" ");
 
-  const textStyle: CSSProperties = {
+  const textStyle: TextStyle = {
     fontFamily: fontFamilyValues[resolvedFontFamily],
-    ...style,
+    ...(style as TextStyle),
   };
 
   return (
-    <Component
-      className={textClassName}
-      style={textStyle}
+    <RNText
+      style={withClassName(textClassName, textStyle) as TextStyle}
       {...props}
     >
       {children}
-    </Component>
+    </RNText>
   );
 }

@@ -1,4 +1,5 @@
 import type { Preview } from '@storybook/nextjs-vite'
+import "../src/polyfills";
 import { MidbyurProvider } from "@midbyur/ui"
 import "../src/styles/globals.css";
 

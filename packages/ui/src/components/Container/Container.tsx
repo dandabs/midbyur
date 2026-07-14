@@ -1,6 +1,8 @@
 "use client";
 
-import type { HTMLAttributes, ReactNode } from "react";
+import type { ReactNode } from "react";
+import { View, type ViewProps } from "react-native";
+import { withClassName } from "../../cssInterop";
 
 type ContainerMaxWidth = "sm" | "md" | "lg" | "xl" | "2xl" | "full";
 
@@ -16,7 +18,7 @@ const maxWidthClassNames: Readonly<Record<ContainerMaxWidth, string>> = {
 export type ContainerProps = Readonly<{
   children?: ReactNode;
   maxWidth?: ContainerMaxWidth;
-}> & Omit<HTMLAttributes<HTMLDivElement>, "children">;
+}> & Omit<ViewProps, "children">;
 
 export function Container({
   children,
@@ -33,11 +35,11 @@ export function Container({
     .join(" ");
 
   return (
-    <div
-      className={rootClassName}
+    <View
+      style={withClassName(rootClassName) as any}
       {...props}
     >
       {children}
-    </div>
+    </View>
   );
 }

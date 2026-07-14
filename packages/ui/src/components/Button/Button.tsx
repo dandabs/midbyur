@@ -1,7 +1,9 @@
 "use client";
 
-import type { ButtonHTMLAttributes, CSSProperties, ReactNode } from "react";
+import type { ReactNode } from "react";
+import { Pressable, type PressableProps, type ViewStyle } from "react-native";
 import { Text } from "../Text/Text";
+import { withClassName } from "../../cssInterop";
 
 export type ButtonVariant =
   | "primary"
@@ -18,8 +20,9 @@ export type ButtonProps = Readonly<{
   variant?: ButtonVariant;
   type?: ButtonType;
   fluid?: boolean;
-  htmlType?: ButtonHTMLAttributes<HTMLButtonElement>["type"];
-}> & Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children" | "type">;
+  htmlType?: "button" | "submit" | "reset";
+  className?: string;
+}> & Omit<PressableProps, "children">;
 
 const variantColorVariables: Readonly<
   Record<
@@ -77,7 +80,7 @@ export function Button({
   variant = "primary",
   type = "solid",
   fluid = true,
-  htmlType = "button",
+  htmlType,
   className,
   style,
   ...props
@@ -96,22 +99,21 @@ export function Button({
   const buttonStyle = {
     ...variantColorVariables[variant],
     ...style,
-  } as CSSProperties;
+  } as ViewStyle;
 
   return (
-    <button
-      className={rootClassName}
-      style={buttonStyle}
-      type={htmlType}
+    <Pressable
+      style={withClassName(rootClassName, buttonStyle) as ViewStyle}
+      accessibilityRole="button"
+      // htmlType is accepted for API compatibility but unused in RN primitives.
       {...props}
     >
       <Text
-        as="span"
         variant="body"
-        className="text-current"
+        color="current"
       >
         {children}
       </Text>
-    </button>
+    </Pressable>
   );
 }
