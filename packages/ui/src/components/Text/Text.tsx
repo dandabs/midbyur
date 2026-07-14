@@ -245,6 +245,7 @@ export type TextProps = Readonly<{
   weight?: TextWeight;
   lineHeight?: TextLineHeight;
   fontFamily?: TextFontFamily;
+  inline?: boolean;
   className?: string;
 }> & Omit<RNTextProps, "children">;
 
@@ -256,6 +257,7 @@ export function Text({
   weight,
   lineHeight,
   fontFamily,
+  inline = false,
   className,
   style,
   ...props
@@ -269,7 +271,7 @@ export function Text({
   const resolvedFontFamily = fontFamily ?? definition.fontFamily;
 
   const textClassName = [
-    "block",
+    inline ? "" : "block",
     textColorClassNames[resolvedColor],
     textSizeClassNames[resolvedSize],
     variant === "display" ? "text-[clamp(6.25rem,10vw,10rem)]" : "",
