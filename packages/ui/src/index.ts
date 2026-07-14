@@ -17,6 +17,8 @@ export { Hero } from "./components/Hero/Hero";
 export type { HeroHeightPreset, HeroProps } from "./components/Hero/Hero";
 export { Icon } from "./components/Icon/Icon";
 export type { IconProps } from "./components/Icon/Icon";
+export { IconButton } from "./components/IconButton/IconButton";
+export type { IconButtonProps } from "./components/IconButton/IconButton";
 export { Navigation } from "./components/Navigation/Navigation";
 export type { NavigationItem, NavigationProps } from "./components/Navigation/Navigation";
 export { Navbar } from "./components/Navbar/Navbar";
