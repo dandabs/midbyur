@@ -3,16 +3,13 @@
 import type { ReactNode } from "react";
 import { View, type ViewProps } from "react-native";
 import { withClassName } from "../../cssInterop";
+import { resolveGapValue, type GapValue } from "../../spacing";
 
 export type GridProps = Readonly<{
   children?: ReactNode;
   cols?: number | string;
-  gap?: number | string;
+  gap?: GapValue;
 }> & Omit<ViewProps, "children">;
-
-function resolveSpacingValue(value: number | string): string {
-  return typeof value === "number" ? `${value}px` : value;
-}
 
 function resolveColumnsValue(cols: number | string): string {
   if (typeof cols === "number") {
@@ -35,7 +32,7 @@ export function Grid({
   const rootStyle = {
     ...(style as any),
     gridTemplateColumns: resolveColumnsValue(cols),
-    gap: resolveSpacingValue(gap),
+    gap: resolveGapValue(gap),
   } as any;
 
   return (

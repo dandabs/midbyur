@@ -41,9 +41,18 @@ const config: StorybookConfig = {
         },
       },
       optimizeDeps: {
-        exclude: ["react-native", "nativewind", "react-native-css-interop"],
+        exclude: ["react-native", "nativewind", "react-native-css-interop", "burnt"],
       },
     });
+  },
+  webpackFinal: async (config) => {
+    // Mark burnt as an external module to prevent parsing issues in Chromatic
+    config.externals = {
+      ...config.externals,
+      "burnt/web": "burnt/web",
+      burnt: "burnt",
+    };
+    return config;
   },
 };
 export default config;

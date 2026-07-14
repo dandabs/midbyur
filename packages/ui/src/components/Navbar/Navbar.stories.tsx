@@ -2,13 +2,15 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Navbar } from "./Navbar";
 import { Text } from "../Text/Text";
 
+const gapOptions = ["sm", "md", "lg"] as const;
+
 const meta = {
   title: "Components/Navbar",
   component: Navbar,
   tags: ["autodocs"],
   args: {
     brand: "Miðbýur",
-    linksGap: 20,
+    linksGap: "lg",
     links: [
       { title: "Home", href: "#home", active: true },
       { title: "Work", href: "#work" },
@@ -21,7 +23,8 @@ const meta = {
       control: "text",
     },
     linksGap: {
-      control: "text",
+      control: "select",
+      options: gapOptions,
     },
     links: {
       control: "object",

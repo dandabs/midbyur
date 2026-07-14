@@ -3,20 +3,23 @@ import { Card } from "../Card/Card";
 import { Text } from "../Text/Text";
 import { Grid } from "./Grid";
 
+const gapOptions = ["sm", "md", "lg"] as const;
+
 const meta = {
   title: "Components/Grid",
   component: Grid,
   tags: ["autodocs"],
   args: {
     cols: 3,
-    gap: 24,
+    gap: "lg",
   },
   argTypes: {
     cols: {
       control: "number",
     },
     gap: {
-      control: "text",
+      control: "select",
+      options: gapOptions,
     },
   },
 } satisfies Meta<typeof Grid>;

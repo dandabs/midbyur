@@ -3,18 +3,15 @@
 import type { ReactNode } from "react";
 import { View, type ViewProps, type ViewStyle } from "react-native";
 import { withClassName } from "../../cssInterop";
+import { resolveGapValue, type GapValue } from "../../spacing";
 
 export type ButtonGroupDirection = "horizontal" | "vertical";
 
 export type ButtonGroupProps = Readonly<{
   children?: ReactNode;
   direction?: ButtonGroupDirection;
-  gap?: number | string;
+  gap?: GapValue;
 }> & Omit<ViewProps, "children">;
-
-function resolveGapValue(gap: number | string): string {
-  return typeof gap === "number" ? `${gap}px` : gap;
-}
 
 export function ButtonGroup({
   children,

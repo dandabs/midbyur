@@ -3,6 +3,7 @@
 import { Pressable, View, type ViewProps, type ViewStyle } from "react-native";
 import { Text, type TextColor } from "../Text/Text";
 import { withClassName } from "../../cssInterop";
+import { resolveGapValue, type GapValue } from "../../spacing";
 
 export type NavigationItem = Readonly<{
   title: string;
@@ -13,13 +14,9 @@ export type NavigationItem = Readonly<{
 export type NavigationProps = Readonly<{
   items: NavigationItem[];
   color?: TextColor;
-  gap?: number | string;
+  gap?: GapValue;
   fullWidth?: boolean;
 }> & Omit<ViewProps, "children">;
-
-function resolveGapValue(gap: number | string): string {
-  return typeof gap === "number" ? `${gap}px` : gap;
-}
 
 export function Navigation({
   items,

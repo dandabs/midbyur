@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Pressable, View, type ViewProps, type ViewStyle } from "react-native";
 import { themeModes, type ThemeMode } from "@midbyur/theme";
 import { withClassName } from "../../cssInterop";
+import type { GapValue } from "../../spacing";
 import { Container } from "../Container/Container";
 import { IconButton } from "../IconButton/IconButton";
 import { Navigation, type NavigationItem } from "../Navigation/Navigation";
@@ -13,7 +14,7 @@ import { Text } from "../Text/Text";
 export type NavbarProps = Readonly<{
   brand: string;
   links: NavigationItem[];
-  linksGap?: number | string;
+  linksGap?: GapValue;
 }> & Omit<ViewProps, "children">;
 
 function hasScrolledPastFirstViewportHeight(): boolean {

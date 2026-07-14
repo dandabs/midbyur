@@ -3,13 +3,15 @@ import { Button } from "../Button/Button";
 import { Text } from "../Text/Text";
 import { ButtonGroup } from "./ButtonGroup";
 
+const gapOptions = ["sm", "md", "lg"] as const;
+
 const meta = {
   title: "Components/ButtonGroup",
   component: ButtonGroup,
   tags: ["autodocs"],
   args: {
     direction: "horizontal",
-    gap: 12,
+    gap: "md",
   },
   argTypes: {
     direction: {
@@ -17,7 +19,8 @@ const meta = {
       options: ["horizontal", "vertical"],
     },
     gap: {
-      control: "text",
+      control: "select",
+      options: gapOptions,
     },
   },
 } satisfies Meta<typeof ButtonGroup>;

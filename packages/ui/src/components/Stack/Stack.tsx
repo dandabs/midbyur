@@ -3,19 +3,16 @@
 import type { ReactNode } from "react";
 import { View, type ViewProps, type ViewStyle } from "react-native";
 import { withClassName } from "../../cssInterop";
+import { resolveGapValue, type GapValue } from "../../spacing";
 
 export type StackDirection = "row" | "column";
 
 export type StackProps = Readonly<{
   children?: ReactNode;
   direction?: StackDirection;
-  gap?: number | string;
+  gap?: GapValue;
   className?: string;
 }> & Omit<ViewProps, "children">;
-
-function resolveGapValue(gap: number | string): string {
-  return typeof gap === "number" ? `${gap}px` : gap;
-}
 
 export function Stack({
   children,
@@ -38,9 +35,14 @@ export function Stack({
     gap: resolveGapValue(gap),
   };
 
+  const rootStyle: ViewStyle = {
+    ...gapStyle,
+    ...(style as ViewStyle),
+  };
+
   return (
     <View
-      style={withClassName(rootClassName, style as ViewStyle) as ViewStyle}
+      style={withClassName(rootClassName, rootStyle) as ViewStyle}
       {...props}
     >
       {children}

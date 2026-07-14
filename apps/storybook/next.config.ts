@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     "@expo/html-elements",
     "nativewind",
     "react-native-css-interop",
+    "burnt",
   ],
   webpack: (config) => {
     config.plugins ??= [];

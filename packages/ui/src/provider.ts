@@ -2,6 +2,8 @@
 
 import { createElement, type CSSProperties, type ReactNode } from "react";
 import { themeModes, type ThemeMode } from "@midbyur/theme";
+import type { ToastProviderProps } from "./components/ToastProvider/ToastProvider";
+import { ToastProvider } from "./components/ToastProvider/ToastProvider";
 
 type ThemeCssVariables = Readonly<Record<`--color-${string}`, string>>;
 
@@ -40,13 +42,17 @@ function buildThemeVariables(theme: ThemeMode): ThemeCssVariables {
   };
 }
 
+export type MidbyurProviderProps = Readonly<{
+  theme?: ThemeMode;
+  children: ReactNode;
+  toastConfig?: ToastProviderProps["config"];
+}>;
+
 export function MidbyurProvider({
   theme = "light",
   children,
-}: Readonly<{
-  theme?: ThemeMode;
-  children: ReactNode;
-}>) {
+  toastConfig,
+}: MidbyurProviderProps) {
   return createElement(
     "div",
     {
@@ -54,6 +60,6 @@ export function MidbyurProvider({
       className: "bg-(--color-background) text-(--color-text)",
       style: buildThemeVariables(theme) as CSSProperties,
     },
-    children,
+    createElement(ToastProvider, { config: toastConfig, children }),
   );
 }
