@@ -3,6 +3,7 @@
 import { Children, cloneElement, isValidElement, type ReactElement, type ReactNode } from "react";
 import { Pressable, type PressableProps, type ViewStyle } from "react-native";
 import { Text } from "../Text/Text";
+import { Spinner } from "../Spinner/Spinner";
 import { withClassName } from "../../cssInterop";
 
 export type ButtonVariant =
@@ -20,6 +21,7 @@ export type ButtonProps = Readonly<{
   variant?: ButtonVariant;
   type?: ButtonType;
   fluid?: boolean;
+  loading?: boolean;
   htmlType?: "button" | "submit" | "reset";
   className?: string;
 }> & Omit<PressableProps, "children">;
@@ -106,13 +108,15 @@ export function Button({
   variant = "primary",
   type = "solid",
   fluid = true,
+  loading = false,
   htmlType,
   className,
   style,
+  disabled,
   ...props
 }: ButtonProps) {
   const rootClassName = [
-    "inline-flex cursor-pointer items-center justify-center rounded-none text-sm font-medium transition-colors duration-150",
+    "inline-flex flex-row cursor-pointer items-center justify-center rounded-none text-sm font-medium transition-colors duration-150",
     fluid ? "w-full" : "w-auto",
     type === "link" ? "focus-visible:outline-none" : "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-borderStrong)",
     "disabled:cursor-not-allowed",
@@ -131,10 +135,20 @@ export function Button({
     <Pressable
       style={withClassName(rootClassName, buttonStyle) as ViewStyle}
       accessibilityRole="button"
+      disabled={disabled || loading}
       // htmlType is accepted for API compatibility but unused in RN primitives.
       {...props}
     >
-      {normalizeButtonChildren(children)}
+      <>
+        {loading ? (
+          <Spinner
+            color="current"
+            size="small"
+            className="mr-2"
+          />
+        ) : null}
+        {normalizeButtonChildren(children)}
+      </>
     </Pressable>
   );
 }

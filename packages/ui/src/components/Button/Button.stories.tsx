@@ -11,6 +11,7 @@ const meta = {
     variant: "primary",
     type: "solid",
     fluid: true,
+    loading: false,
   },
   argTypes: {
     variant: {
@@ -22,6 +23,9 @@ const meta = {
       options: ["solid", "outline", "link"],
     },
     fluid: {
+      control: "boolean",
+    },
+    loading: {
       control: "boolean",
     },
   },
@@ -96,4 +100,42 @@ export const InlineButton: Story = {
     fluid: false,
     children: <Text variant="label">Inline Action</Text>,
   },
+};
+
+export const Loading: Story = {
+  args: {
+    loading: true,
+    children: <Text variant="label">Submitting</Text>,
+  },
+};
+
+export const LoadingVariants: Story = {
+  render: (args) => (
+    <div className="flex flex-col gap-3 max-w-sm">
+      <Button {...args} variant="primary" loading>
+        <Text variant="label">Primary Loading</Text>
+      </Button>
+      <Button {...args} variant="secondary" loading>
+        <Text variant="label">Secondary Loading</Text>
+      </Button>
+      <Button {...args} variant="success" loading>
+        <Text variant="label">Success Loading</Text>
+      </Button>
+      <Button {...args} variant="danger" loading>
+        <Text variant="label">Danger Loading</Text>
+      </Button>
+      <Button {...args} variant="warning" loading>
+        <Text variant="label">Warning Loading</Text>
+      </Button>
+      <Button {...args} variant="info" loading>
+        <Text variant="label">Info Loading</Text>
+      </Button>
+      <Button {...args} type="outline" variant="primary" loading>
+        <Text variant="label">Outline Loading</Text>
+      </Button>
+      <Button {...args} type="link" variant="info" loading fluid={false}>
+        <Text variant="label">Link Loading</Text>
+      </Button>
+    </div>
+  ),
 };
