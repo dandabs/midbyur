@@ -71,12 +71,17 @@ const SparkIcon = forwardRef<SVGSVGElement, DemoIconProps>(function SparkIcon(
 
 export default function Home() {
   return (
-    <Page className="bg-(--color-background)">
+    <Page
+      className="bg-(--color-background)"
+      scroll={false}
+      safeArea={false}
+    >
       <Navbar
         brand="Miðbýur"
         links={navigationItems}
       />
         <Hero
+          id="home"
           title="Miðbýur"
           subtitle="A complete one-page sample using every available component in @midbyur/ui."
           height="100vh"
@@ -198,6 +203,6 @@ export default function Home() {
       </Section>
 
       <Footer />
-    </Page>
+      </Page>
   );
 }

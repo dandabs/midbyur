@@ -17,6 +17,28 @@ export type NavbarProps = Readonly<{
   linksGap?: GapValue;
 }> & Omit<ViewProps, "children">;
 
+function navigateToHref(href: string) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  if (href.startsWith("#")) {
+    const sectionId = href.slice(1);
+    const sectionElement = document.getElementById(sectionId);
+
+    if (sectionElement) {
+      sectionElement.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+      window.history.replaceState(null, "", href);
+      return;
+    }
+  }
+
+  window.location.href = href;
+}
+
 function hasScrolledPastFirstViewportHeight(): boolean {
   if (typeof window === "undefined") {
     return false;
@@ -134,10 +156,10 @@ export function Navbar({
   };
 
   const rootClassName = [
-    "fixed top-0 left-0 z-50 w-full border-b transition-[background-color,border-color,backdrop-filter] duration-300",
+    "fixed top-0 left-0 z-50 w-full transition-[background-color,backdrop-filter] duration-300",
     isPastFirstViewport
-      ? "bg-black border-black"
-      : "bg-black/45 border-white/15 backdrop-blur-xl supports-[backdrop-filter]:bg-black/35",
+      ? "bg-black"
+      : "bg-black/45 backdrop-blur-xl supports-[backdrop-filter]:bg-black/35",
     className,
   ]
     .filter(Boolean)
@@ -214,9 +236,7 @@ export function Navbar({
                   accessibilityState={{ selected: item.active }}
                   onPress={() => {
                     setIsMenuOpen(false);
-                    if (typeof window !== "undefined") {
-                      window.location.href = item.href;
-                    }
+                    navigateToHref(item.href);
                   }}
                   style={withClassName(
                     "flex px-6 py-3 transition-colors duration-150 hover:bg-white/10",

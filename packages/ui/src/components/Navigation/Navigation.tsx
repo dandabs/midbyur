@@ -18,6 +18,28 @@ export type NavigationProps = Readonly<{
   fullWidth?: boolean;
 }> & Omit<ViewProps, "children">;
 
+function navigateToHref(href: string) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  if (href.startsWith("#")) {
+    const sectionId = href.slice(1);
+    const sectionElement = document.getElementById(sectionId);
+
+    if (sectionElement) {
+      sectionElement.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+      window.history.replaceState(null, "", href);
+      return;
+    }
+  }
+
+  window.location.href = href;
+}
+
 export function Navigation({
   items,
   color = "text",
@@ -48,6 +70,7 @@ export function Navigation({
             <Pressable
               accessibilityRole="link"
               accessibilityState={{ selected: item.active }}
+              onPress={() => navigateToHref(item.href)}
               style={withClassName([
                 "inline-flex items-center justify-center rounded-none px-0 py-0 transition-colors duration-150",
                 item.active ? "underline decoration-2 underline-offset-4" : "hover:underline hover:decoration-2 hover:underline-offset-4",
