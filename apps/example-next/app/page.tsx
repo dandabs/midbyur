@@ -84,7 +84,6 @@ export default function Home() {
           id="home"
           title="Miðbýur"
           subtitle="A complete one-page sample using every available component in @midbyur/ui."
-          height="100vh"
           heightPreset="full"
           overlayOpacity={0.35}
           backgroundImageUrls={[

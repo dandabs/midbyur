@@ -16,11 +16,11 @@ export function Footer({ className, style, ...props }: FooterProps) {
       {...props}
     >
       <Container>
-        <View style={withClassName("flex w-full flex-row") as ViewStyle}>
-          <View style={withClassName("w-1/2 py-6") as ViewStyle}>
+        <View style={withClassName("flex w-full flex-col sm:flex-row") as ViewStyle}>
+          <View style={withClassName("w-full py-6 sm:w-1/2") as ViewStyle}>
             <FooterText />
           </View>
-          <View style={withClassName("w-1/2") as ViewStyle} />
+          <View style={withClassName("hidden sm:block sm:w-1/2") as ViewStyle} />
         </View>
       </Container>
     </View>

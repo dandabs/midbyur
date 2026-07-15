@@ -20,7 +20,7 @@ export type HeroProps = Readonly<{
 }> & Omit<ViewProps, "children">;
 
 const heroHeightPresetValues: Readonly<Record<HeroHeightPreset, string>> = {
-  full: "100vh",
+  full: "100dvh",
   twoThirds: "66.6667vh",
   oneThird: "33.3333vh",
 };
