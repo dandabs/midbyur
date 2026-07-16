@@ -76,7 +76,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: /apps/storybook/out
+          path: ./apps/storybook/out
 
   # Deployment job
   deploy:
