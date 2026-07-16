@@ -9,7 +9,6 @@ const nextConfig: NextConfig = {
     "react-native-css-interop",
     "burnt",
   ],
-  turbopack: {},
   webpack: (config) => {
     config.plugins ??= [];
     config.plugins.push(
