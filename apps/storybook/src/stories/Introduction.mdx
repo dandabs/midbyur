@@ -2,179 +2,23 @@ import { Meta, Title, Subtitle } from "@storybook/addon-docs/blocks";
 
 <Meta title="Get started/Introduction" />
 
-<Title>Get started with Midbyur</Title>
+<Title>Midbyur Feature List</Title>
 
-<Subtitle>Welcome to the design system</Subtitle>
+<Subtitle>Library capabilities and where to find setup docs</Subtitle>
 
-<div className="sb-container">
-  <div className='sb-section-title'>
-    # Welcome to Miðbýur
+## Feature List
 
-    Miðbýur is a complete UI design system and component library built with React, React Native, and Tailwind CSS. It provides a modern, composable set of primitives and components designed to work seamlessly across web and mobile platforms.
-  </div>
+- Layout primitives: Page, Section, Container, Stack, Grid.
+- Surface/display: Card, Hero.
+- Navigation: Navigation, Navbar.
+- Actions: Button, ButtonGroup, Icon.
+- Typography: Text variants and sizing.
+- Feedback APIs: showToast, showAlert, showSuccess, showError, showWarning, showInfo.
+- Theme support: MidbyurProvider with light/dark mode.
+- React Native compatibility on web via react-native-web.
 
-  <div className="sb-section">
-    <div className="sb-section-item">
-      <h3>What's Inside</h3>
-      <p>
-        Miðbýur includes carefully crafted components like Button, Card, Grid, Hero, Navigation, and more. 
-        All components are built to be fully responsive, themeable, and accessible out of the box.
-      </p>
-    </div>
+## Documentation Index
 
-    <div className="sb-section-item">
-      <h3>Design Principles</h3>
-      <ul>
-        <li><strong>Composable:</strong> Build layouts using primitives like Page, Section, Container, and Stack.</li>
-        <li><strong>Responsive:</strong> Mobile-first design that adapts beautifully to all screen sizes.</li>
-        <li><strong>Typed:</strong> Full TypeScript support with precise prop types and variants.</li>
-        <li><strong>Cross-Platform:</strong> Share code between web and React Native applications.</li>
-        <li><strong>Themeable:</strong> Built-in light and dark mode support with customizable color tokens.</li>
-      </ul>
-    </div>
-  </div>
-
-  <div className="sb-section">
-    <h2>Getting Started</h2>
-
-    <div className="sb-section-item">
-      <h3>For Web Development</h3>
-      <p>
-        If you're building a Next.js application, check out the{' '}
-        <strong>Setup with Next.js</strong> guide to learn how to integrate Miðbýur into your project.
-      </p>
-      <p>
-        The integration handles all the complexity: Tailwind configuration, NativeWind polyfills, 
-        provider setup, and hydration concerns—so you can focus on building.
-      </p>
-    </div>
-
-    <div className="sb-section-item">
-      <h3>Explore Components</h3>
-      <p>
-        Browse the component library in the sidebar. Each component includes interactive examples 
-        and documentation showing different variants, states, and use cases.
-      </p>
-    </div>
-
-    <div className="sb-section-item">
-      <h3>View Example</h3>
-      <p>
-        Visit the <code>example-next</code> app in the repository for a complete working demo of all 
-        components on a single page, including navigation, theming, and toast notifications.
-      </p>
-    </div>
-  </div>
-
-  <div className="sb-section">
-    <h2>Key Features</h2>
-
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
-      <div className="sb-section-item">
-        <h4>Layout System</h4>
-        <p>Page, Section, Container, Grid, Stack, and more primitives for building structured layouts.</p>
-      </div>
-
-      <div className="sb-section-item">
-        <h4>Interactive Components</h4>
-        <p>Buttons, Icons, Navigation, Navbar, and Cards with full variant support and accessibility.</p>
-      </div>
-
-      <div className="sb-section-item">
-        <h4>Typography</h4>
-        <p>Text component with multiple variants, sizes, weights, and colors following a cohesive scale.</p>
-      </div>
-
-      <div className="sb-section-item">
-        <h4>Feedback</h4>
-        <p>Toast and alert notifications with preset styles and platform-specific behavior.</p>
-      </div>
-
-      <div className="sb-section-item">
-        <h4>Theming</h4>
-        <p>MidbyurProvider with built-in light/dark mode, theme switching, and CSS variable support.</p>
-      </div>
-
-      <div className="sb-section-item">
-        <h4>Responsive Design</h4>
-        <p>Mobile-first Tailwind classes with breakpoints that scale from xs to 2xl screens.</p>
-      </div>
-    </div>
-  </div>
-
-  <div className="sb-section">
-    <h2>Documentation</h2>
-
-    <p>
-      Use the navigation in the sidebar to explore:
-    </p>
-
-    <ul>
-      <li><strong>Components:</strong> Interactive examples of each UI component with prop documentation.</li>
-      <li><strong>Setup with Next.js:</strong> Step-by-step guide for integrating Miðbýur into a new Next.js project.</li>
-      <li><strong>Configure your project:</strong> Storybook configuration and best practices.</li>
-    </ul>
-  </div>
-</div>
-
-<style>{`
-  .sb-container {
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 20px;
-  }
-
-  .sb-section-title {
-    margin-bottom: 40px;
-  }
-
-  .sb-section-title h1 {
-    font-size: 2.5em;
-    margin-bottom: 16px;
-  }
-
-  .sb-section-title p {
-    font-size: 1.1em;
-    color: #666;
-    margin: 0;
-  }
-
-  .sb-section {
-    margin-bottom: 40px;
-  }
-
-  .sb-section h2 {
-    font-size: 2em;
-    margin-bottom: 24px;
-  }
-
-  .sb-section-item {
-    margin-bottom: 24px;
-  }
-
-  .sb-section-item h3 {
-    font-size: 1.5em;
-    margin-bottom: 12px;
-  }
-
-  .sb-section-item h4 {
-    font-size: 1.2em;
-    margin-bottom: 8px;
-  }
-
-  .sb-section-item ul {
-    list-style: disc;
-    margin-left: 20px;
-  }
-
-  .sb-section-item li {
-    margin-bottom: 8px;
-  }
-
-  .sb-section-item code {
-    background: #f5f5f5;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-family: monospace;
-  }
-`}</style>
+- Setup instructions: Get started / Setup with Next.js.
+- Storybook setup notes: Configure your project.
+- Component APIs and variants: Components section in the sidebar.

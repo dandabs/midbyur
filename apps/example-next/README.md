@@ -1,14 +1,6 @@
 # Midbyur + Next.js Setup
 
-This app is the working reference for using `@midbyur/ui` inside a Next.js App Router project.
-
-It includes the extra pieces needed to make Midbyur styling and providers work correctly in Next:
-
-- Tailwind v4 scanning both the app and the UI package.
-- `react-native` aliased to `react-native-web`.
-- NativeWind and related packages transpiled by Next.
-- A server-side `__DEV__` polyfill for packages that expect it.
-- A client-only provider boundary to avoid hydration mismatches from the web toaster.
+Configuration-only reference for integrating `@midbyur/ui` in a Next.js App Router project.
 
 ## Run This Example
 
@@ -217,15 +209,6 @@ export default function Home() {
 	);
 }
 ```
-
-## Why Each Piece Exists
-
-- Missing `@source` entries causes Tailwind classes from `@midbyur/ui` to never be generated.
-- Missing `important` can make the button appear styled briefly and then lose its styles after hydration.
-- Missing `react-native-web` alias breaks React Native-based imports on the web.
-- Missing `transpilePackages` leaves required workspace dependencies uncompiled.
-- Missing `__DEV__` server polyfill can crash or misbehave during server rendering.
-- Rendering `MidbyurProvider` on the server causes hydration mismatches because of the toaster layer.
 
 ## Project Scripts
 

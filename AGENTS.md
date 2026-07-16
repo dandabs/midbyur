@@ -16,3 +16,8 @@ Use these rules for all changes in this repository.
 ## Scope Expectation
 - Treat documentation and stories as part of the definition of done.
 - If a required story/doc update is intentionally skipped, explicitly state why in the change summary.
+
+## Documentation Style
+- Keep documentation utilitarian and concise.
+- Prioritize configuration steps, exact commands, troubleshooting, and feature lists.
+- Avoid marketing language, value statements, mission/principles sections, and other non-operational prose.

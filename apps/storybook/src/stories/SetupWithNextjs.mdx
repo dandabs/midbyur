@@ -4,13 +4,11 @@ import { Meta, Title, Subtitle } from "@storybook/addon-docs/blocks";
 
 <Title>Set up Midbyur with Next.js</Title>
 
-<Subtitle>Production-ready App Router integration</Subtitle>
+<Subtitle>Configuration-only reference</Subtitle>
 
 <div className="sb-container">
   <div className='sb-section-title'>
     # Midbyur + Next.js Setup
-
-    This guide shows how to integrate `@midbyur/ui` into a Next.js App Router project with all the required configuration for styling, theming, and provider setup to work correctly.
   </div>
 
   <div className="sb-section">
@@ -92,7 +90,7 @@ const nextConfig: NextConfig = {
 
 export default nextConfig;`}</code></pre>
 
-    <p><strong>Why this is needed:</strong></p>
+    <p><strong>Notes:</strong></p>
     <ul>
       <li><code>transpilePackages</code> ensures React Native and NativeWind dependencies are compiled for Next.js.</li>
       <li>The <code>react-native</code> alias maps to <code>react-native-web</code> for browser compatibility.</li>
@@ -249,32 +247,6 @@ export default function Home() {
     </p>
   </div>
 
-  <div className="sb-section">
-    <h2>Why Each Piece Exists</h2>
-
-    <ul>
-      <li><strong>Missing @source entries:</strong> Tailwind won't generate classes used by @midbyur/ui components.</li>
-      <li><strong>Missing important flag:</strong> Styles can be overwritten during or after hydration.</li>
-      <li><strong>Missing react-native-web alias:</strong> React Native imports will fail on the web.</li>
-      <li><strong>Missing transpilePackages:</strong> Required dependencies won't be compiled for Next.js.</li>
-      <li><strong>Missing __DEV__ polyfill:</strong> React Native and NativeWind can crash during server rendering.</li>
-      <li><strong>Server-side MidbyurProvider:</strong> Causes hydration mismatches because of the client-only toaster layer.</li>
-      <li><strong>suppressHydrationWarning:</strong> Acknowledges the expected toaster layer mismatch.</li>
-    </ul>
-  </div>
-
-  <div className="sb-section">
-    <h2>Next Steps</h2>
-
-    <p>Once set up, you can:</p>
-    <ul>
-      <li>Browse components in this Storybook for interactive examples and prop documentation.</li>
-      <li>Check the <code>example-next</code> app for a complete one-page demo of all components.</li>
-      <li>Use <code>Page</code>, <code>Section</code>, <code>Container</code>, <code>Stack</code>, and <code>Grid</code> for layout.</li>
-      <li>Explore <code>Hero</code>, <code>Card</code>, <code>Button</code>, and other interactive components.</li>
-      <li>Use <code>showToast</code>, <code>showAlert</code>, and related functions for user feedback.</li>
-    </ul>
-  </div>
 </div>
 
 <style>{`
