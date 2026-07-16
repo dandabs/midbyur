@@ -20,6 +20,11 @@ const preview: Preview = {
     },
   },
   parameters: {
+    options: {
+      storySort: {
+        order: ["Get started", "Configure your project", "Components"],
+      },
+    },
     backgrounds: {
       disable: true,
     },
