@@ -1,10 +1,10 @@
 import type { StorybookConfig } from '@storybook/nextjs-vite';
 
-import { dirname } from "path"
-import { mergeConfig, defineConfig } from "vite"
+import { dirname } from "node:path"
+import { mergeConfig } from "vite"
 import tailwindcss from "@tailwindcss/vite"
 
-import { fileURLToPath } from "url"
+import { fileURLToPath } from "node:url"
 
 /**
 * This function is used to resolve the absolute path of a package.
@@ -13,6 +13,9 @@ import { fileURLToPath } from "url"
 function getAbsolutePath(value: string) {
   return dirname(fileURLToPath(import.meta.resolve(`${value}/package.json`)))
 }
+
+const runtimeStubsDir = fileURLToPath(new URL("./stubs", import.meta.url));
+
 const config: StorybookConfig = {
   "stories": [
     "../../../packages/ui/src/**/*.stories.@(js|jsx|ts|tsx)",
@@ -39,7 +42,13 @@ const config: StorybookConfig = {
       resolve: {
         alias: {
           "react-native": "react-native-web",
+          "react-native-css-interop/dist/runtime/native/rem": `${runtimeStubsDir}/react-native-css-interop/rem.ts`,
+          "react-native-css-interop/dist/runtime/native/variables": `${runtimeStubsDir}/react-native-css-interop/variables.ts`,
+          "react-native-css-interop/dist/runtime/native/stylesheet": `${runtimeStubsDir}/react-native-css-interop/stylesheet.ts`,
         },
+      },
+      server: {
+        sourcemapIgnoreList: (sourcePath) => sourcePath.includes("react-native-css-interop/dist/runtime/native/"),
       },
       optimizeDeps: {
         exclude: ["react-native", "nativewind", "react-native-css-interop", "burnt"],

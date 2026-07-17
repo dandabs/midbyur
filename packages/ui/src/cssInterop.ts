@@ -1,12 +1,26 @@
 "use client";
 
 import { Platform } from "react-native";
-import { getGlobalStyle } from "react-native-css-interop/dist/runtime/native/stylesheet";
+import * as nativeStylesheetModule from "react-native-css-interop/dist/runtime/native/stylesheet";
 
 type NativeThemeVariables = Readonly<Record<string, string>>;
+type GetGlobalStyleFn = (className: string) => object | object[] | undefined;
+type NativeStylesheetModule = {
+  getGlobalStyle?: GetGlobalStyleFn;
+  default?: {
+    getGlobalStyle?: GetGlobalStyleFn;
+  };
+};
 
 let nativeThemeVariables: NativeThemeVariables = {};
 let nativeTextScale = 1;
+
+const getGlobalStyle =
+  (
+    (nativeStylesheetModule as unknown as NativeStylesheetModule).getGlobalStyle ??
+    (nativeStylesheetModule as unknown as NativeStylesheetModule).default?.getGlobalStyle
+  ) ??
+  (() => undefined);
 
 export function setNativeThemeVariables(variables: NativeThemeVariables): void {
   nativeThemeVariables = variables;

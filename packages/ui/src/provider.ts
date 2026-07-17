@@ -2,8 +2,8 @@
 
 import { createElement, type CSSProperties, type ReactNode } from "react";
 import { Platform, View, useColorScheme } from "react-native";
-import { rem as nativeRem } from "react-native-css-interop/dist/runtime/native/rem";
-import { vars as nativeVars } from "react-native-css-interop/dist/runtime/native/variables";
+import * as nativeRemModule from "react-native-css-interop/dist/runtime/native/rem";
+import * as nativeVariablesModule from "react-native-css-interop/dist/runtime/native/variables";
 import { themeModes, type ThemeMode } from "@midbyur/theme";
 import type { ToastProviderProps } from "./components/ToastProvider/ToastProvider";
 import { ToastProvider } from "./components/ToastProvider/ToastProvider";
@@ -11,6 +11,41 @@ import { setNativeTextScale, setNativeThemeVariables } from "./cssInterop";
 
 const NATIVE_BASE_REM = 15;
 const NATIVE_TEXT_SCALE = 1.08;
+
+type NativeRem = {
+  get(): number;
+  set(nextValue: number): void;
+};
+
+type NativeRemModule = {
+  rem?: NativeRem;
+  default?: {
+    rem?: NativeRem;
+  };
+};
+
+type NativeVars = (variables: Readonly<Record<string, string>>) => object;
+
+type NativeVarsModule = {
+  vars?: NativeVars;
+  default?: {
+    vars?: NativeVars;
+  };
+};
+
+const nativeRem =
+  ((nativeRemModule as unknown as NativeRemModule).rem ??
+    (nativeRemModule as unknown as NativeRemModule).default?.rem) ?? {
+    get: () => 16,
+    set: () => {
+      // No-op fallback for environments where native rem interop module is unavailable.
+    },
+  };
+
+const nativeVars =
+  ((nativeVariablesModule as unknown as NativeVarsModule).vars ??
+    (nativeVariablesModule as unknown as NativeVarsModule).default?.vars) ??
+  (() => ({}));
 
 type ThemeCssVariables = Readonly<Record<`--color-${string}`, string>>;
 
@@ -29,7 +64,6 @@ function buildThemeVariables(theme: ThemeMode): ThemeCssVariables {
     "--color-secondaryHover": colors.secondaryHover,
     "--color-secondaryForeground": colors.secondaryForeground,
     "--color-text": colors.text,
-    "--color-textMuted": colors.textMuted,
     "--color-border": colors.border,
     "--color-borderStrong": colors.borderStrong,
     "--color-success": colors.success,
