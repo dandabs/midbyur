@@ -1,37 +1,62 @@
 # Miðbýur + Expo Setup
 
-Configuration reference for using @midbyur/ui in an Expo app.
+Configuration reference for running `@midbyur/ui` in Expo with NativeWind and native toasts/fonts.
 
-## Required Native Packages
+## What Was Added From A Default Expo App
 
-Install these in your Expo app:
+Dependencies:
+
+- `expo-dev-client`
+- `expo-font`
+- `burnt`
+- `react-native-css-interop`
+- `nativewind`
+- `tailwindcss`
+
+Scripts:
+
+- `start:dev-client`
+- `ios:run`
+- `android:run`
+
+Config/files:
+
+- `babel.config.js` with `jsxImportSource: "nativewind"`
+- `metro.config.js` using `withNativeWind(...)`
+- `tailwind.config.js` scanning app + `packages/ui/src`
+- `global.css` (Tailwind entry)
+- `nativewind-env.d.ts`
+- `fonts.ts` + `assets/fonts/*.ttf`
+
+## Required Install Commands
+
+From repo root:
 
 ```bash
-pnpm add expo-dev-client expo-font burnt react-native-css-interop
+pnpm install
 ```
 
-Install `burnt` explicitly if you only want toast support:
+For this app (workspace):
+
+```bash
+pnpm --filter @midbyur/example-expo add expo-dev-client expo-font burnt react-native-css-interop
+```
+
+If you only need to add `burnt` in an Expo app:
 
 ```bash
 npx expo install burnt
 ```
 
-Notes:
-
-- expo-dev-client is required for native modules used by the UI/toast stack.
-- burnt provides native toast/alert presentation on iOS/Android.
-- expo-font enables loading custom native font files.
-
 ## Run This Example
 
-From the repository root:
+1. Start Metro for dev client:
 
 ```bash
-pnpm install
 pnpm --filter @midbyur/example-expo start:dev-client
 ```
 
-Build and open native clients:
+1. Build/run native app:
 
 ```bash
 pnpm --filter @midbyur/example-expo ios:run
@@ -44,154 +69,135 @@ Web:
 pnpm --filter @midbyur/example-expo web
 ```
 
-## Add Miðbýur To A New Or Existing Expo App
+## Required Project Configuration
 
-In this monorepo, use workspace dependencies:
+### `package.json` scripts
 
-```bash
-pnpm add @midbyur/ui@workspace:* @midbyur/theme@workspace:* expo react react-dom react-native react-native-web
-pnpm add expo-dev-client expo-font burnt react-native-css-interop
-pnpm add -D babel-preset-expo nativewind@4.0.0-alpha.31 tailwindcss@^3.4.17 typescript @types/react
+```json
+{
+  "scripts": {
+    "start": "expo start",
+    "start:dev-client": "expo start --dev-client",
+    "ios": "expo run:ios",
+    "ios:run": "expo run:ios",
+    "android": "expo run:android",
+    "android:run": "expo run:android",
+    "web": "expo start --web"
+  }
+}
 ```
 
-For a published library, replace workspace versions with published package versions.
-
-### 1. Configure Babel
-
-Create or update babel.config.js:
+### `babel.config.js`
 
 ```js
 module.exports = function (api) {
-	api.cache(true);
+  api.cache(true);
 
-	return {
-		presets: [["babel-preset-expo", { jsxImportSource: "nativewind" }]],
-	};
+  return {
+    presets: [["babel-preset-expo", { jsxImportSource: "nativewind" }]],
+  };
 };
 ```
 
-Do not add nativewind/babel in this setup.
+Important:
 
-### 2. Configure Metro
+- Do not add `nativewind/babel` for this setup.
 
-Create or update metro.config.js:
+### `metro.config.js`
 
 ```js
 const { getDefaultConfig } = require("expo/metro-config");
 const { withNativeWind } = require("nativewind/metro");
 
 const config = getDefaultConfig(__dirname, { isCSSEnabled: true });
+
 config.watchFolders = [require("path").resolve(__dirname, "../..")];
 
 module.exports = withNativeWind(config, {
-	input: "./global.css",
+  input: "./global.css",
 });
 ```
 
-Adjust watchFolders to the workspace root. Remove it when using a published package.
-
-### 3. Add NativeWind CSS Entry And Content Sources
-
-Create global.css:
+### `global.css`
 
 ```css
-@tailwind base;
 @tailwind components;
 @tailwind utilities;
 ```
 
-Create tailwind.config.js:
+### `tailwind.config.js`
 
 ```js
-/** @type {import("tailwindcss").Config} */
+/** @type {import('tailwindcss').Config} */
 module.exports = {
-	content: [
-		"./App.{js,jsx,ts,tsx}",
-		"./src/**/*.{js,jsx,ts,tsx}",
-		"../../packages/ui/src/**/*.{js,jsx,ts,tsx}",
-	],
-	presets: [require("nativewind/preset")],
+  content: [
+    "./App.{js,jsx,ts,tsx}",
+    "./src/**/*.{js,jsx,ts,tsx}",
+    "../../packages/ui/src/**/*.{js,jsx,ts,tsx}",
+  ],
+  presets: [require("nativewind/preset")],
+  theme: {
+    extend: {},
+  },
 };
 ```
 
-### 4. Add NativeWind Types
+### `nativewind-env.d.ts` and `tsconfig.json`
 
-Create nativewind-env.d.ts:
+`nativewind-env.d.ts`:
 
 ```ts
 /// <reference types="nativewind/types" />
+declare module "*.css";
 ```
 
-Ensure tsconfig.json includes:
+`tsconfig.json` must include `nativewind-env.d.ts` and nativewind types.
 
-```json
-{
-	"compilerOptions": {
-		"types": ["nativewind/types"]
-	}
-}
-```
+### `fonts.ts` and assets
 
-### 5. Configure Native Fonts
-
-This example includes a font mapping file at ./fonts.ts.
-
-1. Add .ttf files under ./assets/fonts.
-2. Uncomment and adjust mappings in ./fonts.ts.
-3. Restart Expo dev server with cache clear.
-
-Example mapping:
+Current mapping in this app:
 
 ```ts
-export const MIDBYUR_NATIVE_FONTS = {
-	"Stack Sans Text": require("./assets/fonts/StackSansText-Regular.ttf"),
-	"Stack Sans Notch": require("./assets/fonts/StackSansNotch-Regular.ttf"),
-	"Stack Sans Headline": require("./assets/fonts/StackSansHeadline-Medium.ttf"),
+import type { FontSource } from "expo-font";
+
+export const MIDBYUR_NATIVE_FONTS: Record<string, FontSource> = {
+  "Stack Sans Text": require("./assets/fonts/StackSansText.ttf"),
+  "Stack Sans Notch": require("./assets/fonts/StackSansNotch.ttf"),
+  "Stack Sans Headline": require("./assets/fonts/StackSansHeadline.ttf"),
 };
 ```
 
-### 6. Use Components
+Current fonts folder includes both `.ttf` and `[wght].ttf` files. Use the plain `.ttf` names in mappings for Metro compatibility.
 
-```tsx
-import "./global.css";
-import { Button, Page, Text, showSuccessToast } from "@midbyur/ui";
+## Usage Notes
 
-export default function App() {
-	return (
-		<Page>
-			<Text variant="h1">Hello Miðbýur</Text>
-			<Button onPress={() => void showSuccessToast("Saved")}>Save</Button>
-		</Page>
-	);
-}
-```
+- Import `./global.css` in app entry.
+- Wrap UI with `MidbyurProvider`.
+- Native toasts (`burnt`) require a dev build; do not rely on Expo Go for this flow.
 
 ## Troubleshooting
 
-### Native toasts do not appear on iOS/Android
+### Native toasts do not show
 
-Use a development build instead of Expo Go:
+Use dev-client flow:
 
 ```bash
-pnpm --filter @midbyur/example-expo ios:run
-pnpm --filter @midbyur/example-expo android:run
 pnpm --filter @midbyur/example-expo start:dev-client
+pnpm --filter @midbyur/example-expo ios:run
 ```
 
-### Components have no utility styles
+### Styles missing on native/web
 
-Confirm tailwind content includes ../../packages/ui/src/**/*.{js,jsx,ts,tsx}.
-
-Then restart with a clean cache:
+1. Verify `tailwind.config.js` content paths include `../../packages/ui/src/**/*.{js,jsx,ts,tsx}`.
+2. Verify `metro.config.js` uses `withNativeWind` and `input: "./global.css"`.
+3. Clear cache:
 
 ```bash
 pnpm --filter @midbyur/example-expo start -- --clear
 ```
 
-### Custom fonts are not applied on native
+### Font changes not reflected
 
-Verify all of the following:
-
-- Font files exist under ./assets/fonts.
-- Family names in ./fonts.ts match names referenced by UI typography.
-- Metro cache was cleared after font map changes.
+1. Confirm mapped file names in `fonts.ts` exist in `assets/fonts`.
+2. Restart Metro with `--clear`.
+3. Re-run native app (`ios:run`/`android:run`).
