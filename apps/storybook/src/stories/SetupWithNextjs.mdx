@@ -6,67 +6,56 @@ import { Meta, Title, Subtitle } from "@storybook/addon-docs/blocks";
 
 <Subtitle>Configuration-only reference</Subtitle>
 
-<div className="sb-container">
-  <div className='sb-section-title'>
-    # Midbyur + Next.js Setup
-  </div>
+## Installation
 
-  <div className="sb-section">
-    <h2>Installation</h2>
+Create a new Next.js app with App Router, then install Midbyur and required dependencies:
 
-    <p>Create a new Next.js app with the App Router enabled, then add Midbyur and its dependencies:</p>
-
-    <pre><code>{`pnpm create next-app@latest my-app
+```bash
+pnpm create next-app@latest my-app
 cd my-app
 pnpm add @midbyur/ui @midbyur/theme next react react-dom react-native react-native-web
-pnpm add -D tailwindcss @tailwindcss/postcss nativewind webpack @babel/plugin-transform-flow-strip-types babel-loader typescript @types/react @types/react-dom @types/node`}</code></pre>
+pnpm add -D tailwindcss @tailwindcss/postcss nativewind webpack @babel/plugin-transform-flow-strip-types babel-loader typescript @types/react @types/react-dom @types/node
+```
 
-    <p>
-      If you are integrating with Expo, use the dedicated guide: <code>Get started / Setup with Expo</code>.
-    </p>
+If you are integrating with Expo, use Get started / Setup with Expo.
 
-    <p>
-      If consuming <code>@midbyur/ui</code> from a workspace package, keep the Tailwind <code>@source</code> paths as shown below.
-      If using a published package, adjust paths to match your distribution layout.
-    </p>
+If consuming @midbyur/ui from a workspace package, keep the Tailwind @source paths as shown below. If using a published package, adjust paths to your distribution layout.
 
-  </div>
+## Required Configuration
 
-  <div className="sb-section">
-    <h2>Required Configuration</h2>
+### 1. PostCSS
 
-    <h3>1. PostCSS</h3>
+Create postcss.config.mjs:
 
-    <p>Create <code>postcss.config.mjs</code>:</p>
-
-    <pre><code>{`const config = {
+```js
+const config = {
   plugins: {
     "@tailwindcss/postcss": {},
   },
 };
 
-export default config;`}</code></pre>
+export default config;
+```
 
-    <h3>2. Tailwind CSS Entry Point</h3>
+### 2. Tailwind CSS Entry Point
 
-    <p>Create <code>app/globals.css</code>:</p>
+Create app/globals.css:
 
-    <pre><code>{`@import "tailwindcss" important;
+```css
+@import "tailwindcss" important;
 @source "./**/*.{js,ts,jsx,tsx,mdx}";
-@source "../packages/ui/src/**/*.{js,ts,jsx,tsx,mdx}";`}</code></pre>
+@source "../packages/ui/src/**/*.{js,ts,jsx,tsx,mdx}";
+```
 
-    <p><strong>Important notes:</strong></p>
-    <ul>
-      <li>The <code>important</code> flag ensures Tailwind styles have high specificity and won't be overwritten after hydration.</li>
-      <li>The <code>@source</code> entries must include both your app and the UI package, otherwise Tailwind won't generate the component styles.</li>
-      <li>Update the second <code>@source</code> path to match your repository layout.</li>
-    </ul>
+- The important flag keeps utilities from being overwritten after hydration.
+- The @source entries must include both app and UI package paths.
 
-    <h3>3. Next.js Configuration</h3>
+### 3. Next.js Configuration
 
-    <p>Create or update <code>next.config.ts</code>:</p>
+Create or update next.config.ts:
 
-    <pre><code>{`import type { NextConfig } from "next";
+```ts
+import type { NextConfig } from "next";
 import webpack from "webpack";
 
 const nextConfig: NextConfig = {
@@ -93,32 +82,26 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;`}</code></pre>
+export default nextConfig;
+```
 
-    <p><strong>Notes:</strong></p>
-    <ul>
-      <li><code>transpilePackages</code> ensures React Native and NativeWind dependencies are compiled for Next.js.</li>
-      <li>The <code>react-native</code> alias maps to <code>react-native-web</code> for browser compatibility.</li>
-      <li>Defining <code>__DEV__</code> in webpack handles client-side; server-side is handled separately.</li>
-    </ul>
+### 4. Server Polyfill for __DEV__
 
-    <h3>4. Server Polyfill for __DEV__</h3>
+Create app/polyfills.ts:
 
-    <p>Create <code>app/polyfills.ts</code>:</p>
+```ts
+(globalThis as unknown as Record<string, unknown>).__DEV__ =
+  process.env.NODE_ENV !== "production";
+```
 
-    <pre><code>{`(globalThis as unknown as Record<string, unknown>).__DEV__ =
-  process.env.NODE_ENV !== "production";`}</code></pre>
+Import this first in app/layout.tsx, before any @midbyur/ui, react-native, or NativeWind imports.
 
-    <p>
-      Import this <strong>first</strong> in <code>app/layout.tsx</code>, before any <code>@midbyur/ui</code>, 
-      <code>react-native</code>, or NativeWind imports. Server Components run in raw Node.js before webpack substitution applies.
-    </p>
+### 5. Root Layout
 
-    <h3>5. Root Layout</h3>
+Create app/layout.tsx:
 
-    <p>Create <code>app/layout.tsx</code>:</p>
-
-    <pre><code>{`import "./polyfills";
+```tsx
+import "./polyfills";
 import "./globals.css";
 import { ClientProviders } from "./client-providers";
 
@@ -134,23 +117,17 @@ export default function RootLayout({
       </body>
     </html>
   );
-}`}</code></pre>
+}
+```
 
-    <p>
-      The <code>suppressHydrationWarning</code> is required because Miðbýur's toaster layer is client-only 
-      and will mismatch during hydration if rendered on the server.
-    </p>
+### 6. Client-Only Provider Boundary
 
-    <h3>6. Client-Only Provider Boundary</h3>
+Do not use ssr: false directly in app/layout.tsx because layout is a Server Component. Create a client wrapper.
 
-    <p>
-      <strong>Important:</strong> Do not use <code>ssr: false</code> directly in <code>layout.tsx</code> 
-      because layout is a Server Component. Create a separate Client Component that wraps it.
-    </p>
+Create app/providers.tsx:
 
-    <p>Create <code>app/providers.tsx</code>:</p>
-
-    <pre><code>{`"use client";
+```tsx
+"use client";
 
 import { MidbyurProvider } from "@midbyur/ui";
 
@@ -160,11 +137,13 @@ export function Providers({
   children: React.ReactNode;
 }>) {
   return <MidbyurProvider>{children}</MidbyurProvider>;
-}`}</code></pre>
+}
+```
 
-    <p>Create <code>app/client-providers.tsx</code>:</p>
+Create app/client-providers.tsx:
 
-    <pre><code>{`"use client";
+```tsx
+"use client";
 
 import dynamic from "next/dynamic";
 
@@ -178,181 +157,59 @@ export function ClientProviders({
   children: React.ReactNode;
 }>) {
   return <Providers>{children}</Providers>;
-}`}</code></pre>
+}
+```
 
-    <p>
-      This setup prevents hydration mismatches by rendering <code>MidbyurProvider</code> only on the client, 
-      avoiding the toaster layer mismatch during server-to-client hydration.
-    </p>
+### 7. TypeScript Configuration
 
-    <h3>7. TypeScript Configuration</h3>
+Ensure tsconfig.json includes NativeWind types:
 
-    <p>Make sure <code>tsconfig.json</code> includes NativeWind type definitions:</p>
-
-    <pre><code>{`{
+```json
+{
   "compilerOptions": {
     "types": ["nativewind/types"]
   }
-}`}</code></pre>
+}
+```
 
-    <h3>8. First Page</h3>
+### 8. First Page
 
-    <p>
-      Pages that use interactive Miðbýur components must be Client Components. 
-      Create <code>app/page.tsx</code>:
-    </p>
+Pages using interactive Midbyur components must be client components. Create app/page.tsx:
 
-    <pre><code>{`"use client";
+```tsx
+"use client";
 
 import { Button } from "@midbyur/ui";
 
 export default function Home() {
   return (
     <main>
-      <Button>Hello Miðbýur</Button>
+      <Button>Hello Midbyur</Button>
     </main>
   );
-}`}</code></pre>
-  </div>
+}
+```
 
-  <div className="sb-section">
-    <h2>Troubleshooting</h2>
+## Troubleshooting
 
-    <h3>Button renders unstyled</h3>
+### Button renders unstyled
 
-    <p>Check all of the following:</p>
-    <ul>
-      <li><code>app/globals.css</code> imports Tailwind with <code>important</code>.</li>
-      <li><code>app/globals.css</code> includes an <code>@source</code> entry for the UI package.</li>
-      <li><code>globals.css</code> is imported by <code>app/layout.tsx</code>.</li>
-    </ul>
+- Confirm app/globals.css imports Tailwind with important.
+- Confirm app/globals.css includes @source for the UI package.
+- Confirm globals.css is imported by app/layout.tsx.
 
-    <h3>Styles flash and then disappear</h3>
+### Styles flash then disappear
 
-    <p>
-      This happens when Tailwind imports are missing the <code>important</code> flag. 
-      The styles render initially but are overwritten after hydration. Use:
-    </p>
+This usually means Tailwind was imported without important.
 
-    <pre><code>{`@import "tailwindcss" important;`}</code></pre>
+```css
+@import "tailwindcss" important;
+```
 
-    <h3>Hydration failed: server HTML did not match client</h3>
+### Hydration failed: server HTML did not match client
 
-    <p>
-      Do not render <code>MidbyurProvider</code> directly in the server layout. 
-      Keep it behind the <code>ClientProviders</code> boundary as shown above.
-    </p>
+Do not render MidbyurProvider directly in the server layout. Keep it behind ClientProviders.
 
-    <h3>Hero is taller than viewport on Android mobile</h3>
+### Hero is taller than viewport on Android mobile
 
-    <p>
-      Use <code>100dvh</code> (dynamic viewport height) instead of <code>100vh</code> 
-      for hero heights to account for browser chrome that compresses and expands. 
-      Miðbýur's Hero component uses <code>100dvh</code> by default.
-    </p>
-
-    <h3>Expo native toasts do not show</h3>
-
-    <p>
-      Toasts use <code>burnt</code> on native. Run a development build and start with
-      <code> --dev-client</code> instead of relying on Expo Go.
-    </p>
-
-    <pre><code>{`pnpm --filter @midbyur/example-expo start:dev-client
-pnpm --filter @midbyur/example-expo ios:run`}</code></pre>
-
-    <h3>Expo native styles look incomplete</h3>
-
-    <p>
-      Verify Expo Tailwind content paths include <code>../../packages/ui/src/**/*.{'{'}js,jsx,ts,tsx{'}'}</code>,
-      confirm <code>withNativeWind</code> is configured in Metro, then clear cache.
-    </p>
-
-    <pre><code>{`pnpm --filter @midbyur/example-expo start -- --clear`}</code></pre>
-  </div>
-
-</div>
-
-<style>{`
-  .sb-container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    line-height: 1.6;
-    color: #333;
-  }
-
-  .sb-section-title {
-    margin-bottom: 40px;
-  }
-
-  .sb-section-title h1 {
-    font-size: 2.5em;
-    margin-bottom: 16px;
-    margin-top: 0;
-  }
-
-  .sb-section-title p {
-    font-size: 1.1em;
-    color: #666;
-    margin: 0;
-  }
-
-  .sb-section {
-    margin-bottom: 40px;
-  }
-
-  .sb-section h2 {
-    font-size: 2em;
-    margin-bottom: 24px;
-    margin-top: 0;
-    border-bottom: 2px solid #f0f0f0;
-    padding-bottom: 12px;
-  }
-
-  .sb-section h3 {
-    font-size: 1.3em;
-    margin-bottom: 12px;
-    margin-top: 24px;
-  }
-
-  .sb-section p {
-    margin-bottom: 12px;
-  }
-
-  .sb-section ul {
-    list-style: disc;
-    margin-left: 20px;
-    margin-bottom: 16px;
-  }
-
-  .sb-section li {
-    margin-bottom: 8px;
-  }
-
-  .sb-section code {
-    background: #f5f5f5;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-family: "Monaco", "Menlo", "Ubuntu Mono", "Courier New", monospace;
-    font-size: 0.9em;
-  }
-
-  .sb-section pre {
-    background: #f5f5f5;
-    border-left: 4px solid #007bff;
-    padding: 12px;
-    border-radius: 4px;
-    overflow-x: auto;
-    margin-bottom: 16px;
-  }
-
-  .sb-section pre code {
-    background: none;
-    padding: 0;
-    border-radius: 0;
-    font-size: 0.85em;
-    line-height: 1.5;
-  }
-`}</style>
+Use 100dvh instead of 100vh for hero heights to account for browser chrome changes.

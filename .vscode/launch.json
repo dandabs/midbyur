@@ -1,0 +1,36 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Storybook",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm --filter @midbyur/storybook storybook",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Example Next",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm --filter @midbyur/example-next dev",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Example Expo (Dev Client)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm --filter @midbyur/example-expo start:dev-client",
+      "cwd": "${workspaceFolder}"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "All: Storybook + Next + Expo",
+      "configurations": [
+        "Storybook",
+        "Example Next",
+        "Example Expo (Dev Client)"
+      ]
+    }
+  ]
+}
