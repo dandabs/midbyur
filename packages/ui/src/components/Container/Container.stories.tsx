@@ -23,10 +23,10 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
   render: (args) => (
-    <div className="w-full bg-(--color-surfaceAccent) py-8">
+    <div className="w-full bg-[var(--color-surfaceAccent)] py-8">
       <Container
         {...args}
-        className="border border-dashed border-(--color-borderStrong) py-6"
+        className="border border-dashed border-[var(--color-borderStrong)] py-6"
       >
         <Text variant="h4">Container</Text>
         <Text className="mt-3">

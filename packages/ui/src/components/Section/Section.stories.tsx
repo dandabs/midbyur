@@ -33,11 +33,11 @@ export const Default: Story = {
     <Section
       {...args}
       type="default"
-      className="bg-(--color-surface)"
+      className="bg-[var(--color-surface)]"
     >
       <Container>
         <Text variant="h2">Section</Text>
-        <Text className="mt-3 text-(--color-textMuted)">
+        <Text className="mt-3 text-[var(--color-textMuted)]">
           A reusable page section with consistent top spacing.
         </Text>
       </Container>

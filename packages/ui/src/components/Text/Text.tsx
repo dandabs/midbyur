@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Text as RNText, type TextProps as RNTextProps, type TextStyle } from "react-native";
+import { Platform, Text as RNText, type TextProps as RNTextProps, type TextStyle } from "react-native";
 import { withClassName } from "../../cssInterop";
 
 export type TextSize =
@@ -104,43 +104,49 @@ const lineHeightClassNames: Readonly<Record<TextLineHeight, string>> = {
   relaxed: "leading-relaxed",
 };
 
+const nativeMonoFontFamily = Platform.OS === "ios" ? "Menlo" : "monospace";
+
 const fontFamilyValues: Readonly<Record<TextFontFamily, string>> = {
-  text: '"Stack Sans Text", ui-sans-serif, system-ui, sans-serif',
-  notch: '"Stack Sans Notch", ui-sans-serif, system-ui, sans-serif',
-  headline: '"Stack Sans Headline", ui-sans-serif, system-ui, sans-serif',
-  mono: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+  text: Platform.OS === "web" ? '"Stack Sans Text", ui-sans-serif, system-ui, sans-serif' : "Stack Sans Text",
+  notch: Platform.OS === "web" ? '"Stack Sans Notch", ui-sans-serif, system-ui, sans-serif' : "Stack Sans Notch",
+  headline:
+    Platform.OS === "web" ? '"Stack Sans Headline", ui-sans-serif, system-ui, sans-serif' : "Stack Sans Headline",
+  mono:
+    Platform.OS === "web"
+      ? 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace'
+      : nativeMonoFontFamily,
 };
 
 const textColorClassNames: Readonly<Record<TextColor, string>> = {
-  background: "text-(--color-background)",
-  backgroundAccent: "text-(--color-backgroundAccent)",
-  surface: "text-(--color-surface)",
-  surfaceAccent: "text-(--color-surfaceAccent)",
-  primary: "text-(--color-primary)",
-  primaryHover: "text-(--color-primaryHover)",
-  primaryForeground: "text-(--color-primaryForeground)",
-  secondary: "text-(--color-secondary)",
-  secondaryHover: "text-(--color-secondaryHover)",
-  secondaryForeground: "text-(--color-secondaryForeground)",
-  text: "text-(--color-text)",
-  textMuted: "text-(--color-textMuted)",
-  muted: "text-(--color-textMuted)",
-  border: "text-(--color-border)",
-  borderStrong: "text-(--color-borderStrong)",
-  success: "text-(--color-success)",
-  successHover: "text-(--color-successHover)",
-  successForeground: "text-(--color-successForeground)",
-  warning: "text-(--color-warning)",
-  warningHover: "text-(--color-warningHover)",
-  warningForeground: "text-(--color-warningForeground)",
-  danger: "text-(--color-danger)",
-  dangerHover: "text-(--color-dangerHover)",
-  dangerForeground: "text-(--color-dangerForeground)",
-  info: "text-(--color-info)",
-  infoHover: "text-(--color-infoHover)",
-  infoForeground: "text-(--color-infoForeground)",
-  disabled: "text-(--color-disabled)",
-  disabledText: "text-(--color-disabledText)",
+  background: "text-[var(--color-background)]",
+  backgroundAccent: "text-[var(--color-backgroundAccent)]",
+  surface: "text-[var(--color-surface)]",
+  surfaceAccent: "text-[var(--color-surfaceAccent)]",
+  primary: "text-[var(--color-primary)]",
+  primaryHover: "text-[var(--color-primaryHover)]",
+  primaryForeground: "text-[var(--color-primaryForeground)]",
+  secondary: "text-[var(--color-secondary)]",
+  secondaryHover: "text-[var(--color-secondaryHover)]",
+  secondaryForeground: "text-[var(--color-secondaryForeground)]",
+  text: "text-[var(--color-text)]",
+  textMuted: "text-[var(--color-textMuted)]",
+  muted: "text-[var(--color-textMuted)]",
+  border: "text-[var(--color-border)]",
+  borderStrong: "text-[var(--color-borderStrong)]",
+  success: "text-[var(--color-success)]",
+  successHover: "text-[var(--color-successHover)]",
+  successForeground: "text-[var(--color-successForeground)]",
+  warning: "text-[var(--color-warning)]",
+  warningHover: "text-[var(--color-warningHover)]",
+  warningForeground: "text-[var(--color-warningForeground)]",
+  danger: "text-[var(--color-danger)]",
+  dangerHover: "text-[var(--color-dangerHover)]",
+  dangerForeground: "text-[var(--color-dangerForeground)]",
+  info: "text-[var(--color-info)]",
+  infoHover: "text-[var(--color-infoHover)]",
+  infoForeground: "text-[var(--color-infoForeground)]",
+  disabled: "text-[var(--color-disabled)]",
+  disabledText: "text-[var(--color-disabledText)]",
   current: "text-current",
 };
 

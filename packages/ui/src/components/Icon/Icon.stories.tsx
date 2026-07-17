@@ -72,7 +72,7 @@ export const Playground: Story = {
 
 export const IconSet: Story = {
   render: (args) => (
-    <div className="flex items-center gap-6 text-(--color-text)">
+    <div className="flex items-center gap-6 text-[var(--color-text)]">
       <Icon {...args} icon={Home} />
       <Icon {...args} icon={Search} color="info" />
       <Icon {...args} icon={Bell} color="warning" />

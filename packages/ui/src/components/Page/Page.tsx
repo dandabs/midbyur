@@ -35,7 +35,12 @@ export function Page({
   keyboardAvoidingProps,
   safeAreaProps,
 }: PageProps) {
-  const rootClassName = ["flex flex-1 w-full", className].filter(Boolean).join(" ");
+  const rootClassName = [
+    "flex flex-1 w-full bg-[var(--color-background)] text-[var(--color-text)]",
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   let content = children;
 

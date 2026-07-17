@@ -1,3 +1,5 @@
+import { Alert } from "react-native";
+
 export type ToastPreset = "done" | "error" | "none";
 export type AlertPreset = "done" | "error" | "heart" | "none";
 export type HapticFeedback = "success" | "warning" | "error" | "none";
@@ -47,6 +49,15 @@ async function getNativeBurntModule(): Promise<NativeBurntModule> {
   const moduleId = "burnt";
   const burnt = await import(/* @vite-ignore */ moduleId);
   return burnt as NativeBurntModule;
+}
+
+async function runWithNativeBurnt<T>(fn: (burnt: NativeBurntModule) => Promise<T>): Promise<T | undefined> {
+  try {
+    const burnt = await getNativeBurntModule();
+    return await fn(burnt);
+  } catch {
+    return undefined;
+  }
 }
 
 async function showWebToast(options: ToastOptions): Promise<void> {
@@ -105,7 +116,7 @@ export function showToast(options: ToastOptions): Promise<void> {
     return showWebToast(options);
   }
 
-  return getNativeBurntModule().then((burnt) =>
+  return runWithNativeBurnt((burnt) =>
     burnt.toast({
       title: options.title,
       message: options.message,
@@ -114,8 +125,10 @@ export function showToast(options: ToastOptions): Promise<void> {
       haptic: options.haptic ?? "none",
       shouldDismissByDrag: options.shouldDismissByDrag ?? true,
       from: options.from ?? "bottom",
-    })
-  );
+    }),
+  ).then(() => {
+    return;
+  });
 }
 
 /**
@@ -180,14 +193,25 @@ export function showAlert(options: AlertOptions): Promise<void> {
     return showWebAlert(options);
   }
 
-  return getNativeBurntModule().then((burnt) =>
+  return runWithNativeBurnt((burnt) =>
     burnt.alert({
       title: options.title,
       message: options.message,
       preset: options.preset ?? "none",
       duration: options.duration ?? 2,
-    })
-  );
+    }),
+  ).then((result) => {
+    if (result !== undefined) {
+      return;
+    }
+
+    if (options.message) {
+      Alert.alert(options.title, options.message);
+      return;
+    }
+
+    Alert.alert(options.title);
+  });
 }
 
 /**

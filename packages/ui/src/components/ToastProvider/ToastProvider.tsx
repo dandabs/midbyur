@@ -1,6 +1,7 @@
 "use client";
 
 import { type ReactNode, lazy, Suspense } from "react";
+import { Platform } from "react-native";
 import type { GapSize } from "../../spacing";
 
 export type ToastProviderProps = Readonly<{
@@ -27,6 +28,10 @@ const ToasterWrapper = lazy(() =>
 );
 
 export function ToastProvider({ children, config }: ToastProviderProps) {
+  if (Platform.OS !== "web") {
+    return <>{children}</>;
+  }
+
   return (
     <>
       <Suspense fallback={null}>

@@ -139,3 +139,39 @@ export const LoadingVariants: Story = {
     </div>
   ),
 };
+
+export const VariantColorMatrix: Story = {
+  render: (args) => (
+    <div className="flex flex-col gap-3 max-w-sm">
+      <Button {...args} variant="primary">
+        <Text variant="label">Primary</Text>
+      </Button>
+      <Button {...args} variant="secondary">
+        <Text variant="label">Secondary</Text>
+      </Button>
+      <Button {...args} variant="success">
+        <Text variant="label">Success</Text>
+      </Button>
+      <Button {...args} variant="danger">
+        <Text variant="label">Danger</Text>
+      </Button>
+      <Button {...args} variant="warning">
+        <Text variant="label">Warning</Text>
+      </Button>
+      <Button {...args} variant="info">
+        <Text variant="label">Info</Text>
+      </Button>
+    </div>
+  ),
+};
+
+export const LabelColorMapping: Story = {
+  render: (args) => (
+    <div className="flex flex-col gap-3 max-w-sm">
+      <Button {...args} variant="primary" type="solid">Solid Label</Button>
+      <Button {...args} variant="secondary" type="outline">Outline Label</Button>
+      <Button {...args} variant="info" type="link" fluid={false}>Link Label</Button>
+      <Button {...args} variant="primary" type="solid" disabled>Disabled Label</Button>
+    </div>
+  ),
+};

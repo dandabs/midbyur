@@ -55,15 +55,15 @@ export function CustomWebToaster({ config }: CustomWebToasterProps) {
         toastOptions={{
           classNames: {
             toast:
-              "rounded-none border-0 bg-(--color-surface) text-(--color-text) shadow-[0_14px_36px_rgba(0,0,0,0.24)]",
-            title: "text-(--color-text) text-base font-light leading-relaxed",
-            description: "text-(--color-textMuted) text-sm font-light leading-relaxed",
+              "rounded-none border-0 bg-[var(--color-surface)] text-[var(--color-text)] shadow-[0_14px_36px_rgba(0,0,0,0.24)]",
+            title: "text-[var(--color-text)] text-base font-light leading-relaxed",
+            description: "text-[var(--color-textMuted)] text-sm font-light leading-relaxed",
             actionButton:
-              "rounded-none border-0 bg-(--color-primary) text-(--color-primaryForeground) text-sm font-medium",
+              "rounded-none border-0 bg-[var(--color-primary)] text-[var(--color-primaryForeground)] text-sm font-medium",
             cancelButton:
-              "rounded-none border-0 bg-(--color-secondary) text-(--color-secondaryForeground) text-sm font-medium",
+              "rounded-none border-0 bg-[var(--color-secondary)] text-[var(--color-secondaryForeground)] text-sm font-medium",
             closeButton:
-              "h-7 w-7 rounded-none border-0 bg-transparent p-1.5 text-(--color-textMuted)",
+              "h-7 w-7 rounded-none border-0 bg-transparent p-1.5 text-[var(--color-textMuted)]",
           },
         }}
       />

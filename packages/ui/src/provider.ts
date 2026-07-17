@@ -1,9 +1,16 @@
 "use client";
 
 import { createElement, type CSSProperties, type ReactNode } from "react";
+import { Platform, View, useColorScheme } from "react-native";
+import { rem as nativeRem } from "react-native-css-interop/dist/runtime/native/rem";
+import { vars as nativeVars } from "react-native-css-interop/dist/runtime/native/variables";
 import { themeModes, type ThemeMode } from "@midbyur/theme";
 import type { ToastProviderProps } from "./components/ToastProvider/ToastProvider";
 import { ToastProvider } from "./components/ToastProvider/ToastProvider";
+import { setNativeTextScale, setNativeThemeVariables } from "./cssInterop";
+
+const NATIVE_BASE_REM = 15;
+const NATIVE_TEXT_SCALE = 1.08;
 
 type ThemeCssVariables = Readonly<Record<`--color-${string}`, string>>;
 
@@ -49,17 +56,36 @@ export type MidbyurProviderProps = Readonly<{
 }>;
 
 export function MidbyurProvider({
-  theme = "light",
+  theme,
   children,
   toastConfig,
 }: MidbyurProviderProps) {
+  const systemColorScheme = useColorScheme();
+  const resolvedTheme: ThemeMode =
+    theme ?? (Platform.OS !== "web" && systemColorScheme === "dark" ? "dark" : "light");
+
+  if (Platform.OS !== "web") {
+    // Slightly increase native rem baseline so em/rem-sized UI tokens render larger on mobile.
+    nativeRem.set(NATIVE_BASE_REM);
+    setNativeTextScale(NATIVE_TEXT_SCALE);
+
+    const themeVariables = buildThemeVariables(resolvedTheme);
+    setNativeThemeVariables(themeVariables);
+
+    return createElement(
+      View,
+      { style: [{ flex: 1 }, nativeVars(themeVariables)] },
+      children,
+    );
+  }
+
   return createElement(
     "div",
     {
-      "data-theme": theme,
-      className: "bg-(--color-background) text-(--color-text)",
-      style: buildThemeVariables(theme) as CSSProperties,
+      "data-theme": resolvedTheme,
+      className: "bg-[var(--color-background)] text-[var(--color-text)]",
+      style: buildThemeVariables(resolvedTheme) as CSSProperties,
     },
-    createElement(ToastProvider, { config: toastConfig, children }),
+    createElement(ToastProvider, { config: toastConfig }, children),
   );
 }

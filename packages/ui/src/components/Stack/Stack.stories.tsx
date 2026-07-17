@@ -50,13 +50,13 @@ export const Horizontal: Story = {
   },
   render: (args) => (
     <Stack {...args} direction="row">
-      <div className="px-4 py-2 bg-(--color-primary) rounded text-white">
+      <div className="px-4 py-2 bg-[var(--color-primary)] rounded text-white">
         <Text variant="label" color="current">Item 1</Text>
       </div>
-      <div className="px-4 py-2 bg-(--color-secondary) rounded text-white">
+      <div className="px-4 py-2 bg-[var(--color-secondary)] rounded text-white">
         <Text variant="label" color="current">Item 2</Text>
       </div>
-      <div className="px-4 py-2 bg-(--color-info) rounded text-white">
+      <div className="px-4 py-2 bg-[var(--color-info)] rounded text-white">
         <Text variant="label" color="current">Item 3</Text>
       </div>
     </Stack>
@@ -73,13 +73,13 @@ export const NestedStacks: Story = {
       <Text variant="h3">Nested Stacks</Text>
       
       <Stack direction="row" gap="md">
-        <div className="px-3 py-2 bg-(--color-background) rounded border border-(--color-border)">
+        <div className="px-3 py-2 bg-[var(--color-background)] rounded border border-[var(--color-border)]">
           <Text variant="body">Row Item 1</Text>
         </div>
-        <div className="px-3 py-2 bg-(--color-background) rounded border border-(--color-border)">
+        <div className="px-3 py-2 bg-[var(--color-background)] rounded border border-[var(--color-border)]">
           <Text variant="body">Row Item 2</Text>
         </div>
-        <div className="px-3 py-2 bg-(--color-background) rounded border border-(--color-border)">
+        <div className="px-3 py-2 bg-[var(--color-background)] rounded border border-[var(--color-border)]">
           <Text variant="body">Row Item 3</Text>
         </div>
       </Stack>
@@ -105,6 +105,34 @@ export const WithCustomGap: Story = {
       <Text variant="body">First section with plenty of space</Text>
       <Text variant="body">Second section</Text>
       <Text variant="body">Third section</Text>
+    </Stack>
+  ),
+};
+
+export const NativeGapFallback: Story = {
+  args: {
+    direction: "column",
+    gap: "lg",
+  },
+  render: (args) => (
+    <Stack {...args} direction="column">
+      <Text variant="h4">First item</Text>
+      <Text variant="body">Second item with native spacing fallback.</Text>
+      <Text variant="body">Third item with the same spacing.</Text>
+    </Stack>
+  ),
+};
+
+export const NumericGap: Story = {
+  args: {
+    direction: "column",
+    gap: 16,
+  },
+  render: (args) => (
+    <Stack {...args} direction="column">
+      <Text variant="h4">First item</Text>
+      <Text variant="body">Second item with numeric gap.</Text>
+      <Text variant="body">Third item with numeric gap.</Text>
     </Stack>
   ),
 };

@@ -2,6 +2,21 @@ declare module "react-native-css-interop/dist/runtime/css-interop" {
   export function remapProps(component: any, mapping: Record<string, string>): void;
 }
 
+declare module "react-native-css-interop/dist/runtime/native/stylesheet" {
+  export function getGlobalStyle(className: string): object | object[] | undefined;
+}
+
+declare module "react-native-css-interop/dist/runtime/native/variables" {
+  export function vars(variables: Readonly<Record<string, string>>): object;
+}
+
+declare module "react-native-css-interop/dist/runtime/native/rem" {
+  export const rem: {
+    get(): number;
+    set(nextValue: number): void;
+  };
+}
+
 declare module "nativewind/jsx-runtime" {
   export * from "react/jsx-runtime";
 }

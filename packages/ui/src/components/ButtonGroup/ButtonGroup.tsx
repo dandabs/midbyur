@@ -1,9 +1,10 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { Platform } from "react-native";
 import { View, type ViewProps, type ViewStyle } from "react-native";
 import { withClassName } from "../../cssInterop";
-import { resolveGapValue, type GapValue } from "../../spacing";
+import { resolveGapNumber, resolveGapValue, type GapValue } from "../../spacing";
 
 export type ButtonGroupDirection = "horizontal" | "vertical";
 
@@ -21,6 +22,15 @@ export function ButtonGroup({
   style,
   ...props
 }: ButtonGroupProps) {
+  const mappedGap =
+    typeof gap === "string" && (gap === "sm" || gap === "md" || gap === "lg")
+      ? gap
+      : undefined;
+  const numericGap = typeof gap === "number" ? gap : undefined;
+  const resolvedGapNumber = resolveGapNumber(
+    mappedGap ?? numericGap,
+  );
+
   const rootClassName = [
     "flex w-full",
     direction === "horizontal"
@@ -32,7 +42,7 @@ export function ButtonGroup({
     .join(" ");
 
   const rootStyle: ViewStyle = {
-    gap: resolveGapValue(gap),
+    gap: Platform.OS === "web" ? resolveGapValue(gap) : (resolvedGapNumber ?? 0),
     ...(style as ViewStyle),
   };
 

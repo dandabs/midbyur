@@ -13,7 +13,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: (args) => (
-    <div className="min-h-[320px] bg-(--color-background)">
+    <div className="min-h-[320px] bg-[var(--color-background)]">
       <div className="flex min-h-[220px] items-end">
         <Footer {...args} />
       </div>

@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "Miðbýur Expo Example",
+    "slug": "midbyur-example-expo",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "bundleIdentifier": "com.anonymous.midbyur-example-expo"
+    }
+  }
+}

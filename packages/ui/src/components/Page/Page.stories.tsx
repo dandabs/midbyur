@@ -88,7 +88,7 @@ export const WithKeyboardAvoiding: Story = {
             <input
               type="text"
               placeholder="Try typing on mobile"
-              className="w-full px-4 py-2 border border-(--color-border) rounded"
+              className="w-full px-4 py-2 border border-[var(--color-border)] rounded"
             />
           </Stack>
         </Stack>
@@ -133,6 +133,26 @@ export const MinimalPage: Story = {
           <Text variant="h1">Minimal Page</Text>
           <Text variant="body" color="textMuted">
             No SafeAreaView, no scroll, no keyboard avoiding.
+          </Text>
+        </Stack>
+      </Container>
+    </Page>
+  ),
+};
+
+export const ThemedBackground: Story = {
+  args: {
+    keyboardAvoiding: false,
+    safeArea: true,
+    scroll: false,
+  },
+  render: (args) => (
+    <Page {...args}>
+      <Container>
+        <Stack direction="column" gap={16} className="py-8">
+          <Text variant="h2">Themed Page Background</Text>
+          <Text variant="body" color="textMuted">
+            Page now applies the theme background and text colors by default.
           </Text>
         </Stack>
       </Container>

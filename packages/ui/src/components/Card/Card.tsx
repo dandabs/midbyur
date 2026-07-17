@@ -23,7 +23,7 @@ export function Card({
   className,
   ...props
 }: CardProps) {
-  const rootClassName = ["w-full overflow-hidden bg-(--color-surface)", className]
+  const rootClassName = ["w-full overflow-hidden bg-[var(--color-surface)]", className]
     .filter(Boolean)
     .join(" ");
 

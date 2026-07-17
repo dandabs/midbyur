@@ -78,3 +78,22 @@ export const VariantScale: Story = {
     </div>
   ),
 };
+
+export const FontFamilies: Story = {
+  render: () => (
+    <div className="grid gap-3">
+      <Text fontFamily="headline" variant="h3">
+        Headline family
+      </Text>
+      <Text fontFamily="notch" variant="h4">
+        Notch family
+      </Text>
+      <Text fontFamily="text" variant="body">
+        Text family
+      </Text>
+      <Text fontFamily="mono" variant="bodySm">
+        Mono family: const value = 42;
+      </Text>
+    </div>
+  ),
+};

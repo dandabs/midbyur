@@ -2,7 +2,7 @@
 
 import { Children, cloneElement, isValidElement, type ReactElement, type ReactNode } from "react";
 import { Pressable, type PressableProps, type ViewStyle } from "react-native";
-import { Text } from "../Text/Text";
+import { Text, type TextColor } from "../Text/Text";
 import { Spinner } from "../Spinner/Spinner";
 import { withClassName } from "../../cssInterop";
 
@@ -26,13 +26,41 @@ export type ButtonProps = Readonly<{
   className?: string;
 }> & Omit<PressableProps, "children">;
 
-function normalizeButtonChildren(children: ReactNode): ReactNode {
+const variantToTextColor: Readonly<Record<ButtonVariant, TextColor>> = {
+  primary: "primary",
+  secondary: "secondary",
+  success: "success",
+  danger: "danger",
+  warning: "warning",
+  info: "info",
+};
+
+const variantToForegroundTextColor: Readonly<Record<ButtonVariant, TextColor>> = {
+  primary: "primaryForeground",
+  secondary: "secondaryForeground",
+  success: "successForeground",
+  danger: "dangerForeground",
+  warning: "warningForeground",
+  info: "infoForeground",
+};
+
+function resolveButtonLabelColor(
+  type: ButtonType,
+  variant: ButtonVariant,
+  disabled: boolean,
+): TextColor {
+  if (disabled) return "disabledText";
+  if (type === "solid") return variantToForegroundTextColor[variant];
+  return variantToTextColor[variant];
+}
+
+function normalizeButtonChildren(children: ReactNode, textColor: TextColor): ReactNode {
   return Children.map(children, (child) => {
     if (typeof child === "string" || typeof child === "number") {
       return (
         <Text
           variant="label"
-          color="current"
+          color={textColor}
         >
           {child}
         </Text>
@@ -40,11 +68,11 @@ function normalizeButtonChildren(children: ReactNode): ReactNode {
     }
 
     if (isValidElement(child) && child.type === Text) {
-      const textChild = child as ReactElement<{ color?: "current" }>;
+      const textChild = child as ReactElement<{ color?: TextColor }>;
 
       return cloneElement(textChild, {
         ...textChild.props,
-        color: "current",
+        color: textColor,
       });
     }
 
@@ -52,56 +80,116 @@ function normalizeButtonChildren(children: ReactNode): ReactNode {
   });
 }
 
-const variantColorVariables: Readonly<
+const variantClassNames: Readonly<
   Record<
     ButtonVariant,
     {
-      "--button-bg": string;
-      "--button-hover-bg": string;
-      "--button-fg": string;
+      solidBg: string;
+      solidHoverBg: string;
+      solidFg: string;
+      outlineColor: string;
+      outlineHoverBg: string;
+      outlineHoverFg: string;
+      linkColor: string;
+      linkHoverColor: string;
     }
   >
 > = {
   primary: {
-    "--button-bg": "var(--color-primary)",
-    "--button-hover-bg": "var(--color-primaryHover)",
-    "--button-fg": "var(--color-primaryForeground)",
+    solidBg: "bg-[var(--color-primary)]",
+    solidHoverBg: "enabled:hover:bg-[var(--color-primaryHover)]",
+    solidFg: "text-[var(--color-primaryForeground)]",
+    outlineColor: "border-[var(--color-primary)] text-[var(--color-primary)]",
+    outlineHoverBg: "enabled:hover:bg-[var(--color-primary)]",
+    outlineHoverFg: "enabled:hover:text-[var(--color-primaryForeground)]",
+    linkColor: "text-[var(--color-primary)]",
+    linkHoverColor: "enabled:hover:text-[var(--color-primaryHover)]",
   },
   secondary: {
-    "--button-bg": "var(--color-secondary)",
-    "--button-hover-bg": "var(--color-secondaryHover)",
-    "--button-fg": "var(--color-secondaryForeground)",
+    solidBg: "bg-[var(--color-secondary)]",
+    solidHoverBg: "enabled:hover:bg-[var(--color-secondaryHover)]",
+    solidFg: "text-[var(--color-secondaryForeground)]",
+    outlineColor: "border-[var(--color-secondary)] text-[var(--color-secondary)]",
+    outlineHoverBg: "enabled:hover:bg-[var(--color-secondary)]",
+    outlineHoverFg: "enabled:hover:text-[var(--color-secondaryForeground)]",
+    linkColor: "text-[var(--color-secondary)]",
+    linkHoverColor: "enabled:hover:text-[var(--color-secondaryHover)]",
   },
   success: {
-    "--button-bg": "var(--color-success)",
-    "--button-hover-bg": "var(--color-successHover)",
-    "--button-fg": "var(--color-successForeground)",
+    solidBg: "bg-[var(--color-success)]",
+    solidHoverBg: "enabled:hover:bg-[var(--color-successHover)]",
+    solidFg: "text-[var(--color-successForeground)]",
+    outlineColor: "border-[var(--color-success)] text-[var(--color-success)]",
+    outlineHoverBg: "enabled:hover:bg-[var(--color-success)]",
+    outlineHoverFg: "enabled:hover:text-[var(--color-successForeground)]",
+    linkColor: "text-[var(--color-success)]",
+    linkHoverColor: "enabled:hover:text-[var(--color-successHover)]",
   },
   danger: {
-    "--button-bg": "var(--color-danger)",
-    "--button-hover-bg": "var(--color-dangerHover)",
-    "--button-fg": "var(--color-dangerForeground)",
+    solidBg: "bg-[var(--color-danger)]",
+    solidHoverBg: "enabled:hover:bg-[var(--color-dangerHover)]",
+    solidFg: "text-[var(--color-dangerForeground)]",
+    outlineColor: "border-[var(--color-danger)] text-[var(--color-danger)]",
+    outlineHoverBg: "enabled:hover:bg-[var(--color-danger)]",
+    outlineHoverFg: "enabled:hover:text-[var(--color-dangerForeground)]",
+    linkColor: "text-[var(--color-danger)]",
+    linkHoverColor: "enabled:hover:text-[var(--color-dangerHover)]",
   },
   warning: {
-    "--button-bg": "var(--color-warning)",
-    "--button-hover-bg": "var(--color-warningHover)",
-    "--button-fg": "var(--color-warningForeground)",
+    solidBg: "bg-[var(--color-warning)]",
+    solidHoverBg: "enabled:hover:bg-[var(--color-warningHover)]",
+    solidFg: "text-[var(--color-warningForeground)]",
+    outlineColor: "border-[var(--color-warning)] text-[var(--color-warning)]",
+    outlineHoverBg: "enabled:hover:bg-[var(--color-warning)]",
+    outlineHoverFg: "enabled:hover:text-[var(--color-warningForeground)]",
+    linkColor: "text-[var(--color-warning)]",
+    linkHoverColor: "enabled:hover:text-[var(--color-warningHover)]",
   },
   info: {
-    "--button-bg": "var(--color-info)",
-    "--button-hover-bg": "var(--color-infoHover)",
-    "--button-fg": "var(--color-infoForeground)",
+    solidBg: "bg-[var(--color-info)]",
+    solidHoverBg: "enabled:hover:bg-[var(--color-infoHover)]",
+    solidFg: "text-[var(--color-infoForeground)]",
+    outlineColor: "border-[var(--color-info)] text-[var(--color-info)]",
+    outlineHoverBg: "enabled:hover:bg-[var(--color-info)]",
+    outlineHoverFg: "enabled:hover:text-[var(--color-infoForeground)]",
+    linkColor: "text-[var(--color-info)]",
+    linkHoverColor: "enabled:hover:text-[var(--color-infoHover)]",
   },
 };
 
-const buttonTypeClassNames: Readonly<Record<ButtonType, string>> = {
-  solid:
-    "px-4 py-1.5 bg-(--button-bg) text-(--button-fg) enabled:hover:bg-(--button-hover-bg) disabled:bg-(--color-disabled) disabled:text-(--color-disabledText)",
-  outline:
-    "px-4 py-1.5 border border-(--button-bg) bg-transparent text-(--button-bg) enabled:hover:bg-(--button-bg) enabled:hover:text-(--button-fg) disabled:border-(--color-border) disabled:text-(--color-disabledText)",
-  link:
-    "px-0 py-0 bg-transparent text-(--button-bg) enabled:hover:underline enabled:hover:decoration-2 enabled:hover:underline-offset-4 enabled:hover:text-(--button-hover-bg) disabled:text-(--color-disabledText)",
-};
+function getButtonTypeClasses(type: ButtonType, variant: ButtonVariant): string {
+  const variantClasses = variantClassNames[variant];
+
+  if (type === "solid") {
+    return [
+      "px-4 py-1.5",
+      variantClasses.solidBg,
+      variantClasses.solidFg,
+      variantClasses.solidHoverBg,
+      "disabled:bg-[var(--color-disabled)]",
+      "disabled:text-[var(--color-disabledText)]",
+    ].join(" ");
+  }
+
+  if (type === "outline") {
+    return [
+      "px-4 py-1.5 border bg-transparent",
+      variantClasses.outlineColor,
+      variantClasses.outlineHoverBg,
+      variantClasses.outlineHoverFg,
+      "disabled:border-[var(--color-border)]",
+      "disabled:text-[var(--color-disabledText)]",
+    ].join(" ");
+  }
+
+  return [
+    "px-0 py-0 bg-transparent",
+    variantClasses.linkColor,
+    "enabled:hover:underline enabled:hover:decoration-2 enabled:hover:underline-offset-4",
+    variantClasses.linkHoverColor,
+    "disabled:text-[var(--color-disabledText)]",
+  ].join(" ");
+}
 
 export function Button({
   children,
@@ -115,25 +203,23 @@ export function Button({
   disabled,
   ...props
 }: ButtonProps) {
+  const typeClassName = getButtonTypeClasses(type, variant);
+  const labelColor = resolveButtonLabelColor(type, variant, Boolean(disabled || loading));
+
   const rootClassName = [
     "inline-flex flex-row cursor-pointer items-center justify-center rounded-none text-sm font-medium transition-colors duration-150",
     fluid ? "w-full" : "w-auto",
-    type === "link" ? "focus-visible:outline-none" : "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-borderStrong)",
+    type === "link" ? "focus-visible:outline-none" : "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-borderStrong)]",
     "disabled:cursor-not-allowed",
-    buttonTypeClassNames[type],
+    typeClassName,
     className,
   ]
     .filter(Boolean)
     .join(" ");
 
-  const buttonStyle = {
-    ...variantColorVariables[variant],
-    ...style,
-  } as ViewStyle;
-
   return (
     <Pressable
-      style={withClassName(rootClassName, buttonStyle) as ViewStyle}
+      style={withClassName(rootClassName, style as ViewStyle) as ViewStyle}
       accessibilityRole="button"
       disabled={disabled || loading}
       // htmlType is accepted for API compatibility but unused in RN primitives.
@@ -142,12 +228,12 @@ export function Button({
       <>
         {loading ? (
           <Spinner
-            color="current"
+            color={labelColor}
             size="small"
             className="mr-2"
           />
         ) : null}
-        {normalizeButtonChildren(children)}
+        {normalizeButtonChildren(children, labelColor)}
       </>
     </Pressable>
   );

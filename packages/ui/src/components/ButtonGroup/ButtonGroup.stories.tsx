@@ -51,3 +51,17 @@ export const Vertical: Story = {
     </ButtonGroup>
   ),
 };
+
+export const NumericGap: Story = {
+  args: {
+    direction: "horizontal",
+    gap: 16,
+  },
+  render: (args) => (
+    <ButtonGroup {...args}>
+      <Button variant="primary"><Text variant="label">One</Text></Button>
+      <Button variant="secondary"><Text variant="label">Two</Text></Button>
+      <Button variant="info"><Text variant="label">Three</Text></Button>
+    </ButtonGroup>
+  ),
+};

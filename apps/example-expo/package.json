@@ -1,0 +1,36 @@
+{
+  "name": "@midbyur/example-expo",
+  "version": "0.0.1",
+  "private": true,
+  "main": "expo/AppEntry",
+  "scripts": {
+    "start": "expo start",
+    "start:dev-client": "expo start --dev-client",
+    "android": "expo run:android",
+    "android:run": "expo run:android",
+    "ios": "expo run:ios",
+    "ios:run": "expo run:ios",
+    "web": "expo start --web",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@midbyur/theme": "workspace:*",
+    "@midbyur/ui": "workspace:*",
+    "burnt": "^0.13.0",
+    "expo": "57.0.7",
+    "expo-dev-client": "~57.0.7",
+    "expo-font": "^57.0.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.0",
+    "react-native-css-interop": "0.0.0-alpha.27",
+    "react-native-web": "0.21.2"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "babel-preset-expo": "~57.0.0",
+    "nativewind": "4.0.0-alpha.31",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^6.0.3"
+  }
+}
