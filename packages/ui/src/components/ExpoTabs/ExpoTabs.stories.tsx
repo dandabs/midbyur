@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { ExpoNavbarTabs } from "./ExpoNavbarTabs";
+import { ExpoNavbarTabs } from "./ExpoNavbarTabs.web";
 import { ExpoTabList, ExpoTabSlot, ExpoTabsRoot, ExpoTabTrigger } from "./ExpoTabs";
 import { Stack } from "../Stack/Stack";
 import { Text } from "../Text/Text";

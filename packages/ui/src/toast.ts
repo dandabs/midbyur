@@ -45,6 +45,20 @@ type NativeBurntModule = {
   dismissAllAlerts: () => void;
 };
 
+type SonnerToastApi = {
+  (message: string, data?: { description?: string; duration?: number; icon?: string }): string | number;
+  success: (message: string, data?: { description?: string; duration?: number }) => string | number;
+  error: (message: string, data?: { description?: string; duration?: number }) => string | number;
+  dismiss: (id?: number | string) => string | number;
+};
+
+type SonnerModule = {
+  toast?: SonnerToastApi;
+  default?: {
+    toast?: SonnerToastApi;
+  };
+};
+
 async function getNativeBurntModule(): Promise<NativeBurntModule> {
   const moduleId = "burnt";
   const burnt = await import(/* @vite-ignore */ moduleId);
@@ -60,52 +74,69 @@ async function runWithNativeBurnt<T>(fn: (burnt: NativeBurntModule) => Promise<T
   }
 }
 
+async function getWebSonnerToast(): Promise<SonnerToastApi | null> {
+  try {
+    const sonner = await import("sonner") as SonnerModule;
+    return sonner.toast ?? sonner.default?.toast ?? null;
+  } catch {
+    return null;
+  }
+}
+
 async function showWebToast(options: ToastOptions): Promise<void> {
-  const sonner = await import("sonner");
+  const toast = await getWebSonnerToast();
+  if (!toast) {
+    return;
+  }
+
   const payload = {
     description: options.message,
     duration: (options.duration ?? 2) * 1000,
   };
 
   if (options.preset === "done") {
-    sonner.toast.success(options.title, payload);
+    toast.success(options.title, payload);
     return;
   }
 
   if (options.preset === "error") {
-    sonner.toast.error(options.title, payload);
+    toast.error(options.title, payload);
     return;
   }
 
-  sonner.toast(options.title, payload);
+  toast(options.title, payload);
 }
 
 async function showWebAlert(options: AlertOptions): Promise<void> {
-  const sonner = await import("sonner");
+  const toast = await getWebSonnerToast();
+  if (!toast) {
+    return;
+  }
+
   const payload = {
     description: options.message,
     duration: (options.duration ?? 2) * 1000,
   };
 
   if (options.preset === "done") {
-    sonner.toast.success(options.title, payload);
+    toast.success(options.title, payload);
     return;
   }
 
   if (options.preset === "error") {
-    sonner.toast.error(options.title, payload);
+    toast.error(options.title, payload);
     return;
   }
 
   if (options.preset === "heart") {
-    sonner.toast(options.title, {
+    toast(options.title, {
       ...payload,
       icon: "❤️",
     });
     return;
   }
 
-  sonner.toast(options.title, payload);
+  toast(options.title, payload);
 }
 
 /**
@@ -124,7 +155,7 @@ export function showToast(options: ToastOptions): Promise<void> {
       duration: options.duration ?? 2,
       haptic: options.haptic ?? "none",
       shouldDismissByDrag: options.shouldDismissByDrag ?? true,
-      from: options.from ?? "bottom",
+      from: options.from ?? "top",
     }),
   ).then(() => {
     return;
@@ -255,9 +286,9 @@ export function showHeartAlert(title: string, message?: string, duration = 2): P
  */
 export function dismissAllToasts(): void {
   if (isWebRuntime()) {
-    void import("sonner")
-      .then((sonner) => {
-        sonner.toast.dismiss();
+    void getWebSonnerToast()
+      .then((toast) => {
+        toast?.dismiss();
       })
       .catch(() => {
         // ignore dismissal failures in non-browser contexts

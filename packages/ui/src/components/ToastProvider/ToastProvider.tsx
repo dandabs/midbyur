@@ -1,8 +1,9 @@
 "use client";
 
-import { type ReactNode, lazy, Suspense } from "react";
+import { type ReactNode } from "react";
 import { Platform } from "react-native";
 import type { GapSize } from "../../spacing";
+import { ToasterWrapper } from "./ToasterWrapper";
 
 export type ToastProviderProps = Readonly<{
   children: ReactNode;
@@ -22,11 +23,6 @@ export type ToastProviderProps = Readonly<{
   };
 }>;
 
-// Lazy load the Toaster component to avoid parsing JSX in build tools like Chromatic
-const ToasterWrapper = lazy(() =>
-  import("./ToasterWrapper").then((mod) => ({ default: mod.ToasterWrapper }))
-);
-
 export function ToastProvider({ children, config }: ToastProviderProps) {
   if (Platform.OS !== "web") {
     return <>{children}</>;
@@ -34,9 +30,7 @@ export function ToastProvider({ children, config }: ToastProviderProps) {
 
   return (
     <>
-      <Suspense fallback={null}>
-        <ToasterWrapper config={config} />
-      </Suspense>
+      <ToasterWrapper config={config} />
       {children}
     </>
   );

@@ -26,8 +26,8 @@ export default function RootLayout() {
         brand="Miðbýur"
         pathname={pathname}
         routes={[
-          { name: "home", href: "/", title: "Home" },
-          { name: "activity", href: "/activity", title: "Activity" },
+          { name: "index", href: "/", title: "Home", icon: { sf: "house.fill", md: "home" } },
+          { name: "activity", href: "/activity", title: "Activity", icon: { sf: "chart.bar.fill", md: "bar_chart" } },
         ]}
       />
     </MidbyurProvider>

@@ -11,6 +11,11 @@ export function CustomWebToaster({ config }: CustomWebToasterProps) {
     return null;
   }
 
+  const inferredTheme =
+    document.querySelector("[data-theme]")?.getAttribute("data-theme") === "dark"
+      ? "dark"
+      : "light";
+
   return (
     <>
       <style>
@@ -29,6 +34,12 @@ export function CustomWebToaster({ config }: CustomWebToasterProps) {
             padding: 0.375rem !important;
           }
 
+          [data-sonner-toast][data-styled="true"] {
+            border-radius: 0 !important;
+            background: var(--color-surface) !important;
+            color: var(--color-text) !important;
+          }
+
           [data-sonner-toast][data-styled="true"][data-x-position="right"] [data-close-button] {
             right: 0.5rem !important;
             left: auto !important;
@@ -42,8 +53,8 @@ export function CustomWebToaster({ config }: CustomWebToasterProps) {
       </style>
       <Toaster
         position={config?.position ?? "bottom-right"}
-        theme={config?.theme ?? "system"}
-        richColors={config?.richColors ?? true}
+        theme={config?.theme ?? inferredTheme}
+        richColors={config?.richColors ?? false}
         expand={config?.expand}
         visibleToasts={config?.visibleToasts ?? 4}
         hotkey={config?.hotkey}
@@ -53,6 +64,11 @@ export function CustomWebToaster({ config }: CustomWebToasterProps) {
         gap={resolveGapNumber(config?.gap) ?? 12}
         closeButton={config?.closeButton ?? true}
         toastOptions={{
+          style: {
+            borderRadius: 0,
+            background: "var(--color-surface)",
+            color: "var(--color-text)",
+          },
           classNames: {
             toast: "mb-sonner-toast",
             title: "mb-sonner-title",
