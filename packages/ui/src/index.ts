@@ -25,6 +25,8 @@ export { IconButton } from "./components/IconButton/IconButton";
 export type { IconButtonProps } from "./components/IconButton/IconButton";
 export { Navigation } from "./components/Navigation/Navigation";
 export type { NavigationItem, NavigationProps } from "./components/Navigation/Navigation";
+export { ExpoNavbarTabs } from "./components/ExpoTabs/ExpoNavbarTabs";
+export type { ExpoNavbarTabRoute, ExpoNavbarTabsProps } from "./components/ExpoTabs/ExpoNavbarTabs";
 export { Navbar } from "./components/Navbar/Navbar";
 export type { NavbarProps } from "./components/Navbar/Navbar";
 export { Page } from "./components/Page/Page";

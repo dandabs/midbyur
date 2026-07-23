@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { ExpoNavbarTabs } from "./ExpoNavbarTabs";
 import { ExpoTabList, ExpoTabSlot, ExpoTabsRoot, ExpoTabTrigger } from "./ExpoTabs";
 import { Stack } from "../Stack/Stack";
 import { Text } from "../Text/Text";
@@ -34,5 +35,20 @@ export const PreviewStructure: Story = {
         </Stack>
       </ExpoTabSlot>
     </ExpoTabsRoot>
+  ),
+};
+
+export const NavbarModePreview: Story = {
+  render: () => (
+    <div className="min-h-screen bg-[var(--color-background)]">
+      <ExpoNavbarTabs
+        brand="Miðbýur"
+        pathname="/"
+        routes={[
+          { name: "home", href: "/", title: "Home" },
+          { name: "activity", href: "/activity", title: "Activity" },
+        ]}
+      />
+    </div>
   ),
 };
