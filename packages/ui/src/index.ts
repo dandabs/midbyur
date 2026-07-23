@@ -1,5 +1,11 @@
 "use client";
 
+export { Divider } from "./components/Divider/Divider";
+export type { DividerProps } from "./components/Divider/Divider";
+export { Input } from "./components/Input/Input";
+export type { InputProps } from "./components/Input/Input";
+export { FlatList } from "./components/FlatList/FlatList";
+export type { FlatListProps } from "./components/FlatList/FlatList";
 export { MidbyurProvider } from "./provider";
 export type { ThemeMode } from "@midbyur/theme";
 

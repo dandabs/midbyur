@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Image, View, type ImageStyle, type ViewProps } from "react-native";
+import { Image, View, type ImageStyle, type ViewProps, type ViewStyle } from "react-native";
 import { withClassName } from "../../cssInterop";
 
 export type CardProps = Readonly<{
@@ -10,6 +10,8 @@ export type CardProps = Readonly<{
   imageAlt?: string;
   imageHeight?: number | string;
   className?: string;
+  contentClassName?: string;
+  contentStyle?: ViewStyle;
 }> & Omit<ViewProps, "children">;
 
 function resolveHeightValue(height: number | string): number | string {
@@ -22,6 +24,8 @@ export function Card({
   imageAlt = "",
   imageHeight = "48em",
   className,
+  contentClassName,
+  contentStyle,
   ...props
 }: CardProps) {
   const rootClassName = ["mb-card", className]
@@ -31,6 +35,10 @@ export function Card({
   const cardImageStyle: ImageStyle = {
     height: resolveHeightValue(imageHeight) as any,
   };
+
+  const contentRootClassName = ["mb-card__content", contentClassName]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <View
@@ -46,7 +54,7 @@ export function Card({
         />
       ) : null}
 
-      <View style={withClassName("mb-card__content") as any}>{children}</View>
+      <View style={withClassName(contentRootClassName, contentStyle) as any}>{children}</View>
     </View>
   );
 }

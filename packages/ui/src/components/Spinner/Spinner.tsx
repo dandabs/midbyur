@@ -1,8 +1,10 @@
 "use client";
 
-import { ActivityIndicator, type ActivityIndicatorProps, type ViewStyle } from "react-native";
+import { ActivityIndicator, Platform, type ActivityIndicatorProps, type ViewStyle } from "react-native";
+import { themeModes } from "@midbyur/theme";
 import { withClassName } from "../../cssInterop";
 import type { TextColor } from "../Text/Text";
+import { useMidbyurTheme } from "../../provider";
 
 const spinnerColorValues: Readonly<Record<TextColor, string>> = {
   background: "var(--color-background)",
@@ -37,6 +39,27 @@ const spinnerColorValues: Readonly<Record<TextColor, string>> = {
   current: "currentColor",
 };
 
+function resolveNativeSpinnerColor(color: TextColor, theme: keyof typeof themeModes): string {
+  const colors = themeModes[theme] ?? themeModes.light;
+
+  switch (color) {
+    case "current":
+      return colors.text;
+    case "muted":
+      return colors.textMuted;
+    case "border":
+      return colors.border;
+    case "borderStrong":
+      return colors.borderStrong;
+    case "disabled":
+      return colors.disabled;
+    case "disabledText":
+      return colors.disabledText;
+    default:
+      return (colors as Readonly<Record<string, string>>)[color] ?? colors.text;
+  }
+}
+
 export type SpinnerProps = Readonly<{
   color?: TextColor;
   className?: string;
@@ -48,9 +71,12 @@ export function Spinner({
   style,
   ...props
 }: SpinnerProps) {
+  const theme = useMidbyurTheme();
+  const resolvedColor = resolveNativeSpinnerColor(color, theme);
+
   return (
     <ActivityIndicator
-      color={spinnerColorValues[color]}
+      color={Platform.OS === "web" ? spinnerColorValues[color] : resolvedColor}
       style={withClassName(className, style as ViewStyle) as ViewStyle}
       {...props}
     />

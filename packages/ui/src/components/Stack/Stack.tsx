@@ -1,6 +1,6 @@
 "use client";
 
-import { Children, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { Platform, View, type ViewProps, type ViewStyle } from "react-native";
 import { withClassName } from "../../cssInterop";
 import { resolveGapNumber, resolveGapValue, type GapValue } from "../../spacing";
@@ -27,9 +27,7 @@ export function Stack({
       ? gap
       : undefined;
   const numericGap = typeof gap === "number" ? gap : undefined;
-  const resolvedGapNumber = resolveGapNumber(
-    mappedGap ?? numericGap,
-  );
+  const resolvedGapNumber = resolveGapNumber(mappedGap ?? numericGap);
   const resolvedGap = resolveGapValue(gap);
   const directionClass = direction === "row" ? "mb-stack--row" : "mb-stack--column";
   const rootClassName = [
@@ -40,47 +38,9 @@ export function Stack({
     .filter(Boolean)
     .join(" ");
 
-  if (Platform.OS !== "web") {
-    const spacedChildren = Children.toArray(children).map((child, index) => {
-      if (index === 0) return child;
-
-      const childKey =
-        typeof child === "object" &&
-        child !== null &&
-        "key" in child &&
-        (typeof (child as { key: unknown }).key === "string" ||
-          typeof (child as { key: unknown }).key === "number")
-          ? String((child as { key: string | number }).key)
-          : "stack-gap";
-
-      const spacingStyle: ViewStyle =
-        direction === "row"
-          ? { marginLeft: resolvedGapNumber ?? 0 }
-          : { marginTop: resolvedGapNumber ?? 0 };
-
-      return (
-        <View
-          key={`stack-gap-${childKey}`}
-          style={spacingStyle}
-        >
-          {child}
-        </View>
-      );
-    });
-
-    return (
-      <View
-        style={withClassName(rootClassName, style as ViewStyle) as ViewStyle}
-        {...props}
-      >
-        {spacedChildren}
-      </View>
-    );
-  }
-
-  const gapStyle: ViewStyle = {
-    gap: resolvedGap,
-  };
+  const gapStyle: ViewStyle = Platform.OS === "web"
+    ? { gap: resolvedGap }
+    : { gap: resolvedGapNumber ?? 0 };
 
   const rootStyle: ViewStyle = {
     ...gapStyle,

@@ -1,6 +1,6 @@
 "use client";
 
-import { createElement, type CSSProperties, type ReactNode } from "react";
+import { createContext, createElement, useContext, type CSSProperties, type ReactNode } from "react";
 import { Platform, View, useColorScheme } from "react-native";
 import * as nativeRemModule from "react-native-css-interop/dist/runtime/native/rem";
 import * as nativeVariablesModule from "react-native-css-interop/dist/runtime/native/variables";
@@ -49,6 +49,8 @@ const nativeVars =
 
 type ThemeCssVariables = Readonly<Record<`--color-${string}`, string>>;
 
+const MidbyurThemeContext = createContext<ThemeMode>("light");
+
 function buildThemeVariables(theme: ThemeMode): ThemeCssVariables {
   const colors = themeModes[theme];
 
@@ -90,6 +92,10 @@ export type MidbyurProviderProps = Readonly<{
   toastConfig?: ToastProviderProps["config"];
 }>;
 
+export function useMidbyurTheme(): ThemeMode {
+  return useContext(MidbyurThemeContext);
+}
+
 export function MidbyurProvider({
   theme,
   children,
@@ -108,19 +114,27 @@ export function MidbyurProvider({
     setNativeThemeVariables(themeVariables);
 
     return createElement(
-      View,
-      { style: [{ flex: 1 }, nativeVars(themeVariables)] },
-      children,
+      MidbyurThemeContext.Provider,
+      { value: resolvedTheme },
+      createElement(
+        View,
+        { style: [{ flex: 1 }, nativeVars(themeVariables)] },
+        children,
+      ),
     );
   }
 
   return createElement(
-    "div",
-    {
-      "data-theme": resolvedTheme,
-      className: "bg-[var(--color-background)] text-[var(--color-text)]",
-      style: buildThemeVariables(resolvedTheme) as CSSProperties,
-    },
-    createElement(ToastProvider, { config: toastConfig, children }),
+    MidbyurThemeContext.Provider,
+    { value: resolvedTheme },
+    createElement(
+      "div",
+      {
+        "data-theme": resolvedTheme,
+        className: "bg-[var(--color-background)] text-[var(--color-text)]",
+        style: buildThemeVariables(resolvedTheme) as CSSProperties,
+      },
+      createElement(ToastProvider, { config: toastConfig, children }),
+    ),
   );
 }

@@ -18,18 +18,22 @@ const maxWidthClassNames: Readonly<Record<ContainerMaxWidth, string>> = {
 export type ContainerProps = Readonly<{
   children?: ReactNode;
   maxWidth?: ContainerMaxWidth;
+  fill?: boolean;
   className?: string;
 }> & Omit<ViewProps, "children">;
 
 export function Container({
   children,
   maxWidth = "xl",
+  fill = false,
   className,
+  style,
   ...props
 }: ContainerProps) {
   const rootClassName = [
     "mb-container",
     maxWidthClassNames[maxWidth],
+    fill ? "mb-container--fill" : undefined,
     className,
   ]
     .filter(Boolean)
@@ -37,7 +41,7 @@ export function Container({
 
   return (
     <View
-      style={withClassName(rootClassName) as any}
+      style={withClassName(rootClassName, style as any) as any}
       {...props}
     >
       {children}

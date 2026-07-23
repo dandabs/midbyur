@@ -1,10 +1,11 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { Children, cloneElement, isValidElement, type ReactNode, type ReactElement } from "react";
 import { Platform } from "react-native";
 import { View, type ViewProps, type ViewStyle } from "react-native";
 import { withClassName } from "../../cssInterop";
 import { resolveGapNumber, resolveGapValue, type GapValue } from "../../spacing";
+import { Button } from "../Button/Button";
 
 export type ButtonGroupDirection = "horizontal" | "vertical";
 
@@ -47,12 +48,31 @@ export function ButtonGroup({
     ...(style as ViewStyle),
   };
 
+  const normalizedChildren = direction === "horizontal"
+    ? Children.map(children, (child) => {
+      if (!isValidElement(child)) {
+        return child;
+      }
+
+      if (child.type !== Button) {
+        return child;
+      }
+
+      const buttonChild = child as ReactElement<{ fluid?: boolean }>;
+
+      return cloneElement(buttonChild, {
+        ...buttonChild.props,
+        fluid: false,
+      });
+    })
+    : children;
+
   return (
     <View
       style={withClassName(rootClassName, rootStyle) as ViewStyle}
       {...props}
     >
-      {children}
+      {normalizedChildren}
     </View>
   );
 }
