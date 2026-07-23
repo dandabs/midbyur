@@ -3,7 +3,8 @@ import "../../../packages/ui/src/components/styles.css";
 import { useFonts } from "expo-font";
 import { usePathname } from "expo-router";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
-import { ExpoNavbarTabs, MidbyurProvider } from "@midbyur/ui";
+import { MidbyurProvider } from "@midbyur/ui";
+import { ExpoNavbarTabs } from "@midbyur/ui/src/components/ExpoTabs/ExpoNavbarTabs";
 import { MIDBYUR_NATIVE_FONTS } from "../fonts";
 
 export default function RootLayout() {

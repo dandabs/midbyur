@@ -1,33 +1,10 @@
 "use client";
 
-import type { ComponentProps, ComponentType, ReactNode } from "react";
+import type { ReactNode } from "react";
+import { TabList, TabSlot, TabTrigger, Tabs, type TabTriggerSlotProps } from "expo-router/ui";
 import { Platform, Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
 import { Navbar } from "../Navbar/Navbar";
 import { Text } from "../Text/Text";
-
-type ExpoRouterUiModule = {
-  Tabs: ComponentType<Readonly<{ children?: ReactNode; asChild?: boolean }>>;
-  TabList: ComponentType<Readonly<{ children?: ReactNode; asChild?: boolean }>>;
-  TabTrigger: ComponentType<
-    Readonly<{
-      name: string;
-      href: string;
-      asChild?: boolean;
-      children?: ReactNode;
-    }>
-  >;
-  TabSlot: ComponentType<Readonly<{ style?: ComponentProps<typeof View>["style"] }>>;
-};
-
-function getExpoRouterUiModule(): ExpoRouterUiModule | null {
-  try {
-    const runtimeRequire = (0, eval)("require") as ((id: string) => unknown);
-    const moduleId = ["expo-router", "ui"].join("/");
-    return runtimeRequire(moduleId) as ExpoRouterUiModule;
-  } catch {
-    return null;
-  }
-}
 
 export type ExpoNavbarTabRoute = Readonly<{
   name: string;
@@ -49,31 +26,6 @@ export function ExpoNavbarTabs({
   webContentTopPadding = 84,
 }: ExpoNavbarTabsProps) {
   const { height: viewportHeight } = useWindowDimensions();
-  const expoRouterUi = getExpoRouterUiModule();
-
-  if (!expoRouterUi) {
-    return (
-      <View style={[styles.appRoot, Platform.OS === "web" ? { minHeight: viewportHeight } : null]}>
-        {Platform.OS === "web" ? (
-          <Navbar
-            brand={brand}
-            links={routes.map((route) => ({
-              title: route.title,
-              href: route.href,
-              active: pathname === route.href || pathname.startsWith(`${route.href}/`),
-            }))}
-            className="mb-expo-web-navbar"
-          />
-        ) : null}
-        <View style={[styles.tabSlot, Platform.OS === "web" ? { paddingTop: webContentTopPadding } : null]} />
-      </View>
-    );
-  }
-
-  const Tabs = expoRouterUi.Tabs;
-  const TabSlot = expoRouterUi.TabSlot;
-  const TabList = expoRouterUi.TabList;
-  const TabTrigger = expoRouterUi.TabTrigger;
 
   return (
     <View style={[styles.appRoot, Platform.OS === "web" ? { minHeight: viewportHeight } : null]}>
@@ -116,12 +68,7 @@ export function ExpoNavbarTabs({
   );
 }
 
-type TabButtonProps = Omit<ComponentProps<typeof Pressable>, "children" | "style"> & {
-  children?: ReactNode;
-  isFocused?: boolean;
-};
-
-function TabButton({ children, isFocused, ...props }: TabButtonProps) {
+function TabButton({ children, isFocused, ...props }: TabTriggerSlotProps) {
   return (
     <Pressable
       {...props}
