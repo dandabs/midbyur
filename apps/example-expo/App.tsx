@@ -1,14 +1,8 @@
-import "./global.css";
+import "../../packages/ui/src/components/styles.css";
 
 import { useFonts } from "expo-font";
 import { ActivityIndicator, StatusBar, View } from "react-native";
-import { Button } from "@midbyur/ui/src/components/Button/Button";
-import { Card } from "@midbyur/ui/src/components/Card/Card";
-import { Page } from "@midbyur/ui/src/components/Page/Page";
-import { Stack } from "@midbyur/ui/src/components/Stack/Stack";
-import { Text } from "@midbyur/ui/src/components/Text/Text";
-import { showInfoToast, showSuccessToast } from "@midbyur/ui/src/toast";
-import { MidbyurProvider } from "@midbyur/ui/src/provider";
+import { Button, Card, MidbyurProvider, Page, Stack, Text, showInfoToast, showSuccessToast } from "@midbyur/ui";
 import { MIDBYUR_NATIVE_FONTS } from "./fonts";
 
 export default function App() {
@@ -17,7 +11,7 @@ export default function App() {
 
   if (hasNativeFonts && !fontsLoaded) {
     return (
-      <View className="flex-1 items-center justify-center bg-(--color-background)">
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "var(--color-background)" }}>
         <ActivityIndicator size="large" />
       </View>
     );

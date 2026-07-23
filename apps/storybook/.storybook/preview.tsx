@@ -22,7 +22,7 @@ const preview: Preview = {
   parameters: {
     options: {
       storySort: {
-        order: ["Get started", "Configure your project", "Components"],
+        order: ["Get started", "Configure your project", "Expo only", "Components"],
       },
     },
     backgrounds: {

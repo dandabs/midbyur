@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { ImageBackground, View, type ImageStyle, type TextStyle, type ViewProps, type ViewStyle } from "react-native";
+import { ImageBackground, View, type ImageStyle, type ViewProps, type ViewStyle } from "react-native";
 import { Text, type TextVariant } from "../Text/Text";
 import { withClassName } from "../../cssInterop";
 
@@ -17,6 +17,7 @@ export type HeroProps = Readonly<{
   overlayOpacity?: number;
   heightPreset?: HeroHeightPreset;
   height?: number | string;
+  className?: string;
 }> & Omit<ViewProps, "children">;
 
 const heroHeightPresetValues: Readonly<Record<HeroHeightPreset, string>> = {
@@ -84,12 +85,10 @@ export function Hero({
   const hasSubtitle = Boolean(subtitle);
   const useVerticalTextLayout =
     heightPreset === "twoThirds" || heightPreset === "oneThird";
-  const titleStyle: TextStyle | undefined =
-    titleVariant === "display" ? { lineHeight: 0.90 } : undefined;
-  const titleClassName = "text-white";
+  const titleClassName = "mb-hero__title";
 
   const rootClassName = [
-    "relative flex h-full w-full flex-col justify-end overflow-hidden pt-24 pb-2",
+    "mb-hero",
     className,
   ]
     .filter(Boolean)
@@ -109,34 +108,33 @@ export function Hero({
     >
       <ImageBackground
         source={images[activeImageIndex] ? { uri: images[activeImageIndex] } : undefined}
-        style={withClassName("absolute inset-0") as any}
+        style={withClassName("mb-hero__bg") as any}
         imageStyle={{ resizeMode: "cover" } as ImageStyle}
       />
       <View
-        style={withClassName("absolute inset-0 bg-black", { opacity: clampOpacity(overlayOpacity) }) as ViewStyle}
+        style={withClassName("mb-hero__overlay", { opacity: clampOpacity(overlayOpacity) }) as ViewStyle}
       />
 
-      <View style={withClassName("relative z-10 w-full px-4 sm:px-6 lg:px-8") as any}>
+      <View style={withClassName("mb-hero__content") as any}>
         <View
           style={withClassName(
             hasSubtitle
               ? useVerticalTextLayout
-                ? "w-full flex flex-col gap-4"
-                : "w-full flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-start sm:gap-8"
-              : "w-full"
+                ? "mb-hero__layout-vertical"
+                : "mb-hero__layout"
+              : "mb-hero__titleWrap"
           ) as any}
         >
           <View
             style={withClassName(
               hasSubtitle && !useVerticalTextLayout
-                ? "w-full sm:w-fit sm:max-w-[40%] sm:flex-none"
-                : "w-full"
+                ? "mb-hero__titleWrap mb-hero__titleWrap-narrow"
+                : "mb-hero__titleWrap"
             ) as any}
           >
             <Text
               variant={titleVariant}
               className={titleClassName}
-              style={titleStyle}
             >
               {title}
             </Text>
@@ -144,10 +142,12 @@ export function Hero({
           {hasSubtitle ? (
             <View
               style={withClassName(
-                useVerticalTextLayout ? "w-full" : "w-full sm:w-fit sm:max-w-[40%] sm:flex-none"
+                useVerticalTextLayout
+                  ? "mb-hero__subtitleWrap"
+                  : "mb-hero__subtitleWrap mb-hero__subtitleWrap-narrow"
               ) as any}
             >
-              <Text className="text-white/90">{subtitle}</Text>
+              <Text className="mb-hero__subtitle">{subtitle}</Text>
             </View>
           ) : null}
         </View>

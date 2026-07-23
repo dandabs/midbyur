@@ -5,7 +5,6 @@ const nextConfig: NextConfig = {
   transpilePackages: [
     "@midbyur/ui",
     "@expo/html-elements",
-    "nativewind",
     "react-native-css-interop",
     "burnt",
   ],

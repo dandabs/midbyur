@@ -1,0 +1,26 @@
+import { Meta, Title, Subtitle } from "@storybook/addon-docs/blocks";
+
+<Meta title="Expo only/Introduction" />
+
+<Title>Expo-only Components</Title>
+
+<Subtitle>Components that depend on Expo runtimes and are not fully previewable on Storybook web</Subtitle>
+
+## Included Components
+
+- Router Tabs wrappers: ExpoTabsRoot, ExpoTabList, ExpoTabTrigger, ExpoTabSlot.
+
+## Notes
+
+- These components are built for Expo native runtime and use expo-router/ui under the hood.
+- Storybook web shows fallback structure only.
+- Validate full behavior in the Expo example app.
+
+## Where To Test
+
+Run the Expo app and verify tab navigation:
+
+```bash
+pnpm --filter @midbyur/example-expo start:dev-client
+pnpm --filter @midbyur/example-expo ios:run
+```

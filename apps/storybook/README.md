@@ -30,4 +30,5 @@ Configured in `.storybook/preview.tsx` with `parameters.options.storySort.order`
 - `src/stories/Introduction.mdx`
 - `src/stories/SetupWithNextjs.mdx`
 - `src/stories/SetupWithExpo.mdx`
+- `src/stories/ExpoOnly.mdx`
 - `src/stories/Configure.mdx`

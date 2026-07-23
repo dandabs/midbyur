@@ -42,6 +42,9 @@ const config: StorybookConfig = {
       resolve: {
         alias: {
           "react-native": "react-native-web",
+          // Chromatic/Storybook web builds should not traverse expo-router's native tab internals.
+          // This stub keeps shared UI exports resolvable without pulling react-native-screens tab host files.
+          "expo-router/ui": `${runtimeStubsDir}/expo-router/ui.tsx`,
           "react-native-css-interop/dist/runtime/native/rem": `${runtimeStubsDir}/react-native-css-interop/rem.ts`,
           "react-native-css-interop/dist/runtime/native/variables": `${runtimeStubsDir}/react-native-css-interop/variables.ts`,
           "react-native-css-interop/dist/runtime/native/stylesheet": `${runtimeStubsDir}/react-native-css-interop/stylesheet.ts`,

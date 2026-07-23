@@ -14,43 +14,26 @@ Create a new Next.js app with App Router, then install Midbyur and required depe
 pnpm create next-app@latest my-app
 cd my-app
 pnpm add @midbyur/ui @midbyur/theme next react react-dom react-native react-native-web
-pnpm add -D tailwindcss @tailwindcss/postcss nativewind webpack @babel/plugin-transform-flow-strip-types babel-loader typescript @types/react @types/react-dom @types/node
+pnpm add -D webpack @babel/plugin-transform-flow-strip-types babel-loader typescript @types/react @types/react-dom @types/node
 ```
 
 If you are integrating with Expo, use Get started / Setup with Expo.
 
-If consuming @midbyur/ui from a workspace package, keep the Tailwind @source paths as shown below. If using a published package, adjust paths to your distribution layout.
+If consuming @midbyur/ui from a workspace package, keep the stylesheet path as shown below. If using a published package, adjust paths to your distribution layout.
 
 ## Required Configuration
 
-### 1. PostCSS
-
-Create postcss.config.mjs:
-
-```js
-const config = {
-  plugins: {
-    "@tailwindcss/postcss": {},
-  },
-};
-
-export default config;
-```
-
-### 2. Tailwind CSS Entry Point
+### 1. Global Stylesheet
 
 Create app/globals.css:
 
 ```css
-@import "tailwindcss" important;
-@source "./**/*.{js,ts,jsx,tsx,mdx}";
-@source "../packages/ui/src/**/*.{js,ts,jsx,tsx,mdx}";
+@import "../packages/ui/src/components/styles.css";
 ```
 
-- The important flag keeps utilities from being overwritten after hydration.
-- The @source entries must include both app and UI package paths.
+Midbyur component styles are loaded from the imported UI stylesheet.
 
-### 3. Next.js Configuration
+### 2. Next.js Configuration
 
 Create or update next.config.ts:
 
@@ -62,7 +45,6 @@ const nextConfig: NextConfig = {
   transpilePackages: [
     "@midbyur/ui",
     "@expo/html-elements",
-    "nativewind",
     "react-native-css-interop",
     "burnt",
   ],
@@ -85,7 +67,7 @@ const nextConfig: NextConfig = {
 export default nextConfig;
 ```
 
-### 4. Server Polyfill for __DEV__
+### 3. Server Polyfill for __DEV__
 
 Create app/polyfills.ts:
 
@@ -94,9 +76,9 @@ Create app/polyfills.ts:
   process.env.NODE_ENV !== "production";
 ```
 
-Import this first in app/layout.tsx, before any @midbyur/ui, react-native, or NativeWind imports.
+Import this first in app/layout.tsx, before any @midbyur/ui or react-native imports.
 
-### 5. Root Layout
+### 4. Root Layout
 
 Create app/layout.tsx:
 
@@ -120,7 +102,7 @@ export default function RootLayout({
 }
 ```
 
-### 6. Client-Only Provider Boundary
+### 5. Client-Only Provider Boundary
 
 Do not use ssr: false directly in app/layout.tsx because layout is a Server Component. Create a client wrapper.
 
@@ -160,19 +142,7 @@ export function ClientProviders({
 }
 ```
 
-### 7. TypeScript Configuration
-
-Ensure tsconfig.json includes NativeWind types:
-
-```json
-{
-  "compilerOptions": {
-    "types": ["nativewind/types"]
-  }
-}
-```
-
-### 8. First Page
+### 6. First Page
 
 Pages using interactive Midbyur components must be client components. Create app/page.tsx:
 
@@ -182,11 +152,7 @@ Pages using interactive Midbyur components must be client components. Create app
 import { Button } from "@midbyur/ui";
 
 export default function Home() {
-  return (
-    <main>
-      <Button>Hello Midbyur</Button>
-    </main>
-  );
+  return <Button>Hello Midbyur</Button>;
 }
 ```
 
@@ -194,17 +160,8 @@ export default function Home() {
 
 ### Button renders unstyled
 
-- Confirm app/globals.css imports Tailwind with important.
-- Confirm app/globals.css includes @source for the UI package.
+- Confirm app/globals.css imports the Midbyur UI stylesheet.
 - Confirm globals.css is imported by app/layout.tsx.
-
-### Styles flash then disappear
-
-This usually means Tailwind was imported without important.
-
-```css
-@import "tailwindcss" important;
-```
 
 ### Hydration failed: server HTML did not match client
 

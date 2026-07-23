@@ -6,6 +6,8 @@ import { Meta, Title, Subtitle } from "@storybook/addon-docs/blocks";
 
 <Subtitle>Configuration-only reference</Subtitle>
 
+Use @midbyur/ui with Expo Router and direct stylesheet import. No NativeWind or Tailwind app setup is required.
+
 ## Installation
 
 Install dependencies from the repository root:
@@ -14,17 +16,20 @@ Install dependencies from the repository root:
 pnpm install
 ```
 
-Add the Expo runtime packages used by this setup:
+Dependencies used by the working example app include:
 
-```bash
-pnpm --filter @midbyur/example-expo add expo-dev-client expo-font burnt react-native-css-interop
-```
-
-If you only need to install burnt in an Expo project:
-
-```bash
-npx expo install burnt
-```
+- @midbyur/ui
+- @midbyur/theme
+- react-native-css-interop
+- expo-router
+- expo-dev-client
+- expo-font
+- expo-linking
+- expo-constants
+- @expo/metro-runtime
+- @expo/log-box
+- @expo/dom-webview
+- burnt
 
 ## Run Commands
 
@@ -49,7 +54,17 @@ pnpm --filter @midbyur/example-expo web
 
 ## Required Configuration
 
-### 1. Babel
+### 1. Package Entry
+
+apps/example-expo/package.json should use:
+
+```json
+{
+  "main": "expo-router/entry"
+}
+```
+
+### 2. Babel
 
 Create or update apps/example-expo/babel.config.js:
 
@@ -58,59 +73,74 @@ module.exports = function (api) {
   api.cache(true);
 
   return {
-    presets: [["babel-preset-expo", { jsxImportSource: "nativewind" }]],
+    presets: ["babel-preset-expo"],
   };
 };
 ```
 
-Do not add nativewind/babel in this setup.
+### 3. Expo Router Plugin
 
-### 2. Metro
+apps/example-expo/app.json should include:
+
+```json
+{
+  "expo": {
+    "plugins": ["expo-router"]
+  }
+}
+```
+
+Create route files under apps/example-expo/app, including _layout.tsx and tab pages.
+
+### 4. Metro
 
 Create or update apps/example-expo/metro.config.js:
 
 ```js
 const { getDefaultConfig } = require("expo/metro-config");
-const { withNativeWind } = require("nativewind/metro");
+const { withCssInterop } = require("react-native-css-interop/metro");
+const path = require("node:path");
 
 const config = getDefaultConfig(__dirname, { isCSSEnabled: true });
 
-config.watchFolders = [require("path").resolve(__dirname, "../..")];
+const appNodeModulesPath = path.resolve(__dirname, "node_modules");
+const workspaceNodeModulesPath = path.resolve(__dirname, "../../node_modules");
 
-module.exports = withNativeWind(config, {
-  input: "./global.css",
+config.resolver = config.resolver || {};
+config.resolver.nodeModulesPaths = [appNodeModulesPath, workspaceNodeModulesPath];
+
+config.watchFolders = [path.resolve(__dirname, "../..")];
+
+module.exports = withCssInterop(config, {
+  inlineRem: 15,
 });
 ```
 
-### 3. Tailwind Entry
+### 5. Shared Stylesheet Import
 
-apps/example-expo/global.css:
+Import shared UI styles directly in apps/example-expo/app/_layout.tsx:
 
-```css
-@tailwind components;
-@tailwind utilities;
+```ts
+import "../../../packages/ui/src/components/styles.css";
 ```
 
-apps/example-expo/tailwind.config.js content must include:
+If you use App.tsx instead of Expo Router:
 
-```js
-content: [
-  "./App.{js,jsx,ts,tsx}",
-  "./src/**/*.{js,jsx,ts,tsx}",
-  "../../packages/ui/src/**/*.{js,jsx,ts,tsx}",
-]
+```ts
+import "../../packages/ui/src/components/styles.css";
 ```
 
-### 4. NativeWind Types
+### 6. TypeScript CSS Declaration
 
 apps/example-expo/nativewind-env.d.ts:
 
 ```ts
-/// <reference types="nativewind/types" />
 declare module "*.css";
 ```
 
-### 5. Fonts
+apps/example-expo/tsconfig.json should include nativewind-env.d.ts in include.
+
+### 7. Fonts
 
 apps/example-expo/fonts.ts:
 
@@ -124,8 +154,6 @@ export const MIDBYUR_NATIVE_FONTS: Record<string, FontSource> = {
 };
 ```
 
-Use plain .ttf filenames in mapping for Metro compatibility.
-
 ## Troubleshooting
 
 ### Native toasts do not appear
@@ -137,9 +165,13 @@ pnpm --filter @midbyur/example-expo start:dev-client
 pnpm --filter @midbyur/example-expo ios:run
 ```
 
-### Utility styles missing
+### Styles are missing
 
-Check Tailwind content paths include ../../packages/ui/src and verify Metro uses withNativeWind with input set to ./global.css.
+Check all of the following:
+
+- apps/example-expo/app/_layout.tsx imports ../../../packages/ui/src/components/styles.css.
+- Metro config wraps `withCssInterop(config, { inlineRem: 15 })`.
+- Restart Metro after metro.config.js edits.
 
 Then clear cache:
 

@@ -67,3 +67,47 @@ export const Slideshow: Story = {
     ],
   },
 };
+
+export const BrandTitleOnly: Story = {
+  args: {
+    title: <Text variant="display">Miðbýur</Text>,
+    subtitle: undefined,
+    backgroundImageUrls: undefined,
+    backgroundImageUrl:
+      "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1600&q=80",
+  },
+};
+
+export const BrandTitlePlainString: Story = {
+  args: {
+    title: "Miðbýur",
+    subtitle: undefined,
+    titleVariant: "display",
+    backgroundImageUrls: undefined,
+    backgroundImageUrl:
+      "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1600&q=80",
+  },
+};
+
+export const BrandTitleOnlyTwoThirds: Story = {
+  args: {
+    title: <Text variant="display">Miðbýur</Text>,
+    subtitle: undefined,
+    heightPreset: "twoThirds",
+    backgroundImageUrls: undefined,
+    backgroundImageUrl:
+      "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1600&q=80",
+  },
+};
+
+export const TitleShrinkWrapMaxHalf: Story = {
+  args: {
+    title: "Miðbýur Atelier",
+    subtitle: undefined,
+    titleVariant: "display",
+    heightPreset: "full",
+    backgroundImageUrls: undefined,
+    backgroundImageUrl:
+      "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1600&q=80",
+  },
+};

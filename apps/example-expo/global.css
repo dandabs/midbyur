@@ -1,2 +1,1 @@
-@tailwind components;
-@tailwind utilities;
+@import "../../packages/ui/src/components/styles.css";

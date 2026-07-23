@@ -15,6 +15,7 @@ export type NavbarProps = Readonly<{
   brand: string;
   links: NavigationItem[];
   linksGap?: GapValue;
+  className?: string;
 }> & Omit<ViewProps, "children">;
 
 function navigateToHref(href: string) {
@@ -156,10 +157,8 @@ export function Navbar({
   };
 
   const rootClassName = [
-    "fixed top-0 left-0 z-50 w-full transition-[background-color,backdrop-filter] duration-300",
-    isPastFirstViewport
-      ? "bg-black"
-      : "bg-black/45 backdrop-blur-xl supports-[backdrop-filter]:bg-black/35",
+    "mb-navbar",
+    isPastFirstViewport ? "mb-navbar--scrolled" : "",
     className,
   ]
     .filter(Boolean)
@@ -174,18 +173,18 @@ export function Navbar({
       {...props}
     >
       <Container>
-        <View style={withClassName("flex w-full flex-row items-center gap-6 py-4") as ViewStyle}>
-          <Text variant="h5Subheading" className="text-white">
+        <View style={withClassName("mb-navbar__row") as ViewStyle}>
+          <Text variant="h5Subheading" className="mb-navbar__brand">
             {brand}
           </Text>
 
-          <View style={withClassName("ml-auto hidden md:flex flex-row items-center gap-4") as ViewStyle}>
+          <View style={withClassName("mb-navbar__desktop") as ViewStyle}>
             <Navigation
               items={links}
               gap={linksGap}
               color="current"
               fullWidth={false}
-              className="text-white"
+              className="mb-navbar__desktop"
             />
 
             <IconButton
@@ -194,19 +193,19 @@ export function Navbar({
               size={18}
               strokeWidth={2}
               onPress={handleThemeToggle}
-              className="text-white"
+              className="mb-navbar__desktop"
               accessibilityLabel={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
             />
           </View>
 
-          <View style={withClassName("ml-auto md:hidden flex flex-row items-center gap-2") as ViewStyle}>
+          <View style={withClassName("mb-navbar__mobile") as ViewStyle}>
             <IconButton
               icon={theme === "dark" ? Sun : Moon}
               color="current"
               size={18}
               strokeWidth={2}
               onPress={handleThemeToggle}
-              className="text-white"
+              className="mb-navbar__mobile"
               accessibilityLabel={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
             />
 
@@ -216,7 +215,7 @@ export function Navbar({
               size={24}
               strokeWidth={2}
               onPress={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-white"
+              className="mb-navbar__mobile"
               accessibilityLabel={isMenuOpen ? "Close menu" : "Open menu"}
             />
           </View>
@@ -225,10 +224,10 @@ export function Navbar({
         {isMenuOpen && (
           <View
             style={withClassName(
-              "flex md:hidden flex-col border-t border-white/15 bg-black/45 backdrop-blur-xl",
+              "mb-navbar__menu",
             ) as ViewStyle}
           >
-            <View style={withClassName("flex flex-col py-4 px-0") as ViewStyle}>
+            <View style={withClassName("mb-navbar__menu-links") as ViewStyle}>
               {links.map((item) => (
                 <Pressable
                   key={`${item.href}-${item.title}`}
@@ -239,13 +238,13 @@ export function Navbar({
                     navigateToHref(item.href);
                   }}
                   style={withClassName(
-                    "flex px-6 py-3 transition-colors duration-150 hover:bg-white/10",
+                    "mb-navbar__menu-link",
                   ) as ViewStyle}
                 >
                   <Text
                     variant="body"
                     color="current"
-                    className="text-white"
+                    className="mb-navbar__mobile-link"
                   >
                     {item.title}
                   </Text>

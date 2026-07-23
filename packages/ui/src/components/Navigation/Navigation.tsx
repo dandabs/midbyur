@@ -16,6 +16,7 @@ export type NavigationProps = Readonly<{
   color?: TextColor;
   gap?: GapValue;
   fullWidth?: boolean;
+  className?: string;
 }> & Omit<ViewProps, "children">;
 
 function navigateToHref(href: string) {
@@ -49,7 +50,7 @@ export function Navigation({
   style,
   ...props
 }: NavigationProps) {
-  const rootClassName = [fullWidth ? "w-full" : "w-auto", className]
+  const rootClassName = [fullWidth ? "mb-navigation" : "mb-navigation mb-navigation--auto", className]
     .filter(Boolean)
     .join(" ");
 
@@ -63,7 +64,10 @@ export function Navigation({
       {...props}
     >
       <View
-        style={withClassName(fullWidth ? "flex w-full flex-row items-center" : "flex w-auto flex-row items-center", listStyle) as ViewStyle}
+        style={withClassName(
+          fullWidth ? "mb-navigation__list" : "mb-navigation__list mb-navigation__list--auto",
+          listStyle,
+        ) as ViewStyle}
       >
         {items.map((item) => (
           <View key={`${item.href}-${item.title}`}>
@@ -72,14 +76,14 @@ export function Navigation({
               accessibilityState={{ selected: item.active }}
               onPress={() => navigateToHref(item.href)}
               style={withClassName([
-                "inline-flex items-center justify-center rounded-none px-0 py-0 transition-colors duration-150",
-                item.active ? "underline decoration-2 underline-offset-4" : "hover:underline hover:decoration-2 hover:underline-offset-4",
+                "mb-navigation__link",
+                item.active ? "mb-navigation__link--active" : "",
               ].join(" ")) as ViewStyle}
             >
               <Text
                 variant="body"
                 color={color}
-                className="text-current"
+                className="mb-text-color-current"
               >
                 {item.title}
               </Text>

@@ -12,6 +12,7 @@ export type ButtonGroupProps = Readonly<{
   children?: ReactNode;
   direction?: ButtonGroupDirection;
   gap?: GapValue;
+  className?: string;
 }> & Omit<ViewProps, "children">;
 
 export function ButtonGroup({
@@ -32,10 +33,10 @@ export function ButtonGroup({
   );
 
   const rootClassName = [
-    "flex w-full",
+    "mb-button-group",
     direction === "horizontal"
-      ? "flex-row items-center [&>*]:min-w-0 [&>*]:flex-1"
-      : "flex-col",
+      ? "mb-button-group--horizontal"
+      : "mb-button-group--vertical",
     className,
   ]
     .filter(Boolean)

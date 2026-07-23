@@ -22,7 +22,7 @@ export function FooterText({ className, style, ...props }: FooterTextProps) {
           variant="caption"
           color="current"
           inline
-          className="underline"
+          className="mb-footer-text__link"
           accessibilityRole="link"
           onPress={() => {
             if (typeof window !== "undefined") {

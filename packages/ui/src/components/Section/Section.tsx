@@ -12,6 +12,7 @@ export type SectionProps = Readonly<{
   imageUrl?: string;
   overlayOpacity?: number;
   height?: number | string;
+  className?: string;
 }> & Omit<ViewProps, "children">;
 
 function resolveHeightValue(height: number | string): string {
@@ -45,9 +46,9 @@ export function Section({
   const hasFixedHeight = resolvedHeight !== undefined;
 
   const rootClassName = [
-    "relative w-full py-24",
-    hasFixedHeight ? "flex items-center" : "",
-    isImage ? "overflow-hidden" : "",
+    "mb-section",
+    hasFixedHeight ? "mb-section--fixed" : "",
+    isImage ? "mb-section--image" : "",
     className,
   ]
     .filter(Boolean)
@@ -67,13 +68,13 @@ export function Section({
         <>
           <ImageBackground
             source={imageUrl ? { uri: imageUrl } : undefined}
-            style={withClassName("absolute inset-0") as any}
+            style={withClassName("mb-section__bg") as any}
             imageStyle={{ resizeMode: "cover" } as ImageStyle}
           />
           <View
-            style={withClassName("absolute inset-0 bg-black", { opacity: clampOpacity(overlayOpacity) }) as ViewStyle}
+            style={withClassName("mb-section__overlay", { opacity: clampOpacity(overlayOpacity) }) as ViewStyle}
           />
-          <View style={withClassName("relative z-10 w-full") as any}>{children}</View>
+          <View style={withClassName("mb-section__content") as any}>{children}</View>
         </>
       ) : (
         children

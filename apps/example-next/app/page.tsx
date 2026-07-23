@@ -34,7 +34,7 @@ const navigationItems = [
 type DemoIconProps = SVGProps<SVGSVGElement> & {
   color?: string;
   size?: number | string;
-  strokeWidth?: number;
+  strokeWidth?: number | string;
   absoluteStrokeWidth?: boolean;
 };
 
@@ -130,8 +130,8 @@ export default function Home() {
             <Text variant="h2">UI Toolkit</Text>
             <Stack
               direction="row"
-              className="flex-wrap items-center"
               gap={12}
+              style={{ flexWrap: "wrap", alignItems: "center" }}
             >
               <Icon
                 icon={SparkIcon}
@@ -146,7 +146,12 @@ export default function Home() {
                   void showInfoToast("IconButton", "Pressed from the toolkit section");
                 }}
                 accessibilityLabel="Run icon action"
-                className="border border-(--color-border) px-2 py-2"
+                style={{
+                  borderWidth: 1,
+                  borderColor: "var(--color-border)",
+                  paddingHorizontal: 8,
+                  paddingVertical: 8,
+                }}
               />
               <Spinner color="info" />
             </Stack>
@@ -183,7 +188,11 @@ export default function Home() {
               items={navigationItems}
               color="text"
               gap={20}
-              className="border-t border-(--color-border) pt-4"
+              style={{
+                borderTopWidth: 1,
+                borderTopColor: "var(--color-border)",
+                paddingTop: 16,
+              }}
             />
           </Stack>
         </Container>

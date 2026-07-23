@@ -9,6 +9,7 @@ export type GridProps = Readonly<{
   children?: ReactNode;
   cols?: number | string;
   gap?: GapValue;
+  className?: string;
 }> & Omit<ViewProps, "children">;
 
 function resolveColumnsValue(cols: number | string): string {
@@ -27,7 +28,7 @@ export function Grid({
   style,
   ...props
 }: GridProps) {
-  const rootClassName = ["grid w-full", className].filter(Boolean).join(" ");
+  const rootClassName = ["mb-grid", className].filter(Boolean).join(" ");
 
   const rootStyle = {
     ...(style as any),

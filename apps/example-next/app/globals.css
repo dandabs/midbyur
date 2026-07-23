@@ -1,3 +1,26 @@
-@import "tailwindcss" important;
-@source "./**/*.{js,ts,jsx,tsx,mdx}";
-@source "../../../packages/ui/src/**/*.{js,ts,jsx,tsx,mdx}";
+@import "../../../packages/ui/src/components/styles.css";
+
+@font-face {
+	font-family: "Stack Sans Text";
+	src: url("/fonts/StackSansText[wght].ttf") format("truetype");
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Stack Sans Notch";
+	src: url("/fonts/StackSansNotch[wght].ttf") format("truetype");
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Stack Sans Headline";
+	src: url("/fonts/StackSansHeadline[wght].ttf") format("truetype");
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+}
+

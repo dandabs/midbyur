@@ -64,6 +64,7 @@ function buildThemeVariables(theme: ThemeMode): ThemeCssVariables {
     "--color-secondaryHover": colors.secondaryHover,
     "--color-secondaryForeground": colors.secondaryForeground,
     "--color-text": colors.text,
+    "--color-textMuted": colors.textMuted,
     "--color-border": colors.border,
     "--color-borderStrong": colors.borderStrong,
     "--color-success": colors.success,
@@ -120,6 +121,6 @@ export function MidbyurProvider({
       className: "bg-[var(--color-background)] text-[var(--color-text)]",
       style: buildThemeVariables(resolvedTheme) as CSSProperties,
     },
-    createElement(ToastProvider, { config: toastConfig }, children),
+    createElement(ToastProvider, { config: toastConfig, children }),
   );
 }

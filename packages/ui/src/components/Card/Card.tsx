@@ -9,6 +9,7 @@ export type CardProps = Readonly<{
   imageSrc?: string;
   imageAlt?: string;
   imageHeight?: number | string;
+  className?: string;
 }> & Omit<ViewProps, "children">;
 
 function resolveHeightValue(height: number | string): number | string {
@@ -23,7 +24,7 @@ export function Card({
   className,
   ...props
 }: CardProps) {
-  const rootClassName = ["w-full overflow-hidden bg-[var(--color-surface)]", className]
+  const rootClassName = ["mb-card", className]
     .filter(Boolean)
     .join(" ");
 
@@ -41,11 +42,11 @@ export function Card({
           source={{ uri: imageSrc }}
           accessibilityLabel={imageAlt}
           resizeMode="cover"
-          style={withClassName("w-full", cardImageStyle) as ImageStyle}
+          style={withClassName("mb-card__image", cardImageStyle) as ImageStyle}
         />
       ) : null}
 
-      <View style={withClassName("px-6 py-6") as any}>{children}</View>
+      <View style={withClassName("mb-card__content") as any}>{children}</View>
     </View>
   );
 }

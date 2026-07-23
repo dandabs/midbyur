@@ -12,15 +12,15 @@ export type FooterProps = Readonly<{
 export function Footer({ className, style, ...props }: FooterProps) {
   return (
     <View
-      style={withClassName(["w-full bg-black text-white", className].filter(Boolean).join(" "), style as ViewStyle) as ViewStyle}
+      style={withClassName(["mb-footer", className].filter(Boolean).join(" "), style as ViewStyle) as ViewStyle}
       {...props}
     >
       <Container>
-        <View style={withClassName("flex w-full flex-col sm:flex-row") as ViewStyle}>
-          <View style={withClassName("w-full py-6 sm:w-1/2") as ViewStyle}>
+        <View style={withClassName("mb-footer__layout") as ViewStyle}>
+          <View style={withClassName("mb-footer__content") as ViewStyle}>
             <FooterText />
           </View>
-          <View style={withClassName("hidden sm:block sm:w-1/2") as ViewStyle} />
+          <View style={withClassName("mb-footer__spacer") as ViewStyle} />
         </View>
       </Container>
     </View>

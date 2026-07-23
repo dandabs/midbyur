@@ -31,9 +31,9 @@ export function Stack({
     mappedGap ?? numericGap,
   );
   const resolvedGap = resolveGapValue(gap);
-  const directionClass = direction === "row" ? "flex-row" : "flex-col";
+  const directionClass = direction === "row" ? "mb-stack--row" : "mb-stack--column";
   const rootClassName = [
-    "flex",
+    "mb-stack",
     directionClass,
     className,
   ]

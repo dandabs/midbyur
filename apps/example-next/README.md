@@ -1,6 +1,6 @@
 # Midbyur + Next.js Setup
 
-Configuration-only reference for integrating `@midbyur/ui` in a Next.js App Router project.
+Configuration reference for integrating `@midbyur/ui` in a Next.js App Router project with direct CSS import. No Tailwind setup is required.
 
 ## Run This Example
 
@@ -15,50 +15,26 @@ Open `http://localhost:3000`.
 
 ## Start A New Next.js App
 
-Create a new app with the App Router enabled, then add the Midbyur dependencies.
-
 ```bash
 pnpm create next-app@latest my-app
 cd my-app
 pnpm add @midbyur/ui @midbyur/theme next react react-dom react-native react-native-web
-pnpm add -D tailwindcss @tailwindcss/postcss nativewind webpack @babel/plugin-transform-flow-strip-types babel-loader typescript @types/react @types/react-dom @types/node
+pnpm add -D webpack @babel/plugin-transform-flow-strip-types babel-loader typescript @types/react @types/react-dom @types/node
 ```
-
-If you are consuming `@midbyur/ui` from a monorepo workspace package, keep reading as-is. If you are consuming a published package, adjust the Tailwind `@source` path to wherever the distributed component files live.
 
 ## Required Configuration
 
-### 1. PostCSS
-
-Create `postcss.config.mjs`:
-
-```js
-const config = {
-	plugins: {
-		"@tailwindcss/postcss": {},
-	},
-};
-
-export default config;
-```
-
-### 2. Tailwind CSS Entry
+### 1. Global Stylesheet
 
 Create `app/globals.css`:
 
 ```css
-@import "tailwindcss" important;
-@source "./**/*.{js,ts,jsx,tsx,mdx}";
-@source "../packages/ui/src/**/*.{js,ts,jsx,tsx,mdx}";
+@import "../packages/ui/src/components/styles.css";
 ```
 
-Notes:
+If you are consuming a published package, change the import to your distributed UI stylesheet path.
 
-- The `important` flag matters. Without it, the Midbyur button styles rendered but were later overwritten in the browser.
-- The UI package must be included in `@source`, otherwise Tailwind will not emit the classes used by Midbyur components.
-- Update the `@source` path to match your repository layout.
-
-### 3. Next.js Config
+### 2. Next.js Config
 
 Create or update `next.config.ts`:
 
@@ -67,50 +43,43 @@ import type { NextConfig } from "next";
 import webpack from "webpack";
 
 const nextConfig: NextConfig = {
-	transpilePackages: [
-		"@midbyur/ui",
-		"@expo/html-elements",
-		"nativewind",
-		"react-native-css-interop",
-		"burnt",
-	],
-	webpack: (config) => {
-		config.plugins ??= [];
-		config.plugins.push(
-			new webpack.DefinePlugin({
-				__DEV__: JSON.stringify(process.env.NODE_ENV !== "production"),
-			}),
-		);
+  transpilePackages: [
+    "@midbyur/ui",
+    "@expo/html-elements",
+    "react-native-css-interop",
+    "burnt",
+  ],
+  webpack: (config) => {
+    config.plugins ??= [];
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        __DEV__: JSON.stringify(process.env.NODE_ENV !== "production"),
+      }),
+    );
 
-		config.resolve ??= {};
-		config.resolve.alias ??= {};
-		config.resolve.alias["react-native"] = "react-native-web";
+    config.resolve ??= {};
+    config.resolve.alias ??= {};
+    config.resolve.alias["react-native"] = "react-native-web";
 
-		return config;
-	},
+    return config;
+  },
 };
 
 export default nextConfig;
 ```
 
-Notes:
-
-- `transpilePackages` is required because Midbyur depends on React Native and NativeWind packages that need to go through Next's compiler.
-- The `react-native` alias is required for web.
-- Defining `__DEV__` in webpack is not enough on its own for server rendering. The next step handles that.
-
-### 4. Server Polyfill For `__DEV__`
+### 3. Server Polyfill For `__DEV__`
 
 Create `app/polyfills.ts`:
 
 ```ts
 (globalThis as unknown as Record<string, unknown>).__DEV__ =
-	process.env.NODE_ENV !== "production";
+  process.env.NODE_ENV !== "production";
 ```
 
-Import it first in `app/layout.tsx` before anything that might pull in `@midbyur/ui`, `react-native`, or NativeWind.
+Import it first in `app/layout.tsx`.
 
-### 5. Root Layout
+### 4. Root Layout
 
 Create `app/layout.tsx`:
 
@@ -120,25 +89,21 @@ import "./globals.css";
 import { ClientProviders } from "./client-providers";
 
 export default function RootLayout({
-	children,
+  children,
 }: Readonly<{
-	children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-	return (
-		<html lang="en" suppressHydrationWarning>
-			<body>
-				<ClientProviders>{children}</ClientProviders>
-			</body>
-		</html>
-	);
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <ClientProviders>{children}</ClientProviders>
+      </body>
+    </html>
+  );
 }
 ```
 
-The `suppressHydrationWarning` is intentional here because Midbyur's toaster layer is client-only.
-
-### 6. Client-Only Provider Boundary
-
-Do not use `ssr: false` directly inside `layout.tsx`, because `layout.tsx` is a Server Component. Put the dynamic import inside a Client Component.
+### 5. Client-Only Provider Boundary
 
 Create `app/providers.tsx`:
 
@@ -148,11 +113,11 @@ Create `app/providers.tsx`:
 import { MidbyurProvider } from "@midbyur/ui";
 
 export function Providers({
-	children,
+  children,
 }: Readonly<{
-	children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-	return <MidbyurProvider>{children}</MidbyurProvider>;
+  return <MidbyurProvider>{children}</MidbyurProvider>;
 }
 ```
 
@@ -164,37 +129,19 @@ Create `app/client-providers.tsx`:
 import dynamic from "next/dynamic";
 
 const Providers = dynamic(() => import("./providers").then((mod) => mod.Providers), {
-	ssr: false,
+  ssr: false,
 });
 
 export function ClientProviders({
-	children,
+  children,
 }: Readonly<{
-	children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-	return <Providers>{children}</Providers>;
+  return <Providers>{children}</Providers>;
 }
 ```
 
-This is required because Midbyur currently includes a toaster wrapper that checks `document` and cannot render consistently on the server.
-
-### 7. TypeScript
-
-Make sure `tsconfig.json` includes NativeWind types:
-
-```json
-{
-	"compilerOptions": {
-		"types": ["nativewind/types"]
-	}
-}
-```
-
-### 8. First Component
-
-If a page directly imports interactive Midbyur UI components, make that page a Client Component.
-
-Create `app/page.tsx`:
+### 6. First Page
 
 ```tsx
 "use client";
@@ -202,17 +149,11 @@ Create `app/page.tsx`:
 import { Button } from "@midbyur/ui";
 
 export default function Home() {
-	return (
-		<main>
-			<Button>Hello Miðbýur</Button>
-		</main>
-	);
+  return <Button>Hello Miðbýur</Button>;
 }
 ```
 
-## Project Scripts
-
-This example uses:
+## Scripts
 
 ```bash
 pnpm --filter @midbyur/example-next dev
@@ -224,20 +165,9 @@ pnpm --filter @midbyur/example-next build
 
 ### Button renders unstyled
 
-Check all of the following:
+- Confirm `app/globals.css` imports the Midbyur stylesheet.
+- Confirm `globals.css` is imported by `app/layout.tsx`.
 
-- `app/globals.css` imports Tailwind with `important`.
-- `app/globals.css` includes an `@source` entry for the UI package.
-- `globals.css` is imported by `app/layout.tsx`.
+### Hydration failed because server HTML did not match client
 
-### Styles flash and then disappear
-
-This was caused here by omitting `important` from the Tailwind import. Use:
-
-```css
-@import "tailwindcss" important;
-```
-
-### Hydration failed because the server HTML did not match the client
-
-Do not render `MidbyurProvider` directly in the server layout. Keep the provider behind the `ClientProviders` boundary shown above.
+Do not render `MidbyurProvider` directly in the server layout. Keep it behind `ClientProviders`.

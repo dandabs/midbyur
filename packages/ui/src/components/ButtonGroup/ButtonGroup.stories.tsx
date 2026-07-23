@@ -65,3 +65,17 @@ export const NumericGap: Story = {
     </ButtonGroup>
   ),
 };
+
+export const CustomClassName: Story = {
+  args: {
+    direction: "horizontal",
+    gap: "sm",
+    className: "max-w-md",
+  },
+  render: (args) => (
+    <ButtonGroup {...args}>
+      <Button variant="primary"><Text variant="label">North</Text></Button>
+      <Button variant="secondary"><Text variant="label">South</Text></Button>
+    </ButtonGroup>
+  ),
+};

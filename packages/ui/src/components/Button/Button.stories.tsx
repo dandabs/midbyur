@@ -175,3 +175,19 @@ export const LabelColorMapping: Story = {
     </div>
   ),
 };
+
+export const SecondaryOutlineHoverReadable: Story = {
+  args: {
+    type: "outline",
+    variant: "secondary",
+    children: "Secondary Outline",
+  },
+};
+
+export const SolidPrimaryMobileClassCoverage: Story = {
+  args: {
+    type: "solid",
+    variant: "primary",
+    children: "Save changes",
+  },
+};

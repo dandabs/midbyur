@@ -36,7 +36,7 @@ export function Page({
   safeAreaProps,
 }: PageProps) {
   const rootClassName = [
-    "flex flex-1 w-full bg-[var(--color-background)] text-[var(--color-text)]",
+    "mb-page",
     className,
   ]
     .filter(Boolean)
@@ -49,7 +49,7 @@ export function Page({
     content = (
       <ScrollView
         style={withClassName(rootClassName) as ViewStyle}
-        contentContainerStyle={withClassName("flex-grow") as ViewStyle}
+        contentContainerStyle={withClassName("mb-page__grow") as ViewStyle}
         {...scrollViewProps}
       >
         {content}

@@ -10,6 +10,7 @@ export type IconButtonProps = Readonly<{
   size?: IconProps["size"];
   strokeWidth?: IconProps["strokeWidth"];
   onPress: NonNullable<PressableProps["onPress"]>;
+  className?: string;
 }> & Omit<PressableProps, "children" | "onPress">;
 
 export function IconButton({
@@ -23,10 +24,7 @@ export function IconButton({
   ...props
 }: IconButtonProps) {
   const rootClassName = [
-    "inline-flex items-center justify-center rounded-none transition-colors duration-150",
-    "cursor-pointer enabled:hover:bg-white/10",
-    "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-borderStrong)]",
-    "disabled:cursor-not-allowed disabled:opacity-50",
+    "mb-icon-button",
     className,
   ]
     .filter(Boolean)
