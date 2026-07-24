@@ -40,6 +40,7 @@ Create or update `next.config.ts`:
 
 ```ts
 import type { NextConfig } from "next";
+import path from "node:path";
 import webpack from "webpack";
 
 const nextConfig: NextConfig = {
@@ -59,13 +60,29 @@ const nextConfig: NextConfig = {
 
     config.resolve ??= {};
     config.resolve.alias ??= {};
-    config.resolve.alias["react-native"] = "react-native-web";
+    config.resolve.alias["react-native$"] = "react-native-web";
+    config.resolve.alias[
+      "react-native/Libraries/Utilities/codegenNativeComponent$"
+    ] = path.resolve(__dirname, "./stubs/codegenNativeComponent.ts");
+    config.resolve.alias[
+      "react-native/Libraries/Utilities/codegenNativeComponent.js$"
+    ] = path.resolve(__dirname, "./stubs/codegenNativeComponent.ts");
 
     return config;
   },
 };
 
 export default nextConfig;
+```
+
+Create `stubs/codegenNativeComponent.ts`:
+
+```ts
+import type { ComponentType } from "react";
+
+export default function codegenNativeComponent(_name: string): ComponentType {
+  return () => null;
+}
 ```
 
 ### 3. Server Polyfill For `__DEV__`

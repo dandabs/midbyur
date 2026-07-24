@@ -4,7 +4,6 @@ import type { ReactNode } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   ScrollView,
   View,
   type KeyboardAvoidingViewProps,
@@ -12,6 +11,7 @@ import {
   type ViewProps,
   type ViewStyle,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { withClassName } from "../../cssInterop";
 
 export type PageProps = Readonly<{
@@ -43,13 +43,22 @@ export function Page({
     .join(" ");
 
   let content = children;
+  const nativeTopPaddingStyle: ViewStyle | undefined = Platform.OS === "web"
+    ? undefined
+    : { paddingTop: 32 };
 
   // Wrap in ScrollView if enabled
   if (scroll) {
+    const mergedContentContainerStyle = [
+      withClassName("mb-page__grow") as ViewStyle,
+      nativeTopPaddingStyle,
+      scrollViewProps?.contentContainerStyle as ViewStyle | undefined,
+    ].filter(Boolean) as ViewStyle[];
+
     content = (
       <ScrollView
         style={withClassName(rootClassName) as ViewStyle}
-        contentContainerStyle={withClassName("mb-page__grow") as ViewStyle}
+        contentContainerStyle={mergedContentContainerStyle}
         {...scrollViewProps}
       >
         {content}
@@ -59,9 +68,15 @@ export function Page({
 
   // Wrap in SafeAreaView if enabled
   if (safeArea) {
+    const mergedSafeAreaStyle = [
+      withClassName(rootClassName) as ViewStyle,
+      !scroll ? nativeTopPaddingStyle : undefined,
+      safeAreaProps?.style as ViewStyle | undefined,
+    ].filter(Boolean) as ViewStyle[];
+
     content = (
       <SafeAreaView
-        style={withClassName(rootClassName) as ViewStyle}
+        style={mergedSafeAreaStyle}
         {...safeAreaProps}
       >
         {content}

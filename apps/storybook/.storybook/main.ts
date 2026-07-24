@@ -40,21 +40,47 @@ const config: StorybookConfig = {
         __DEV__: JSON.stringify(process.env.NODE_ENV !== "production"),
       },
       resolve: {
-        alias: {
-          "react-native": "react-native-web",
+        alias: [
+          // Alias only the bare react-native package. Keep deep imports available for targeted stubbing below.
+          { find: /^react-native$/, replacement: "react-native-web" },
           // Chromatic/Storybook web builds should not traverse expo-router's native tab internals.
           // This stub keeps shared UI exports resolvable without pulling react-native-screens tab host files.
-          "expo-router/ui": `${runtimeStubsDir}/expo-router/ui.tsx`,
-          "react-native-css-interop/dist/runtime/native/rem": `${runtimeStubsDir}/react-native-css-interop/rem.ts`,
-          "react-native-css-interop/dist/runtime/native/variables": `${runtimeStubsDir}/react-native-css-interop/variables.ts`,
-          "react-native-css-interop/dist/runtime/native/stylesheet": `${runtimeStubsDir}/react-native-css-interop/stylesheet.ts`,
-        },
+          { find: "expo-router/ui", replacement: `${runtimeStubsDir}/expo-router/ui.tsx` },
+          // react-native-safe-area-context lib/module pulls this native-only path.
+          // react-native-web has no equivalent, so stub it out for web builds.
+          {
+            find: /^react-native\/Libraries\/Utilities\/codegenNativeComponent(?:\.js)?$/,
+            replacement: `${runtimeStubsDir}/react-native/codegenNativeComponent.ts`,
+          },
+          // Some builds resolve these files first and then traverse into native codegen.
+          // Replace those resolved spec modules directly with inert web stubs.
+          {
+            find: /react-native-safe-area-context\/lib\/module\/specs\/NativeSafeAreaProvider(?:\.js)?(?:\?.*)?$/,
+            replacement: `${runtimeStubsDir}/react-native-safe-area-context/specs/NativeSafeAreaProvider.ts`,
+          },
+          {
+            find: /react-native-safe-area-context\/lib\/module\/specs\/NativeSafeAreaView(?:\.js)?(?:\?.*)?$/,
+            replacement: `${runtimeStubsDir}/react-native-safe-area-context/specs/NativeSafeAreaView.ts`,
+          },
+          {
+            find: "react-native-css-interop/dist/runtime/native/rem",
+            replacement: `${runtimeStubsDir}/react-native-css-interop/rem.ts`,
+          },
+          {
+            find: "react-native-css-interop/dist/runtime/native/variables",
+            replacement: `${runtimeStubsDir}/react-native-css-interop/variables.ts`,
+          },
+          {
+            find: "react-native-css-interop/dist/runtime/native/stylesheet",
+            replacement: `${runtimeStubsDir}/react-native-css-interop/stylesheet.ts`,
+          },
+        ],
       },
       server: {
         sourcemapIgnoreList: (sourcePath) => sourcePath.includes("react-native-css-interop/dist/runtime/native/"),
       },
       optimizeDeps: {
-        exclude: ["react-native", "nativewind", "react-native-css-interop", "burnt"],
+        exclude: ["react-native", "nativewind", "react-native-css-interop", "react-native-safe-area-context", "burnt"],
       },
     });
   },
