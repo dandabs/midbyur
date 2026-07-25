@@ -18,7 +18,7 @@ export type { CardProps, CardVariant } from "./components/Card/Card";
 export { Container } from "./components/Container/Container";
 export type { ContainerProps } from "./components/Container/Container";
 export { DialPad } from "./components/DialPad/DialPad";
-export type { DialPadProps } from "./components/DialPad/DialPad";
+export type { DialPadProps } from "./components/DialPad/DialPad.types";
 export { Footer } from "./components/Footer/Footer";
 export type { FooterProps } from "./components/Footer/Footer";
 export { FooterText } from "./components/FooterText/FooterText";

@@ -1,6 +1,6 @@
 "use client";
 
-import { Delete, Phone } from "lucide-react";
+import { Lucide } from "@react-native-vector-icons/lucide";
 import { useState } from "react";
 import { StyleSheet, View, useColorScheme } from "react-native";
 import { themeModes } from "@midbyur/theme";
@@ -98,7 +98,9 @@ export function DialPad({
             <Text style={{ color: colors.text, fontSize: 30, fontWeight: "600" }}>0</Text>
           </Button>
           <IconButton
-            icon={Delete}
+            icon={(({ size = 25 }) => (
+              <Lucide name="delete" size={size} color={colors.text} />
+            )) as never}
             onPress={onBackspace}
             onPressIn={() => setIsBackspacePressed(true)}
             onPressOut={() => setIsBackspacePressed(false)}
@@ -116,8 +118,10 @@ export function DialPad({
         <View style={styles.keypadRow}>
           <View style={styles.circleSpacer} />
           <IconButton
-            icon={Phone}
-            color="successForeground"
+            icon={(({ size = 30 }) => (
+              <Lucide name="phone" size={size} color={colors.successForeground} />
+            )) as never}
+            color="text"
             onPress={onCall}
             onPressIn={() => setIsCallPressed(true)}
             onPressOut={() => setIsCallPressed(false)}

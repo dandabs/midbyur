@@ -1,31 +1,20 @@
 "use client";
 
-import { Lucide } from "@react-native-vector-icons/lucide";
 import { useState } from "react";
-import { StyleSheet, View, useColorScheme } from "react-native";
+import { StyleSheet, Text as RNText, View, useColorScheme } from "react-native";
 import { themeModes } from "@midbyur/theme";
 import { Button } from "../Button/Button";
 import { Card } from "../Card/Card";
 import { IconButton } from "../IconButton/IconButton";
 import { Stack } from "../Stack/Stack";
 import { Text } from "../Text/Text";
+import type { DialPadProps } from "./DialPad.types";
 
 const KEYPAD_ROWS: readonly (readonly string[])[] = [
   ["1", "2", "3"],
   ["4", "5", "6"],
   ["7", "8", "9"],
 ];
-
-export type DialPadProps = Readonly<{
-  displayValue: string;
-  error?: string | null;
-  onDigitPress: (digit: string) => void;
-  onBackspace: () => void;
-  onCall: () => void;
-  controlsDisabled?: boolean;
-  backspaceDisabled?: boolean;
-  callDisabled?: boolean;
-}>;
 
 export function DialPad({
   displayValue,
@@ -109,7 +98,7 @@ export function DialPad({
               </Button>
               <IconButton
                 icon={(({ size = 25 }) => (
-                  <Lucide name="delete" size={size} color={colors.text} />
+                  <RNText style={{ fontSize: size, lineHeight: size, fontWeight: "700", color: colors.text }}>⌫</RNText>
                 )) as never}
                 onPress={onBackspace}
                 onPressIn={() => setIsBackspacePressed(true)}
@@ -129,7 +118,7 @@ export function DialPad({
               <View style={styles.circleSpacer} />
               <IconButton
                 icon={(({ size = 30 }) => (
-                  <Lucide name="phone" size={size} color={colors.successForeground} />
+                  <RNText style={{ fontSize: size, lineHeight: size, fontWeight: "700", color: colors.successForeground }}>✆</RNText>
                 )) as never}
                 color="text"
                 onPress={onCall}
