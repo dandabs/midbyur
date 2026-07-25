@@ -7,4 +7,5 @@ export type DialPadProps = Readonly<{
   controlsDisabled?: boolean;
   backspaceDisabled?: boolean;
   callDisabled?: boolean;
+  callLoading?: boolean;
 }>;

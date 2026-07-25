@@ -15,6 +15,7 @@ const meta = {
     controlsDisabled: false,
     backspaceDisabled: false,
     callDisabled: false,
+    callLoading: false,
   },
   argTypes: {
     displayValue: {
@@ -30,6 +31,9 @@ const meta = {
       control: "boolean",
     },
     callDisabled: {
+      control: "boolean",
+    },
+    callLoading: {
       control: "boolean",
     },
     onDigitPress: {

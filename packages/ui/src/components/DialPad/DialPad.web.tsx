@@ -7,6 +7,7 @@ import { themeModes } from "@midbyur/theme";
 import { Button } from "../Button/Button";
 import { Card } from "../Card/Card";
 import { IconButton } from "../IconButton/IconButton";
+import { Spinner } from "../Spinner/Spinner";
 import { Stack } from "../Stack/Stack";
 import { Text } from "../Text/Text";
 import type { DialPadProps } from "./DialPad.types";
@@ -26,6 +27,7 @@ export function DialPad({
   controlsDisabled = false,
   backspaceDisabled = false,
   callDisabled = false,
+  callLoading = false,
 }: DialPadProps) {
   const scheme = useColorScheme();
   const mode = scheme === "dark" ? "dark" : "light";
@@ -115,21 +117,34 @@ export function DialPad({
 
         <View style={styles.keypadRow}>
           <View style={styles.circleSpacer} />
-          <IconButton
-            icon={Phone}
-            color="successForeground"
-            onPress={onCall}
-            onPressIn={() => setIsCallPressed(true)}
-            onPressOut={() => setIsCallPressed(false)}
-            disabled={callDisabled}
-            size={30}
-            style={[
-              styles.circleIconButton,
-              {
-                backgroundColor: isCallPressed ? colors.successHover : colors.success,
-              },
-            ]}
-          />
+          {callLoading ? (
+            <View
+              style={[
+                styles.circleIconButton,
+                {
+                  backgroundColor: colors.success,
+                },
+              ]}
+            >
+              <Spinner color="successForeground" size="small" />
+            </View>
+          ) : (
+            <IconButton
+              icon={Phone}
+              color="successForeground"
+              onPress={onCall}
+              onPressIn={() => setIsCallPressed(true)}
+              onPressOut={() => setIsCallPressed(false)}
+              disabled={callDisabled}
+              size={30}
+              style={[
+                styles.circleIconButton,
+                {
+                  backgroundColor: isCallPressed ? colors.successHover : colors.success,
+                },
+              ]}
+            />
+          )}
           <View style={styles.circleSpacer} />
         </View>
       </Stack>
