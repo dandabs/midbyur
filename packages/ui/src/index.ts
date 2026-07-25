@@ -33,6 +33,8 @@ export { Navigation } from "./components/Navigation/Navigation";
 export type { NavigationItem, NavigationProps } from "./components/Navigation/Navigation";
 export { Navbar } from "./components/Navbar/Navbar";
 export type { NavbarProps } from "./components/Navbar/Navbar";
+export { ChatBubble } from "./components/ChatBubble/ChatBubble";
+export type { ChatBubbleProps, ChatBubbleVariant } from "./components/ChatBubble/ChatBubble";
 export { Page } from "./components/Page/Page";
 export type { PageProps } from "./components/Page/Page";
 export { Pill } from "./components/Pill/Pill";

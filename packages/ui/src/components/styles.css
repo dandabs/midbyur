@@ -709,6 +709,32 @@
   flex-grow: 1;
 }
 
+.mb-chat-bubble {
+  max-width: 85%;
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-width: 1px;
+  border-style: solid;
+}
+
+.mb-chat-bubble--remote {
+  align-self: flex-start;
+  background-color: var(--color-surface);
+  border-color: var(--color-border);
+}
+
+.mb-chat-bubble--local {
+  align-self: flex-end;
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.mb-chat-bubble--system {
+  align-self: flex-start;
+  background-color: var(--color-backgroundAccent);
+  border-color: var(--color-border);
+}
+
 .mb-pill {
   display: inline-flex;
   flex-direction: row;
