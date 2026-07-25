@@ -50,7 +50,9 @@ function normalizeButtonChildren(children: ReactNode, textColor: TextColor): Rea
     if (typeof child === "string" || typeof child === "number") {
       return (
         <Text
-          variant="label"
+          variant="body"
+          lineHeight="normal"
+          weight="medium"
           color={textColor}
         >
           {child}

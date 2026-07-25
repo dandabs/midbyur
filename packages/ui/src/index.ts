@@ -35,6 +35,8 @@ export { Navbar } from "./components/Navbar/Navbar";
 export type { NavbarProps } from "./components/Navbar/Navbar";
 export { Page } from "./components/Page/Page";
 export type { PageProps } from "./components/Page/Page";
+export { Pill } from "./components/Pill/Pill";
+export type { PillProps, PillVariant } from "./components/Pill/Pill";
 export { Section } from "./components/Section/Section";
 export type { SectionProps, SectionType } from "./components/Section/Section";
 export { Spinner } from "./components/Spinner/Spinner";
