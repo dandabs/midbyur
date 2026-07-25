@@ -17,6 +17,8 @@ export { Card } from "./components/Card/Card";
 export type { CardProps, CardVariant } from "./components/Card/Card";
 export { Container } from "./components/Container/Container";
 export type { ContainerProps } from "./components/Container/Container";
+export { DialPad } from "./components/DialPad/DialPad";
+export type { DialPadProps } from "./components/DialPad/DialPad";
 export { Footer } from "./components/Footer/Footer";
 export type { FooterProps } from "./components/Footer/Footer";
 export { FooterText } from "./components/FooterText/FooterText";
@@ -61,6 +63,7 @@ export { ToastProvider } from "./components/ToastProvider/ToastProvider";
 export type { ToastProviderProps } from "./components/ToastProvider/ToastProvider";
 export { GAP_SIZE_VALUES } from "./spacing";
 export type { GapSize, GapValue } from "./spacing";
+export { DeleteIcon } from "./icons";
 export {
 	showToast,
 	showSuccessToast,
