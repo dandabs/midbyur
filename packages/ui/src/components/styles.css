@@ -337,6 +337,33 @@
   background-color: var(--color-surface);
 }
 
+.mb-card--default {
+  background-color: var(--color-surface);
+}
+
+.mb-card--accent {
+  background-color: var(--color-surfaceAccent);
+}
+
+.mb-card--pressable {
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.mb-card__action {
+  min-width: 44px;
+  align-items: center;
+  justify-content: center;
+}
+
+.mb-card__action--default {
+  background-color: var(--color-surfaceAccent);
+}
+
+.mb-card__action--accent {
+  background-color: var(--color-surface);
+}
+
 .mb-card__image {
   width: 100%;
 }

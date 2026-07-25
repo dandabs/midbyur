@@ -13,6 +13,7 @@ export type ExpoNavbarTabRoute = Readonly<{
   href: string;
   title: string;
   icon?: ExpoNativeTabIcon;
+  hidden?: boolean;
 }>;
 
 export type ExpoNavbarTabsProps = Readonly<{
@@ -25,16 +26,24 @@ export type ExpoNavbarTabsProps = Readonly<{
 export function ExpoNavbarTabs({ routes }: ExpoNavbarTabsProps) {
   return (
     <NativeTabs tabBarRespectsIMEInsets>
-      {routes.map((route) => (
-        <NativeTabs.Trigger key={route.name} name={route.name}>
-          {route.icon ? (
-            <NativeTabs.Trigger.Icon
-              {...(route.icon as ComponentProps<typeof NativeTabs.Trigger.Icon>)}
-            />
-          ) : null}
-          <NativeTabs.Trigger.Label>{route.title}</NativeTabs.Trigger.Label>
-        </NativeTabs.Trigger>
-      ))}
+      {routes.map((route) =>
+        route.hidden ? (
+          <NativeTabs.Trigger
+            key={route.name}
+            name={route.name}
+            style={{ display: 'none', width: 0, height: 0, overflow: 'hidden' }}
+          />
+        ) : (
+          <NativeTabs.Trigger key={route.name} name={route.name}>
+            {route.icon ? (
+              <NativeTabs.Trigger.Icon
+                {...(route.icon as ComponentProps<typeof NativeTabs.Trigger.Icon>)}
+              />
+            ) : null}
+            <NativeTabs.Trigger.Label>{route.title}</NativeTabs.Trigger.Label>
+          </NativeTabs.Trigger>
+        )
+      )}
     </NativeTabs>
   );
 }

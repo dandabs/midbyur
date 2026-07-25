@@ -14,7 +14,7 @@ export type { ButtonProps, ButtonType, ButtonVariant } from "./components/Button
 export { ButtonGroup } from "./components/ButtonGroup/ButtonGroup";
 export type { ButtonGroupDirection, ButtonGroupProps } from "./components/ButtonGroup/ButtonGroup";
 export { Card } from "./components/Card/Card";
-export type { CardProps } from "./components/Card/Card";
+export type { CardProps, CardVariant } from "./components/Card/Card";
 export { Container } from "./components/Container/Container";
 export type { ContainerProps } from "./components/Container/Container";
 export { Footer } from "./components/Footer/Footer";
@@ -38,6 +38,8 @@ export type { ChatBubbleProps, ChatBubbleVariant } from "./components/ChatBubble
 export { Page } from "./components/Page/Page";
 export type { PageProps } from "./components/Page/Page";
 export { Pill } from "./components/Pill/Pill";
+export { BackBreadcrumb } from "./components/BackBreadcrumb/BackBreadcrumb";
+export type { BackBreadcrumbProps } from "./components/BackBreadcrumb/BackBreadcrumb";
 export type { PillProps, PillVariant } from "./components/Pill/Pill";
 export { Section } from "./components/Section/Section";
 export type { SectionProps, SectionType } from "./components/Section/Section";

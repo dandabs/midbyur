@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
+  RefreshControl,
   ScrollView,
   View,
   type KeyboardAvoidingViewProps,
@@ -20,7 +21,9 @@ export type PageProps = Readonly<{
   safeArea?: boolean;
   scroll?: boolean;
   className?: string;
-  scrollViewProps?: Omit<ScrollViewProps, "children">;
+  onRefresh?: () => void | Promise<void>;
+  refreshing?: boolean;
+  scrollViewProps?: Omit<ScrollViewProps, "children" | "refreshControl">;
   keyboardAvoidingProps?: Omit<KeyboardAvoidingViewProps, "children" | "behavior">;
   safeAreaProps?: Omit<ViewProps, "children">;
 }>;
@@ -31,6 +34,8 @@ export function Page({
   safeArea = true,
   scroll = true,
   className,
+  onRefresh,
+  refreshing = false,
   scrollViewProps,
   keyboardAvoidingProps,
   safeAreaProps,
@@ -46,12 +51,14 @@ export function Page({
   const nativeTopPaddingStyle: ViewStyle | undefined = Platform.OS === "web"
     ? undefined
     : { paddingTop: 32 };
+  const defaultBottomPaddingStyle: ViewStyle = { paddingBottom: 32 };
 
   // Wrap in ScrollView if enabled
   if (scroll) {
     const mergedContentContainerStyle = [
       withClassName("mb-page__grow") as ViewStyle,
       nativeTopPaddingStyle,
+      defaultBottomPaddingStyle,
       scrollViewProps?.contentContainerStyle as ViewStyle | undefined,
     ].filter(Boolean) as ViewStyle[];
 
@@ -59,7 +66,12 @@ export function Page({
       <ScrollView
         style={withClassName(rootClassName) as ViewStyle}
         contentContainerStyle={mergedContentContainerStyle}
-        {...scrollViewProps}
+        refreshControl={
+          onRefresh ? (
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          ) : undefined
+        }
+        {...(() => { const { contentContainerStyle: _omit, ...rest } = scrollViewProps ?? {}; return rest; })()}
       >
         {content}
       </ScrollView>
