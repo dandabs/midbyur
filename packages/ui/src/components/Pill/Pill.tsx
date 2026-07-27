@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { View, type ViewProps, type ViewStyle } from "react-native";
+import { Pressable, View, type PressableProps, type ViewProps, type ViewStyle } from "react-native";
 import { Text, type TextColor } from "../Text/Text";
 import { withClassName } from "../../cssInterop";
 
@@ -18,6 +18,7 @@ export type PillProps = Readonly<{
   children: ReactNode;
   variant?: PillVariant;
   className?: string;
+  onPress?: PressableProps["onPress"];
 }> & Omit<ViewProps, "children">;
 
 const variantToTextColor: Readonly<Record<PillVariant, TextColor>> = {
@@ -35,24 +36,43 @@ export function Pill({
   variant = "neutral",
   className,
   style,
+  onPress,
   ...props
 }: PillProps) {
   const rootClassName = [
     "mb-pill",
     `mb-pill--${variant}`,
+    onPress ? "mb-pill--pressable" : undefined,
     className,
   ]
     .filter(Boolean)
     .join(" ");
+
+  const content = (
+    <Text variant="bodySm" weight="medium" color={variantToTextColor[variant]} inline>
+      {children}
+    </Text>
+  );
+
+  if (onPress) {
+    return (
+      <Pressable
+        onPress={onPress}
+        accessibilityRole="button"
+        style={withClassName(rootClassName, style as ViewStyle) as ViewStyle}
+        {...(props as object)}
+      >
+        {content}
+      </Pressable>
+    );
+  }
 
   return (
     <View
       style={withClassName(rootClassName, style as ViewStyle) as ViewStyle}
       {...props}
     >
-      <Text variant="bodySm" weight="medium" color={variantToTextColor[variant]} inline>
-        {children}
-      </Text>
+      {content}
     </View>
   );
 }

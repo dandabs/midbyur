@@ -811,6 +811,10 @@
   border-color: color-mix(in srgb, var(--color-secondary) 40%, var(--color-border));
 }
 
+.mb-pill--pressable {
+  cursor: pointer;
+}
+
 .mb-section {
   position: relative;
   width: 100%;

@@ -61,6 +61,8 @@ export type {
 } from "./components/Text/Text";
 export { ToastProvider } from "./components/ToastProvider/ToastProvider";
 export type { ToastProviderProps } from "./components/ToastProvider/ToastProvider";
+export { ConfirmModal } from "./components/ConfirmModal/ConfirmModal";
+export type { ConfirmModalProps } from "./components/ConfirmModal/ConfirmModal";
 export { GAP_SIZE_VALUES } from "./spacing";
 export type { GapSize, GapValue } from "./spacing";
 export { DeleteIcon } from "./icons";
