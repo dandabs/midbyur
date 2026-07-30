@@ -372,6 +372,22 @@
   padding: 1.5rem;
 }
 
+.mb-card-select {
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--color-surface);
+  border-width: 2px;
+  border-color: transparent;
+}
+
+.mb-card-select--selected {
+  border-color: var(--color-primary);
+}
+
+.mb-card-select__content {
+  padding: 1.5rem;
+}
+
 .mb-button-group {
   display: flex;
   width: auto;

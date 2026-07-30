@@ -15,6 +15,8 @@ export { ButtonGroup } from "./components/ButtonGroup/ButtonGroup";
 export type { ButtonGroupDirection, ButtonGroupProps } from "./components/ButtonGroup/ButtonGroup";
 export { Card } from "./components/Card/Card";
 export type { CardProps, CardVariant } from "./components/Card/Card";
+export { CardSelect } from "./components/CardSelect/CardSelect";
+export type { CardSelectProps } from "./components/CardSelect/CardSelect";
 export { Container } from "./components/Container/Container";
 export type { ContainerProps } from "./components/Container/Container";
 export { DialPad } from "./components/DialPad/DialPad";
