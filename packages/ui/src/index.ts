@@ -85,6 +85,12 @@ export {
   roadSignFontWeightValues,
 } from "./components/WarningSign/roadSignFonts";
 export type { RoadSignFontWeight } from "./components/WarningSign/roadSignFonts";
+export { ProhibitorySign } from "./components/ProhibitorySign/ProhibitorySign";
+export type { ProhibitorySignProps } from "./components/ProhibitorySign/ProhibitorySign";
+export { PROHIBITORY_SIGN_SYMBOL_OPTIONS } from "./components/ProhibitorySign/prohibitorySignSymbols";
+export type { ProhibitorySignSymbol } from "./components/ProhibitorySign/prohibitorySignSymbols";
+export { StopSign } from "./components/StopSign/StopSign";
+export type { StopSignProps } from "./components/StopSign/StopSign";
 export { GAP_SIZE_VALUES } from "./spacing";
 export type { GapSize, GapValue } from "./spacing";
 export { DeleteIcon } from "./icons";

@@ -34,6 +34,20 @@ const rowStyle: ViewStyle = {
   paddingHorizontal: 4,
 };
 
+// `.mb-input` (the class the trigger below shares with Input's outer wrapper) only carries
+// horizontal padding — Input's matching vertical padding lives on `.mb-input__field`, applied to
+// its inner TextInput, which this Pressable has no equivalent of. Matching that padding+line-height
+// on this Text turned out unreliable (line-height from a CSS class doesn't measure the same on
+// native as it does on web), so pin the trigger to `.mb-input__field`'s actual content-box height
+// (0.5rem padding + 1.5 line-height at the 1rem body size = 40px) directly via `minHeight` instead
+// — a hard layout constraint every platform honors the same way, regardless of text metrics.
+const triggerStyle: ViewStyle = {
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "space-between",
+  minHeight: 40,
+};
+
 /**
  * A tap-to-open dropdown: the trigger looks like an Input field, tapping it opens a Modal listing
  * every option (with an optional search filter for long lists, e.g. countries). Native has no
@@ -69,7 +83,7 @@ export function Select<T extends string>({
       <Pressable
         onPress={() => !disabled && setOpen(true)}
         disabled={disabled}
-        style={withClassName(rootClassName) as ViewStyle}
+        style={[withClassName(rootClassName) as ViewStyle, triggerStyle]}
       >
         <Text color={selectedLabel ? "text" : "textMuted"}>
           {selectedLabel ?? placeholder}

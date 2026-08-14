@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { themeModes } from "@midbyur/theme";
 import { X } from "lucide-react-native";
 import {
+  Dimensions,
   KeyboardAvoidingView,
   Modal as RNModal,
   Platform,
@@ -40,10 +41,18 @@ const backdropStyle: ViewStyle = {
   padding: 24,
 };
 
+// A percentage maxHeight resolves against this View's laid-out parent, which is the
+// KeyboardAvoidingView — when the keyboard opens and that view's `padding` behavior adds bottom
+// padding, that parent's own content-box height doesn't shrink, so `85%` of it can put the
+// sheet's bottom edge behind the space now occupied by the keyboard-avoiding padding, clipping
+// the bottom of the sheet's content (e.g. a single search result) with no visible affordance to
+// scroll to it. An absolute pixel cap derived from the actual screen height avoids that.
+const MAX_SHEET_HEIGHT = Math.round(Dimensions.get("window").height * 0.85);
+
 const sheetStyle: ViewStyle = {
   width: "100%",
   maxWidth: 480,
-  maxHeight: "85%",
+  maxHeight: MAX_SHEET_HEIGHT,
   borderRadius: 12,
 };
 

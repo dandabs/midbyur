@@ -6,7 +6,7 @@
  * since road sign colours are a fixed, regulated palette independent of the
  * Miðbýur UI theme (light/dark mode, brand colours, etc.).
  */
-export type RoadSignColour = "red" | "yellow" | "black" | "white" | "blue" | "green";
+export type RoadSignColour = "red" | "yellow" | "black" | "white" | "blue" | "green" | "gray";
 
 export const roadSignColorValues: Readonly<Record<RoadSignColour, string>> = {
   red: "#D20000",
@@ -15,6 +15,8 @@ export const roadSignColorValues: Readonly<Record<RoadSignColour, string>> = {
   white: "#FFFFFF",
   blue: "#0039A6",
   green: "#007A3D",
+  /** Muted colour used on "end of zone/prohibition" prohibitory signs. */
+  gray: "#999999",
 };
 
 export const ROAD_SIGN_COLOUR_OPTIONS: readonly RoadSignColour[] = [
@@ -24,4 +26,5 @@ export const ROAD_SIGN_COLOUR_OPTIONS: readonly RoadSignColour[] = [
   "white",
   "blue",
   "green",
+  "gray",
 ];
