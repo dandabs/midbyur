@@ -5,7 +5,7 @@ import { Text } from "../Text/Text";
 import { CardSelect } from "./CardSelect";
 
 const meta = {
-  title: "Components/CardSelect",
+  title: "Forms/CardSelect",
   component: CardSelect,
   tags: ["autodocs"],
   args: {

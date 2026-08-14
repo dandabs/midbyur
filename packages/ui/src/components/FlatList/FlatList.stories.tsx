@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import { FlatList } from "./FlatList";
 
 const meta = {
-  title: "Components/FlatList",
+  title: "Content/FlatList",
   component: FlatList,
   tags: ["autodocs"],
   parameters: {

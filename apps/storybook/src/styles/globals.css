@@ -27,3 +27,7 @@
 
 @source "../../src/**/*.{js,ts,jsx,tsx,mdx}";
 @source "../../../../packages/ui/src/**/*.{js,ts,jsx,tsx,mdx}";
+
+body {
+	font-family: "Stack Sans Text", ui-sans-serif, system-ui, sans-serif;
+}

@@ -8,10 +8,12 @@ import {
   TextInput,
   View,
   type TextInputProps,
+  type TextStyle,
   type ViewStyle,
   type KeyboardTypeOptions,
 } from "react-native";
 import { withClassName } from "../../cssInterop";
+import { fontFamilyValues } from "../Text/Text";
 
 export type InputProps = Readonly<{
   value: string;
@@ -69,7 +71,7 @@ export const Input = forwardRef<TextInput, InputProps>(function Input(
         secureTextEntry={secureTextEntry}
         keyboardType={keyboardType}
         maxLength={maxLength}
-        style={withClassName(fieldClassName) as ViewStyle}
+        style={withClassName(fieldClassName, { fontFamily: fontFamilyValues.text } as TextStyle) as TextStyle}
         {...props}
       />
       {suffix ? (

@@ -35,7 +35,7 @@ const textColorOptions = [
 ] as const;
 
 const meta = {
-  title: "Components/Spinner",
+  title: "Feedback/Spinner",
   component: Spinner,
   tags: ["autodocs"],
   args: {

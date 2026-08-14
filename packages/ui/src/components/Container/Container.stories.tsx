@@ -3,7 +3,7 @@ import { Container } from "./Container";
 import { Text } from "../Text/Text";
 
 const meta = {
-  title: "Components/Container",
+  title: "Layout/Container",
   component: Container,
   tags: ['autodocs'],
   args: {

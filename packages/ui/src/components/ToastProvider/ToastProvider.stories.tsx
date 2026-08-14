@@ -6,7 +6,7 @@ import { showSuccessToast } from "../../toast";
 import { ToastProvider } from "./ToastProvider";
 
 const meta = {
-  title: "Components/ToastProvider",
+  title: "Feedback/ToastProvider",
   component: ToastProvider,
   tags: ["autodocs"],
   args: {

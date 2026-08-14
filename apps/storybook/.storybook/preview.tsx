@@ -2,6 +2,7 @@ import type { Preview } from '@storybook/nextjs-vite'
 import "../src/polyfills";
 import { MidbyurProvider } from "@midbyur/ui"
 import "../src/styles/globals.css";
+import { midbyurTheme } from "./theme";
 
 const preview: Preview = {
   globalTypes: {
@@ -22,11 +23,14 @@ const preview: Preview = {
   parameters: {
     options: {
       storySort: {
-        order: ["Get started", "Configure your project", "Expo only", "Components"],
+        order: ["Get started", "Expo only", "Layout", "Forms", "Navigation", "Feedback", "Content"],
       },
     },
     backgrounds: {
       disable: true,
+    },
+    docs: {
+      theme: midbyurTheme,
     },
   },
   decorators: [

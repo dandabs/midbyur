@@ -1,6 +1,7 @@
 "use client";
 
 import { Modal, Pressable, View, type ViewStyle } from "react-native";
+import { withClassName } from "../../cssInterop";
 import { Button } from "../Button/Button";
 import { ButtonGroup } from "../ButtonGroup/ButtonGroup";
 import { Stack } from "../Stack/Stack";
@@ -56,7 +57,7 @@ export function ConfirmModal({
       <Pressable style={backdropStyle} onPress={onCancel}>
         {/* Inner pressable stops tap-through to the backdrop */}
         <Pressable onPress={() => undefined}>
-          <View className="bg-surface" style={sheetStyle}>
+          <View style={withClassName("bg-surface", sheetStyle) as ViewStyle}>
             <Stack gap={6}>
               <Text size="lg" weight="bold">
                 {title}

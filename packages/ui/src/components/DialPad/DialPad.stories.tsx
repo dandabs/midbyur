@@ -6,7 +6,7 @@ import { Text } from "../Text/Text";
 import { DialPad } from "./DialPad";
 
 const meta = {
-  title: "Components/DialPad",
+  title: "Forms/DialPad",
   component: DialPad,
   tags: ["autodocs"],
   args: {

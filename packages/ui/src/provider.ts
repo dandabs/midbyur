@@ -131,7 +131,10 @@ export function MidbyurProvider({
       "div",
       {
         "data-theme": resolvedTheme,
-        className: "bg-[var(--color-background)] text-[var(--color-text)]",
+        // min-h-screen keeps the themed background covering the full viewport
+        // even when page content is shorter, so switching themes never
+        // exposes an unstyled seam below the content.
+        className: "min-h-screen bg-[var(--color-background)] text-[var(--color-text)]",
         style: buildThemeVariables(resolvedTheme) as CSSProperties,
       },
       createElement(ToastProvider, { config: toastConfig, children }),

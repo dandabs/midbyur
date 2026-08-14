@@ -6,7 +6,7 @@ import { ButtonGroup } from "./ButtonGroup";
 const gapOptions = ["sm", "md", "lg"] as const;
 
 const meta = {
-  title: "Components/ButtonGroup",
+  title: "Forms/ButtonGroup",
   component: ButtonGroup,
   tags: ["autodocs"],
   args: {

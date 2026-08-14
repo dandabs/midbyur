@@ -3,7 +3,7 @@ import { Button } from "./Button";
 import { Text } from "../Text/Text";
 
 const meta = {
-  title: "Components/Button",
+  title: "Forms/Button",
   component: Button,
   tags: ['autodocs'],
   args: {

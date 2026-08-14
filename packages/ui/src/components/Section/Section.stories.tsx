@@ -4,7 +4,7 @@ import { Text } from "../Text/Text";
 import { Section } from "./Section";
 
 const meta = {
-  title: "Components/Section",
+  title: "Layout/Section",
   component: Section,
   tags: ['autodocs'],
   args: {

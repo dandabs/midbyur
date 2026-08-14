@@ -1,26 +1,135 @@
-import { Meta, Title, Subtitle } from "@storybook/addon-docs/blocks";
+import { Meta, Title, Subtitle, ColorPalette, ColorItem, Typeset } from "@storybook/addon-docs/blocks";
 
 <Meta title="Get started/Introduction" />
 
-<Title>Midbyur Feature List</Title>
+<Title>Miðbýur</Title>
 
-<Subtitle>Library capabilities and where to find setup docs</Subtitle>
+<Subtitle>A design system for iOS, Android, and web</Subtitle>
 
-## Feature List
+I created Miðbýur ("downtown" in Faroese) as my design system for iOS, Android, and web apps. It works across Next.js and Expo (and should work with most React implementations, and just as raw CSS, though that's untested). I really enjoy making apps, but I slow down and struggle when I have to design unique UI for each one — so this is just a thing to make writing UI in my apps easier, and to give them a more solidified feel across everything.
 
-- Layout primitives: Page, Section, Container, Stack, Grid.
-- Surface/display: Card, Hero.
-- Navigation: Navigation, Navbar.
-- Actions: Button, ButtonGroup, Icon.
-- Typography: Text variants and sizing.
-- Feedback APIs: showToast, showAlert, showSuccess, showError, showWarning, showInfo.
-- Theme support: MidbyurProvider with light/dark mode.
-- React Native compatibility on web via react-native-web.
+I've taken inspiration from the Digital Iceland, GOV.UK, and NYC Digital design systems. All of the colours are taken from the RGB values of Icelandic road signs.
 
-## Documentation Index
+## Colours
 
-- Setup instructions: Get started / Setup with Next.js.
-- Setup instructions: Get started / Setup with Expo.
-- Expo-only components: Expo only / Introduction.
-- Storybook setup notes: Configure your project.
-- Component APIs and variants: Components section in the sidebar.
+Every colour below is a `TextColor` / theme token, and comes in a light and dark value — `MidbyurProvider` swaps between them depending on the active theme.
+
+<ColorPalette>
+  <ColorItem
+    title="background"
+    subtitle="Page background — the base layer everything else sits on."
+    colors={{ Light: "#F7F7F7", Dark: "#111111" }}
+  />
+  <ColorItem
+    title="backgroundAccent"
+    subtitle="Subtle secondary background, used to set a section apart from the page background."
+    colors={{ Light: "#EDEDED", Dark: "#1B1B1B" }}
+  />
+  <ColorItem
+    title="surface"
+    subtitle="Cards, panels, sheets — any content that sits raised above the background."
+    colors={{ Light: "#FFFFFF", Dark: "#1F1F1F" }}
+  />
+  <ColorItem
+    title="surfaceAccent"
+    subtitle="Nested or secondary panels inside a surface, e.g. a CardSelect interior."
+    colors={{ Light: "#F3F3F3", Dark: "#2B2B2B" }}
+  />
+  <ColorItem
+    title="primary"
+    subtitle="Primary actions, links, and brand emphasis — the Icelandic road-sign blue."
+    colors={{ Light: "#2162AC", Dark: "#2162AC" }}
+  />
+  <ColorItem
+    title="secondary"
+    subtitle="Secondary actions and less prominent interactive elements."
+    colors={{ Light: "#4B5563", Dark: "#6B7280" }}
+  />
+  <ColorItem
+    title="text"
+    subtitle="Default body and heading text colour."
+    colors={{ Light: "#111827", Dark: "#F8FAFC" }}
+  />
+  <ColorItem
+    title="textMuted"
+    subtitle="Supporting copy, captions, placeholders — anything secondary to the main text."
+    colors={{ Light: "#6B7280", Dark: "#94A3B8" }}
+  />
+  <ColorItem
+    title="border"
+    subtitle="Default dividers, input outlines, and card edges."
+    colors={{ Light: "#D1D5DB", Dark: "#374151" }}
+  />
+  <ColorItem
+    title="borderStrong"
+    subtitle="Emphasised borders and focus states that need more contrast than the default border."
+    colors={{ Light: "#4B5563", Dark: "#9CA3AF" }}
+  />
+  <ColorItem
+    title="success"
+    subtitle="Confirmation and positive states."
+    colors={{ Light: "#15803D", Dark: "#22C55E" }}
+  />
+  <ColorItem
+    title="warning"
+    subtitle="Caution and attention states — the road-sign warning yellow."
+    colors={{ Light: "#F8C800", Dark: "#F8C800" }}
+  />
+  <ColorItem
+    title="danger"
+    subtitle="Errors, destructive actions, and stop states — the road-sign red."
+    colors={{ Light: "#D00100", Dark: "#D00100" }}
+  />
+  <ColorItem
+    title="info"
+    subtitle="Informational states and callouts."
+    colors={{ Light: "#2162AC", Dark: "#2162AC" }}
+  />
+  <ColorItem
+    title="disabled"
+    subtitle="Background for disabled controls."
+    colors={{ Light: "#E5E7EB", Dark: "#374151" }}
+  />
+</ColorPalette>
+
+Most of these also have a `Hover` variant (for interactive states) and, where they sit behind text, a `Foreground` variant (for the text/icon colour on top of them) — not shown above, but named and used the same way.
+
+## Fonts
+
+Miðbýur uses three variable weight "Stack Sans" cuts, plus a monospace fallback stack. `Text` picks one automatically per `variant`, or you can set `fontFamily` directly.
+
+<Typeset
+  fontSizes={["14px", "18px", "24px", "32px", "48px"]}
+  fontWeight={400}
+  sampleText="Miðbýur — Aa Bb Cc 123"
+  fontFamily='"Stack Sans Headline", ui-sans-serif, system-ui, sans-serif'
+/>
+
+**Stack Sans Headline** — used by `h1`, `h1Subheading`, `h2`, `h2Subheading`, `h3`, and `h3Subheading`. Reach for it on primary page and section headings: it's the strongest, most authoritative heading voice in the system.
+
+<Typeset
+  fontSizes={["14px", "18px", "24px", "32px", "48px"]}
+  fontWeight={400}
+  sampleText="Miðbýur — Aa Bb Cc 123"
+  fontFamily='"Stack Sans Notch", ui-sans-serif, system-ui, sans-serif'
+/>
+
+**Stack Sans Notch** — used by `display`, `h4`, `h4Subheading`, `h5`, and `h5Subheading`. A friendlier, more geometric cut for hero/display moments and secondary-level headings.
+
+<Typeset
+  fontSizes={["14px", "18px", "24px", "32px", "48px"]}
+  fontWeight={400}
+  sampleText="Miðbýur — Aa Bb Cc 123"
+  fontFamily='"Stack Sans Text", ui-sans-serif, system-ui, sans-serif'
+/>
+
+**Stack Sans Text** — used by `body`, `bodySm`, `label`, and `caption`. The workhorse: long-form copy, form labels, and captions, tuned to stay legible at small sizes.
+
+<Typeset
+  fontSizes={["14px", "18px", "24px", "32px", "48px"]}
+  fontWeight={400}
+  sampleText="Miðbýur — Aa Bb Cc 123"
+  fontFamily="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace"
+/>
+
+**Mono** — the system monospace stack, not assigned to any `Text` variant by default. Opt in with `fontFamily="mono"` for inline code, technical values, or anything that should read as literal.

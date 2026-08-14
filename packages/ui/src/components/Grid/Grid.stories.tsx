@@ -6,7 +6,7 @@ import { Grid } from "./Grid";
 const gapOptions = ["sm", "md", "lg"] as const;
 
 const meta = {
-  title: "Components/Grid",
+  title: "Layout/Grid",
   component: Grid,
   tags: ["autodocs"],
   args: {

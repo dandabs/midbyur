@@ -21,7 +21,7 @@ export function Divider({
   return (
     <View
       style={withClassName(rootClassName, style as ViewStyle) as ViewStyle}
-      accessibilityRole="separator"
+      accessibilityRole={"separator" as never}
       {...props}
     />
   );

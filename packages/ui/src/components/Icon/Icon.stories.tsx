@@ -36,7 +36,7 @@ const textColorOptions = [
 ] as const;
 
 const meta = {
-  title: "Components/Icon",
+  title: "Content/Icon",
   component: Icon,
   tags: ["autodocs"],
   args: {

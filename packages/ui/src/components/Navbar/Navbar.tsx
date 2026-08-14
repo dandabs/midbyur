@@ -1,7 +1,7 @@
 "use client";
 
 import { Menu, Moon, Sun, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Pressable, View, type ViewProps, type ViewStyle } from "react-native";
 import { themeModes, type ThemeMode } from "@midbyur/theme";
 import { withClassName } from "../../cssInterop";
@@ -15,6 +15,15 @@ export type NavbarProps = Readonly<{
   brand: string;
   links: NavigationItem[];
   linksGap?: GapValue;
+  /** Extra content rendered alongside the theme toggle, e.g. a locale switcher. */
+  actions?: ReactNode;
+  /**
+   * Always render the solid scrolled-past-hero background instead of the
+   * transparent-then-black-on-scroll transition. Useful for sites with no
+   * hero image behind the navbar, where the transparent state has nothing
+   * to sit on top of.
+   */
+  alwaysScrolled?: boolean;
   className?: string;
 }> & Omit<ViewProps, "children">;
 
@@ -98,6 +107,8 @@ export function Navbar({
   brand,
   links,
   linksGap = 20,
+  actions,
+  alwaysScrolled = false,
   className,
   style,
   ...props
@@ -108,7 +119,7 @@ export function Navbar({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    if (typeof window === "undefined") {
+    if (typeof window === "undefined" || alwaysScrolled) {
       return;
     }
 
@@ -125,7 +136,7 @@ export function Navbar({
       window.removeEventListener("scroll", updateScrollState);
       window.removeEventListener("resize", updateScrollState);
     };
-  }, []);
+  }, [alwaysScrolled]);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -158,7 +169,7 @@ export function Navbar({
 
   const rootClassName = [
     "mb-navbar",
-    isPastFirstViewport ? "mb-navbar--scrolled" : "",
+    alwaysScrolled || isPastFirstViewport ? "mb-navbar--scrolled" : "",
     className,
   ]
     .filter(Boolean)
@@ -187,6 +198,8 @@ export function Navbar({
               className="mb-navbar__desktop"
             />
 
+            {actions}
+
             <IconButton
               icon={theme === "dark" ? Sun : Moon}
               color="current"
@@ -199,6 +212,8 @@ export function Navbar({
           </View>
 
           <View style={withClassName("mb-navbar__mobile") as ViewStyle}>
+            {actions}
+
             <IconButton
               icon={theme === "dark" ? Sun : Moon}
               color="current"

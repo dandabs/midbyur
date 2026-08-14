@@ -3,7 +3,7 @@ import { Hero } from "./Hero";
 import { Text } from "../Text/Text";
 
 const meta = {
-  title: "Components/Hero",
+  title: "Content/Hero",
   component: Hero,
   tags: ['autodocs'],
   args: {

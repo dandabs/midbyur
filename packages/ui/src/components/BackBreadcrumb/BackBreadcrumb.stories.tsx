@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { BackBreadcrumb } from "./BackBreadcrumb";
 
 const meta = {
-  title: "Components/BackBreadcrumb",
+  title: "Navigation/BackBreadcrumb",
   component: BackBreadcrumb,
   tags: ["autodocs"],
   args: {

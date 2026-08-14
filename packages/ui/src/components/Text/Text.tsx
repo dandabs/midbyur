@@ -106,7 +106,7 @@ const lineHeightClassNames: Readonly<Record<TextLineHeight, string>> = {
 
 const nativeMonoFontFamily = Platform.OS === "ios" ? "Menlo" : "monospace";
 
-const fontFamilyValues: Readonly<Record<TextFontFamily, string>> = {
+export const fontFamilyValues: Readonly<Record<TextFontFamily, string>> = {
   text: Platform.OS === "web" ? '"Stack Sans Text", ui-sans-serif, system-ui, sans-serif' : "Stack Sans Text",
   notch: Platform.OS === "web" ? '"Stack Sans Notch", ui-sans-serif, system-ui, sans-serif' : "Stack Sans Notch",
   headline:

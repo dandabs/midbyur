@@ -5,7 +5,7 @@ import { Text } from "../Text/Text";
 const gapOptions = ["sm", "md", "lg"] as const;
 
 const meta = {
-  title: "Components/Navbar",
+  title: "Navigation/Navbar",
   component: Navbar,
   tags: ["autodocs"],
   args: {

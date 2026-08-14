@@ -18,7 +18,7 @@ import {
 } from "../../toast";
 
 const meta = {
-  title: "Components/Toast Examples",
+  title: "Feedback/Toast Examples",
   component: View,
   tags: ["autodocs"],
 } satisfies Meta;

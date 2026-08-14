@@ -37,7 +37,7 @@ const textColorOptions = [
 const gapOptions = ["sm", "md", "lg"] as const;
 
 const meta = {
-  title: "Components/Navigation",
+  title: "Navigation/Navigation",
   component: Navigation,
   tags: ["autodocs"],
   args: {
