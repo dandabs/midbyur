@@ -62,6 +62,9 @@ const meta = {
     strokeWidth: {
       control: { type: "number", min: 0.5, max: 6, step: 0.25 },
     },
+    loading: {
+      control: "boolean",
+    },
     onPress: {
       control: false,
     },
@@ -84,4 +87,10 @@ export const IconSet: Story = {
       <IconButton {...args} icon={Bell} color="warning" />
     </div>
   ),
+};
+
+export const Loading: Story = {
+  args: {
+    loading: true,
+  },
 };

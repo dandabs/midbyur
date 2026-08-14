@@ -67,6 +67,24 @@ export { ToastProvider } from "./components/ToastProvider/ToastProvider";
 export type { ToastProviderProps } from "./components/ToastProvider/ToastProvider";
 export { ConfirmModal } from "./components/ConfirmModal/ConfirmModal";
 export type { ConfirmModalProps } from "./components/ConfirmModal/ConfirmModal";
+export { Modal } from "./components/Modal/Modal";
+export type { ModalProps } from "./components/Modal/Modal";
+export { Select } from "./components/Select/Select";
+export type { SelectOption, SelectProps } from "./components/Select/Select";
+export { Slider } from "./components/Slider/Slider";
+export type { SliderProps } from "./components/Slider/Slider";
+export { WarningSign } from "./components/WarningSign/WarningSign";
+export type { WarningSignProps } from "./components/WarningSign/WarningSign";
+export { roadSignColorValues, ROAD_SIGN_COLOUR_OPTIONS } from "./components/WarningSign/roadSignColors";
+export type { RoadSignColour } from "./components/WarningSign/roadSignColors";
+export { WARNING_SIGN_SYMBOL_OPTIONS } from "./components/WarningSign/warningSignSymbols";
+export type { WarningSignSymbol } from "./components/WarningSign/warningSignSymbols";
+export {
+  ROAD_SIGN_FONT_FAMILY,
+  ROAD_SIGN_LETTER_SPACING,
+  roadSignFontWeightValues,
+} from "./components/WarningSign/roadSignFonts";
+export type { RoadSignFontWeight } from "./components/WarningSign/roadSignFonts";
 export { GAP_SIZE_VALUES } from "./spacing";
 export type { GapSize, GapValue } from "./spacing";
 export { DeleteIcon } from "./icons";

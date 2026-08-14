@@ -1,6 +1,6 @@
 "use client";
 
-import { Lucide } from "@react-native-vector-icons/lucide";
+import { Delete, Phone } from "lucide-react-native";
 import { useState } from "react";
 import { StyleSheet, View, useColorScheme } from "react-native";
 import { themeModes } from "@midbyur/theme";
@@ -101,7 +101,7 @@ export function DialPad({
           </Button>
           <IconButton
             icon={(({ size = 25 }) => (
-              <Lucide name="delete" size={size} color={colors.text} />
+              <Delete size={size} color={colors.text} />
             )) as never}
             onPress={onBackspace}
             onPressIn={() => setIsBackspacePressed(true)}
@@ -133,7 +133,7 @@ export function DialPad({
           ) : (
             <IconButton
               icon={(({ size = 30 }) => (
-                <Lucide name="phone" size={size} color={colors.successForeground} />
+                <Phone size={size} color={colors.successForeground} />
               )) as never}
               color="text"
               onPress={onCall}

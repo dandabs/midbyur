@@ -25,6 +25,22 @@
 	font-display: swap;
 }
 
+@font-face {
+	font-family: "Transport New";
+	src: url("/fonts/transport-new-medium.woff") format("woff");
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Transport New";
+	src: url("/fonts/transport-new-heavy.woff") format("woff");
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+}
+
 @source "../../src/**/*.{js,ts,jsx,tsx,mdx}";
 @source "../../../../packages/ui/src/**/*.{js,ts,jsx,tsx,mdx}";
 
