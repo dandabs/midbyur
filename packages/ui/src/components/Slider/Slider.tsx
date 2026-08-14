@@ -1,13 +1,10 @@
 "use client";
 
+import { themeModes } from "@midbyur/theme";
 import { useMemo, useRef, useState } from "react";
-import {
-  PanResponder,
-  View,
-  type LayoutChangeEvent,
-  type ViewStyle,
-} from "react-native";
+import { PanResponder, View, type LayoutChangeEvent, type ViewStyle } from "react-native";
 import { withClassName } from "../../cssInterop";
+import { useMidbyurTheme } from "../../provider";
 import { Text } from "../Text/Text";
 
 export type SliderProps = Readonly<{
@@ -18,6 +15,9 @@ export type SliderProps = Readonly<{
   onValueChange: (value: number) => void;
   onSlidingComplete?: (value: number) => void;
   formatValue?: (value: number) => string;
+  /** Labels shown below the ends of the track, e.g. "10 km" / "300 km". Defaults to the raw
+   * `min`/`max` numbers if omitted. Pass `false` to hide the scale labels entirely. */
+  formatScaleLabel?: ((boundary: number) => string) | false;
   disabled?: boolean;
   className?: string;
 }>;
@@ -48,9 +48,13 @@ export function Slider({
   onValueChange,
   onSlidingComplete,
   formatValue,
+  formatScaleLabel,
   disabled = false,
   className,
 }: SliderProps) {
+  const theme = useMidbyurTheme();
+  const colors = themeModes[theme] ?? themeModes.light;
+
   const [trackWidth, setTrackWidth] = useState(0);
   const dragStartValue = useRef(value);
   const dragStartX = useRef(0);
@@ -74,8 +78,7 @@ export function Slider({
         },
         onPanResponderMove: (_event, gestureState) => {
           if (trackWidth <= 0) return;
-          const startFraction =
-            max > min ? (dragStartValue.current - min) / (max - min) : 0;
+          const startFraction = max > min ? (dragStartValue.current - min) / (max - min) : 0;
           dragStartX.current = startFraction * trackWidth;
           const nextX = clamp(dragStartX.current + gestureState.dx, 0, trackWidth);
           const nextFraction = trackWidth > 0 ? nextX / trackWidth : 0;
@@ -95,10 +98,14 @@ export function Slider({
     [disabled, trackWidth, min, max, step],
   );
 
+  // `var(--color-*)` only resolves through the css-interop `withClassName` pipeline on plain
+  // style objects it never processed here — plain inline style props silently keep the literal
+  // string, which React Native then just ignores, leaving the track/fill/handle invisible
+  // (blending into whatever the parent's actual background is). Resolve real colors instead.
   const trackStyle: ViewStyle = {
     height: TRACK_HEIGHT,
     borderRadius: TRACK_HEIGHT / 2,
-    backgroundColor: "var(--color-border)" as unknown as string,
+    backgroundColor: colors.border,
     justifyContent: "center",
   };
 
@@ -108,7 +115,7 @@ export function Slider({
     height: TRACK_HEIGHT,
     borderRadius: TRACK_HEIGHT / 2,
     width: `${fraction * 100}%`,
-    backgroundColor: "var(--color-primary)" as unknown as string,
+    backgroundColor: colors.primary,
   };
 
   const handleStyle: ViewStyle = {
@@ -116,12 +123,16 @@ export function Slider({
     width: HANDLE_SIZE,
     height: HANDLE_SIZE,
     borderRadius: HANDLE_SIZE / 2,
-    backgroundColor: "var(--color-primary)" as unknown as string,
+    backgroundColor: colors.primary,
+    borderWidth: 2,
+    borderColor: colors.surface,
     left: fraction * trackWidth - HANDLE_SIZE / 2,
     top: -(HANDLE_SIZE - TRACK_HEIGHT) / 2,
     opacity: disabled ? 0.5 : 1,
     transform: dragging ? [{ scale: 1.15 }] : [{ scale: 1 }],
   };
+
+  const scaleLabeler = formatScaleLabel === false ? null : (formatScaleLabel ?? String);
 
   return (
     <View style={withClassName(["mb-slider", className].filter(Boolean).join(" ")) as ViewStyle}>
@@ -141,6 +152,17 @@ export function Slider({
         </View>
         <View style={handleStyle} />
       </View>
+
+      {scaleLabeler ? (
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Text size="xs" color="textMuted">
+            {scaleLabeler(min)}
+          </Text>
+          <Text size="xs" color="textMuted">
+            {scaleLabeler(max)}
+          </Text>
+        </View>
+      ) : null}
     </View>
   );
 }

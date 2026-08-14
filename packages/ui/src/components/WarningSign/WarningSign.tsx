@@ -20,7 +20,12 @@ export type WarningSignProps = Readonly<{
   borderColour?: RoadSignColour;
   /** Colour of the inset triangle background. Defaults to the standard "yellow". */
   backgroundColour?: RoadSignColour;
-  /** Colour of the symbol glyph. Defaults to "black". */
+  /**
+   * Colour of the symbol glyph. Defaults to "black". Ignored for any part of
+   * the symbol that has a fixed non-black colour in the reference artwork
+   * (e.g. the red/amber/green lamps on `TrafficLights`) — those parts always
+   * render in their fixed colour.
+   */
   symbolColour?: RoadSignColour;
   /** Which warning symbol to draw on the sign. */
   symbol: WarningSignSymbol;
@@ -55,9 +60,18 @@ export function WarningSign({
       <G transform={WARNING_SIGN_GROUP_TRANSFORM}>
         <Path d={WARNING_SIGN_OUTLINE_PATH} fill={roadSignColorValues[borderColour]} />
         <Path d={WARNING_SIGN_BACKGROUND_PATH} fill={roadSignColorValues[backgroundColour]} />
-        {warningSignSymbolPaths[symbol].map((d) => (
-          <Path key={d} d={d} fill={roadSignColorValues[symbolColour]} />
-        ))}
+        {warningSignSymbolPaths[symbol].map((path) => {
+          let d: string;
+          let fill: string;
+          if (typeof path === "string") {
+            d = path;
+            fill = roadSignColorValues[symbolColour];
+          } else {
+            d = path.d;
+            fill = roadSignColorValues[path.colour];
+          }
+          return <Path key={d} d={d} fill={fill} />;
+        })}
         {gradientTextPosition && (
           <SvgText
             x={gradientTextPosition.x}
