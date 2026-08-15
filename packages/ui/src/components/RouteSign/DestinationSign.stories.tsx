@@ -50,6 +50,12 @@ const meta = {
     textEndPadding: {
       control: { type: "number", min: 0, max: 100, step: 5 },
     },
+    cornerRadius: {
+      control: { type: "number", min: 0, max: 40, step: 1 },
+    },
+    borderWidth: {
+      control: { type: "number", min: 0, max: 20, step: 1 },
+    },
     rowHeight: {
       control: { type: "number", min: 50, max: 200, step: 10 },
     },
@@ -145,7 +151,7 @@ export const PointedFilledEnd: Story = {
  */
 export const PointOfInterestPointedEnd: Story = {
   args: {
-    text: ["Árbæjarsafn"],
+    text: ["Árbæjarsafn     "],
     textColour: "red",
     backgroundColour: "white",
     borderColour: "red",
@@ -207,5 +213,83 @@ export const WithIcon: Story = {
     roadNumbers: [{ text: "1", borderStyle: "dashed" }, { text: "36" }],
     icons: [undefined, { symbol: "PetrolStation" }],
     arrow: "turnRight",
+  },
+};
+
+/**
+ * "Place (turn off)" -- a plain blue board with yellow text pointing to a
+ * place name off the main road, matching
+ * https://en.wikipedia.org/wiki/File:F12.11.svg. No road numbers or icons
+ * -- the board itself stays a normal rounded rectangle, and the thin
+ * chevron/bracket mark from the reference artwork is drawn after the text
+ * instead of a full directional arrow. `borderColour` matches
+ * `backgroundColour` since the reference has no visible outline.
+ */
+export const PlaceTurnOff: Story = {
+  args: {
+    text: ["Grund"],
+    textColour: "yellow",
+    backgroundColour: "capitalBlue",
+    borderColour: "capitalBlue",
+    roadNumbers: [],
+    arrow: "chevronRight",
+    arrowPosition: "end",
+  },
+};
+
+/**
+ * "Place name" (e.g. a river) -- the same blue-on-yellow board as
+ * `PlaceTurnOff` but as a plain rectangle with no pointed end, matching
+ * https://en.wikipedia.org/wiki/File:F12.21.svg. Square corners and a thin
+ * border, matching the reference.
+ */
+export const PlaceName: Story = {
+  args: {
+    text: ["Grund"],
+    textColour: "yellow",
+    backgroundColour: "capitalBlue",
+    borderColour: "capitalBlue",
+    roadNumbers: [],
+    arrow: undefined,
+    cornerRadius: 0,
+    borderWidth: 2,
+  },
+};
+
+/**
+ * "Street or road name" -- a plain white board, black text and border, no
+ * road numbers/icons/arrow, matching
+ * https://en.wikipedia.org/wiki/File:F14.17.svg. Square corners and a thin
+ * border, matching the reference.
+ */
+export const StreetOrRoadName: Story = {
+  args: {
+    text: ["Hamraborg"],
+    textColour: "black",
+    backgroundColour: "white",
+    borderColour: "black",
+    roadNumbers: [],
+    arrow: undefined,
+    cornerRadius: 0,
+    borderWidth: 2,
+  },
+};
+
+/**
+ * "House numbers" -- the same plain white/black board style as
+ * `StreetOrRoadName`, for a house-number range instead of a name, matching
+ * https://en.wikipedia.org/wiki/File:F14.21.svg. Square corners and a thin
+ * border, matching the reference.
+ */
+export const HouseNumbers: Story = {
+  args: {
+    text: ["32-40"],
+    textColour: "black",
+    backgroundColour: "white",
+    borderColour: "black",
+    roadNumbers: [],
+    arrow: undefined,
+    cornerRadius: 0,
+    borderWidth: 2,
   },
 };

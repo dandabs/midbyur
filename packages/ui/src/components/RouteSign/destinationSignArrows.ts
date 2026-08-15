@@ -16,25 +16,23 @@
  *    from a vertical foot into a horizontal arrowhead, extracted from
  *    `Iceland_road_sign_J12.21.svg` (`J12.22.svg`'s mirror-image left turn
  *    confirmed the same way).
- *  - `diagonalUpRight` / `diagonalUpLeft` (mirrored): the diagonal arrow
- *    used on the reference composite sign itself,
- *    `F05.51.svg` (the "Mosfellsbær" destination sign) -- a differently
- *    proportioned, chunkier diagonal arrowhead than `DirectionSign`'s own
- *    `diagonalUpRight` (that one is sourced from class-G sign `G03.31.svg`),
- *    kept as its own separate shape here rather than reused, since this is
- *    the exact glyph that appears alongside road-number boxes and
- *    destination text on a real `DestinationSign`-shaped sign.
+ *  - `chevronRight` / `chevronLeft` (mirrored): a thin open chevron/bracket
+ *    shape (not a filled arrowhead), extracted from the small marker drawn
+ *    after the place name on a "place (turn off)" sign,
+ *    `F12.11.svg` -- its third `<path>` element (`path7220`), bbox/`d`
+ *    extracted with the same `svgelements` technique as the other shapes.
  */
 
 export type DestinationSignBBox = Readonly<{ minX: number; minY: number; maxX: number; maxY: number }>;
 
-export type DestinationSignBaseArrow = "up" | "straightRight" | "turnRight" | "diagonalUpRight";
+export type DestinationSignBaseArrow = "up" | "straightRight" | "turnRight" | "diagonalUpRight" | "chevronRight";
 
 export const DESTINATION_SIGN_ARROW_BBOX: Readonly<Record<DestinationSignBaseArrow, DestinationSignBBox>> = {
   up: { minX: 87.104862, minY: 21.597154, maxX: 164.699426, maxY: 135.510386 },
   straightRight: { minX: 68.343168, minY: 39.756488, maxX: 182.256398, maxY: 117.351052 },
   turnRight: { minX: 69.830749, minY: 20.546836, maxX: 188.076279, maxY: 131.102905 },
   diagonalUpRight: { minX: 772.655538, minY: 54.265056, maxX: 858.536872, maxY: 160.343728 },
+  chevronRight: { minX: -1041.5183, minY: -448.96394, maxX: -964.74106, maxY: -324.96032 },
 };
 
 export const destinationSignArrowPaths: Readonly<Record<DestinationSignBaseArrow, string>> = {
@@ -45,4 +43,6 @@ export const destinationSignArrowPaths: Readonly<Record<DestinationSignBaseArrow
     "m 69.833269,87.614823 c 0,-22.977532 18.34412,-41.467363 41.1127,-41.467363 l 27.31733,0.01003 l -4.54875,-22.576397 c -0.22371,-1.103122 0.23564,-2.030747 1.18069,-2.607379 c 0.94454,-0.589669 1.9388,-0.576632 2.82121,0.09025 l 49.82492,37.330655 c 0.23663,0.175496 0.53491,1.103122 0.53491,1.516793 c 0,0.451277 -0.23664,1.278618 -0.53491,1.504257 l -49.82492,37.343191 c -0.8829,0.664882 -1.88909,0.676916 -2.82121,0.09026 c -0.93163,-0.601703 -1.4044,-1.504258 -1.18069,-2.60738 l 4.54875,-22.588931 l -27.31733,0 c -7.64338,0 -13.86994,6.255204 -13.86994,13.964522 l 0.0199,43.485574 l -27.25518,0 l -0.01,-43.485073 z",
   diagonalUpRight:
     "m 798.583348,160.335938 l 38.59807,-51.37512 l 13.02618,13.7202 c 1.05064,1.10331 2.18883,1.53039 3.68364,1.26418 c 2.58033,-0.46269 1.72614,-3.826 1.85072,-6.44191 l 2.74048,-56.37561 c 0,0 0.56945,-4.18191 -1.97529,-6.03263 c -2.54472,-1.85071 -6.35293,-0.0285 -6.35293,-0.0285 l -52.76316,20.05534 c -2.45575,0.92535 -5.83687,1.13889 -5.55214,3.73702 c 0.14235,1.5126 0.96094,2.47354 2.33119,3.11418 l 17.06572,8.16805 l -38.58029,51.35734 l 25.92781,18.84525 z",
+  chevronRight:
+    "m -1041.4632,-324.96032 14.5001,0 62.22204,-61.83661 -62.11194,-62.16701 -14.6653,0 62.79104,62.05687 -62.73594,61.94675",
 };

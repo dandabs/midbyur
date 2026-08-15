@@ -52,7 +52,16 @@ export type { RoadSignColour };
  * `destinationSignArrows.ts`'s doc comment for where each base shape was
  * extracted from.
  */
-export type DestinationSignArrow = "up" | "left" | "right" | "turnLeft" | "turnRight" | "diagonalUpLeft" | "diagonalUpRight";
+export type DestinationSignArrow =
+  | "up"
+  | "left"
+  | "right"
+  | "turnLeft"
+  | "turnRight"
+  | "diagonalUpLeft"
+  | "diagonalUpRight"
+  | "chevronRight"
+  | "chevronLeft";
 
 /** A road-number box to stack in `DestinationSign`'s `roadNumbers` column -- the same options as `RouteSignRoadNumber` except `size`, which `DestinationSign`'s own `rowHeight` prop controls instead so every box lines up with its neighbouring row. */
 export type DestinationSignRoadNumber = Omit<RouteSignRoadNumberProps, "size">;
@@ -190,6 +199,21 @@ export type DestinationSignProps = Readonly<{
    * Defaults to 0.
    */
   textEndPadding?: number;
+  /**
+   * Corner radius of the board's own outline, in pixels, overriding the
+   * normal `DESTINATION_SIGN_CORNER_RADIUS_RATIO`-derived value -- e.g. `0`
+   * for a square-cornered board, matching plain place-name/street-name/
+   * house-number signs like https://en.wikipedia.org/wiki/File:F14.17.svg.
+   * Has no effect on `pointed` corners, which are always sharp regardless.
+   */
+  cornerRadius?: number;
+  /**
+   * Outline stroke width of the board, in pixels, overriding the normal
+   * `DESTINATION_SIGN_BORDER_WIDTH_RATIO`-derived value -- e.g. a small
+   * value for the thin border on plain place-name/street-name/house-number
+   * signs like https://en.wikipedia.org/wiki/File:F14.17.svg.
+   */
+  borderWidth?: number;
   /** Height of one road-number-box/text row, in pixels -- also the unit every other dimension (padding, gaps, font size) scales from. Defaults to 90. */
   rowHeight?: number;
 }>;
@@ -198,6 +222,7 @@ const MIRRORED_DESTINATION_SIGN_ARROWS: Readonly<Partial<Record<DestinationSignA
   left: "straightRight",
   turnLeft: "turnRight",
   diagonalUpLeft: "diagonalUpRight",
+  chevronLeft: "chevronRight",
 };
 
 function resolveArrow(arrow: DestinationSignArrow): Readonly<{ base: DestinationSignBaseArrow; flip: boolean }> {
@@ -365,6 +390,8 @@ export function DestinationSign({
   pointFilled = false,
   distanceNumber,
   textEndPadding: extraTextEndPadding = 0,
+  cornerRadius: cornerRadiusOverride,
+  borderWidth: borderWidthOverride,
   rowHeight = 90,
 }: DestinationSignProps) {
   const roadNumberRows = roadNumbers.length;
@@ -384,7 +411,13 @@ export function DestinationSign({
   const iconPadding = iconSize * DESTINATION_SIGN_ICON_PADDING_RATIO;
 
   const fontSize = rowHeight * DESTINATION_SIGN_TEXT_FONT_HEIGHT_RATIO;
-  const textEndPadding = rowHeight * DESTINATION_SIGN_TEXT_END_PADDING_RATIO + extraTextEndPadding;
+  // `textEndPadding` only makes sense as breathing room before whatever
+  // comes *after* the text (a `distanceNumber`, or an arrow drawn at the
+  // end) -- applying it when text is the last (or only) piece of content
+  // just pads the right side of the board with nothing to fill it,
+  // throwing text left-of-centre instead of centred/flush with the edge.
+  const hasTrailingContent = !!distanceNumber || (!!arrow && (arrowPosition === "end" || arrowPosition === "both"));
+  const textEndPadding = hasTrailingContent ? rowHeight * DESTINATION_SIGN_TEXT_END_PADDING_RATIO + extraTextEndPadding : 0;
   const letterSpacingWidth = fontSize * DESTINATION_SIGN_TEXT_LETTER_SPACING_RATIO;
   const textMaxWidth =
     textRows > 0
@@ -426,11 +459,23 @@ export function DestinationSign({
 
   const paddingX = rowHeight * DESTINATION_SIGN_PADDING_X_RATIO;
   const paddingY = rowHeight * DESTINATION_SIGN_PADDING_Y_RATIO;
-  const cornerRadius = rowHeight * DESTINATION_SIGN_CORNER_RADIUS_RATIO;
-  const borderWidth = rowHeight * DESTINATION_SIGN_BORDER_WIDTH_RATIO;
+  const cornerRadius = cornerRadiusOverride ?? rowHeight * DESTINATION_SIGN_CORNER_RADIUS_RATIO;
+  const borderWidth = borderWidthOverride ?? rowHeight * DESTINATION_SIGN_BORDER_WIDTH_RATIO;
 
   const bodyWidth = paddingX * 2 + innerWidth;
   const height = paddingY * 2 + contentHeight;
+  // A `chevronRight`/`chevronLeft` arrow is a thin bracket-mark meant to
+  // span the full board from top to bottom edge (ignoring the board's own
+  // padding/border), overlapping on top of them, rather than being sized
+  // and centred within the padded content area like every other arrow --
+  // matching how it reads on the reference artwork
+  // (https://en.wikipedia.org/wiki/File:F12.11.svg). Only its final
+  // rendered size/position (used below, once `height` is known) differs
+  // this way -- `arrowHeight` above (used for layout/segment width) stays
+  // the normal ratio-based size.
+  const isChevronArrow = resolvedArrow?.base === "chevronRight";
+  const renderArrowHeight = isChevronArrow ? height : arrowHeight;
+  const renderArrowY = isChevronArrow ? 0 : paddingY + (contentHeight - arrowHeight) / 2;
   const { bodyX, width, backgroundPath: boxPath, borderPath, borderRenderMode } = computeBoardGeometry(
     pointed,
     pointFilled,
@@ -453,6 +498,16 @@ export function DestinationSign({
   const distanceNumberX = segmentPositions.distanceNumber;
   const arrowStartX = segmentPositions.arrowStart;
   const arrowEndX = segmentPositions.arrowEnd;
+  // `textMaxWidth` is only an *estimate* of the widest text line's rendered
+  // width (see its computation above), so left-aligning at `textX` across
+  // the reserved `textMaxWidth`-wide segment leaves the actual glyphs
+  // off-centre by however far the estimate is wrong -- fine when other
+  // content (road numbers, an arrow, ...) anchors the layout, but visibly
+  // uncentred on a text-only sign, where the board's width is derived
+  // solely from that same estimate. In that case, centre each line on the
+  // board's true horizontal centre instead of trusting the estimate.
+  const isTextOnlySign = segments.length === 1 && segments[0].kind === "text";
+  const textCenterX = bodyX + bodyWidth / 2;
 
   // Uniformly scale (preserving aspect ratio) and centre a symbol's raw path
   // bounding box within an arbitrary target box, with a little padding on
@@ -560,20 +615,29 @@ export function DestinationSign({
           </G>
         );
       })}
-      {text.map((line, index) => (
-        <SvgText
-          key={`${index}-${line}`}
-          x={hasIcons && !icons?.[index] ? iconX : textX}
-          y={paddingY + textBlockTop + index * (rowHeight + rowGap) + rowHeight / 2 + fontSize * 0.36}
-          fontFamily={ROAD_SIGN_FONT_FAMILY}
-          fontWeight={roadSignFontWeightValues.heavy}
-          fontSize={fontSize}
-          letterSpacing={DESTINATION_SIGN_TEXT_LETTER_SPACING}
-          fill={roadSignColorValues[textColour]}
-        >
-          {line}
-        </SvgText>
-      ))}
+      {text.map((line, index) => {
+        let lineX = textX;
+        if (isTextOnlySign) {
+          lineX = textCenterX;
+        } else if (hasIcons && !icons?.[index]) {
+          lineX = iconX;
+        }
+        return (
+          <SvgText
+            key={`${index}-${line}`}
+            x={lineX}
+            y={paddingY + textBlockTop + index * (rowHeight + rowGap) + rowHeight / 2 + fontSize * 0.36}
+            textAnchor={isTextOnlySign ? "middle" : undefined}
+            fontFamily={ROAD_SIGN_FONT_FAMILY}
+            fontWeight={roadSignFontWeightValues.heavy}
+            fontSize={fontSize}
+            letterSpacing={DESTINATION_SIGN_TEXT_LETTER_SPACING}
+            fill={roadSignColorValues[textColour]}
+          >
+            {line}
+          </SvgText>
+        );
+      })}
       {distanceNumber && (
         <SvgText
           x={distanceNumberX}
@@ -591,26 +655,14 @@ export function DestinationSign({
         <Path
           d={destinationSignArrowPaths[resolvedArrow.base]}
           fill={roadSignColorValues[textColour]}
-          transform={buildArrowTransform(
-            arrowBBox,
-            arrowStartX ?? 0,
-            paddingY + (contentHeight - arrowHeight) / 2,
-            arrowHeight,
-            resolvedArrow.flip,
-          )}
+          transform={buildArrowTransform(arrowBBox, arrowStartX ?? 0, renderArrowY, renderArrowHeight, resolvedArrow.flip)}
         />
       )}
       {resolvedArrow && arrowBBox && showArrowAtEnd && (
         <Path
           d={destinationSignArrowPaths[resolvedArrow.base]}
           fill={roadSignColorValues[textColour]}
-          transform={buildArrowTransform(
-            arrowBBox,
-            arrowEndX ?? 0,
-            paddingY + (contentHeight - arrowHeight) / 2,
-            arrowHeight,
-            resolvedArrow.flip,
-          )}
+          transform={buildArrowTransform(arrowBBox, arrowEndX ?? 0, renderArrowY, renderArrowHeight, resolvedArrow.flip)}
         />
       )}
     </Svg>

@@ -46,7 +46,7 @@ export const DESTINATION_SIGN_TEXT_LETTER_SPACING = `${DESTINATION_SIGN_TEXT_LET
 /** Extra width reserved after the end of the longest destination text line, as a fraction of `rowHeight` -- keeps the text from butting directly up against the arrow (or the board's inner edge, when there's no arrow). */
 export const DESTINATION_SIGN_TEXT_END_PADDING_RATIO = 0.24;
 
-/** Height of the `arrow`, as a fraction of a single `rowHeight` -- fixed regardless of how many `roadNumbers`/text rows are stacked, so the arrow stays a consistent size instead of growing on a taller multi-row sign (matching the same size it renders at with no road numbers/single-line text). */
+/** Height of the `arrow`, as a fraction of a single `rowHeight` -- fixed regardless of how many `roadNumbers`/text rows are stacked, so the arrow stays a consistent size instead of growing on a taller multi-row sign (matching the same size it renders at with no road numbers/single-line text). Also used for a `chevronRight`/`chevronLeft` `arrow` -- that shape is naturally thin and tall (a bracket-like mark, not a full arrowhead), so it still reads correctly at full height, matching the reference artwork (https://en.wikipedia.org/wiki/File:F12.11.svg). */
 export const DESTINATION_SIGN_ARROW_HEIGHT_RATIO = 0.92;
 
 /** Height (and width, since it's square) of a per-row `icons` box, as a fraction of `rowHeight` -- matches the small pictogram box drawn beside a road/destination name in the reference artwork (e.g. `F04.11.svg`), sized close to the full row height so it leaves only a small margin above/below rather than a large vertical gap. */
