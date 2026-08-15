@@ -30,6 +30,16 @@ export const PROHIBITORY_SIGN_INNER_CIRCLE_PATH =
 /** Local (pre-transform) centre point shared by every prohibitory sign shape helper. */
 export const PROHIBITORY_SIGN_CENTER = { x: -235.50584, y: 370.29825 } as const;
 
+/**
+ * The sign's circle centre in the *transformed* (i.e. post
+ * `PROHIBITORY_SIGN_GROUP_TRANSFORM`, same space as `PROHIBITORY_SIGN_VIEW_BOX`)
+ * coordinate system -- the point another component (e.g. `DirectionSign`'s
+ * `Restriction` badge) should translate to when embedding a
+ * `ProhibitorySignGroup` at an arbitrary size/position, alongside
+ * `PROHIBITORY_SIGN_OUTER_RADIUS` for the scale factor.
+ */
+export const PROHIBITORY_SIGN_VIEWBOX_CENTER = { x: 300.51011, y: 300.533744 } as const;
+
 /** Radius of the outer circle (border / full background when no border is drawn). */
 export const PROHIBITORY_SIGN_OUTER_RADIUS = 300.31011;
 

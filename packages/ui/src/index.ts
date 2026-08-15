@@ -99,6 +99,15 @@ export { MandatorySign } from "./components/MandatorySign/MandatorySign";
 export type { MandatorySignProps, MandatorySignSecondSymbolLocation } from "./components/MandatorySign/MandatorySign";
 export { MANDATORY_SIGN_SYMBOL_OPTIONS } from "./components/MandatorySign/mandatorySignSymbols";
 export type { MandatorySignSymbol } from "./components/MandatorySign/mandatorySignSymbols";
+export { DirectionSign } from "./components/DirectionSign/DirectionSign";
+export type {
+  DirectionSignArrow,
+  DirectionSignLane,
+  DirectionSignProps,
+  DirectionSignRestriction,
+} from "./components/DirectionSign/DirectionSign";
+export { DIRECTION_SIGN_VEHICLE_ICON_OPTIONS } from "./components/DirectionSign/directionSignArrows";
+export type { DirectionSignVehicleIcon } from "./components/DirectionSign/directionSignArrows";
 export { GAP_SIZE_VALUES } from "./spacing";
 export type { GapSize, GapValue } from "./spacing";
 export { DeleteIcon } from "./icons";

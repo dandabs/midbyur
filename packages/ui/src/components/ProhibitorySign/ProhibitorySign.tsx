@@ -103,14 +103,29 @@ export type ProhibitorySignProps = Readonly<{
   size?: number;
 }>;
 
+/** Every `ProhibitorySignProps` field except `size` -- the props needed to draw the sign's content, independent of how large or where it's placed. */
+export type ProhibitorySignContentProps = Omit<ProhibitorySignProps, "size">;
+
+/** The `viewBox` a standalone `<Svg>` needs to display `ProhibitorySignGroup`'s content at its natural extent -- wider when a `squareBackgroundColour` is set, since the square plate extends past the circle. */
+export function getProhibitorySignViewBox(hasSquare: boolean): string {
+  return hasSquare
+    ? `${-PROHIBITORY_SIGN_SQUARE_MARGIN} ${-PROHIBITORY_SIGN_SQUARE_MARGIN} ${601.04382 + PROHIBITORY_SIGN_SQUARE_MARGIN * 2} ${601.04388 + PROHIBITORY_SIGN_SQUARE_MARGIN * 2}`
+    : PROHIBITORY_SIGN_VIEW_BOX;
+}
+
 /**
- * An Icelandic circular prohibitory road sign (class B), built by combining a
- * reusable circle shape (`prohibitorySignShape.ts`) with an optional symbol
- * glyph (`prohibitorySignSymbols.ts`) and/or free text, coloured and composed
- * via props instead of being baked into fixed artwork. See
- * `ProhibitorySign.stories.tsx` for interactive examples.
+ * Draws a prohibitory sign's circle/symbol/text/strikethrough content as a
+ * `<G>` in the shared `PROHIBITORY_SIGN_VIEW_BOX` coordinate space, without
+ * an enclosing `<Svg>` -- so it can either be shown standalone (wrapped in
+ * an `<Svg viewBox={getProhibitorySignViewBox(...)}>` by `ProhibitorySign`
+ * below) or embedded at an arbitrary size/position inside another sign's own
+ * `<Svg>` (e.g. `DirectionSign`'s `Restriction` badge, which lets a lane
+ * modifier show any prohibitory sign rather than just a plain roundel) via
+ * a wrapping `<G transform="translate(...) scale(...) translate(...)">`
+ * built the same way `buildFitTransform` fits any other symbol, using
+ * `PROHIBITORY_SIGN_VIEWBOX_CENTER` and `PROHIBITORY_SIGN_OUTER_RADIUS`.
  */
-export function ProhibitorySign({
+export function ProhibitorySignGroup({
   backgroundColour = "yellow",
   borderColour = "red",
   strikethroughColour,
@@ -122,14 +137,9 @@ export function ProhibitorySign({
   squareBackgroundBorderColour,
   firstLineText,
   secondLineText,
-  size = 200,
-}: ProhibitorySignProps) {
+}: ProhibitorySignContentProps) {
   const hasSquare = squareBackgroundColour !== undefined;
   const extentRadius = hasSquare ? PROHIBITORY_SIGN_SQUARE_HALF_SIDE : PROHIBITORY_SIGN_OUTER_RADIUS;
-
-  const viewBox = hasSquare
-    ? `${-PROHIBITORY_SIGN_SQUARE_MARGIN} ${-PROHIBITORY_SIGN_SQUARE_MARGIN} ${601.04382 + PROHIBITORY_SIGN_SQUARE_MARGIN * 2} ${601.04388 + PROHIBITORY_SIGN_SQUARE_MARGIN * 2}`
-    : PROHIBITORY_SIGN_VIEW_BOX;
 
   const [alt1, alt2] = buildAlternateStrikethroughPaths(extentRadius);
   // Text is rendered inside the same <G transform> as the circle/symbol
@@ -183,66 +193,82 @@ export function ProhibitorySign({
   const effectiveSquareBackgroundBorderColour = endOfProhibition && hasSquare ? "black" : squareBackgroundBorderColour;
 
   return (
+    <G transform={PROHIBITORY_SIGN_GROUP_TRANSFORM}>
+      {hasSquare && (
+        <Path
+          d={buildSquareBackgroundPath()}
+          fill={roadSignColorValues[effectiveSquareBackgroundColour!]}
+          stroke={effectiveSquareBackgroundBorderColour ? roadSignColorValues[effectiveSquareBackgroundBorderColour] : undefined}
+          strokeWidth={effectiveSquareBackgroundBorderColour ? 8 : 0}
+        />
+      )}
+      <Path d={PROHIBITORY_SIGN_OUTER_CIRCLE_PATH} fill={roadSignColorValues[effectiveBorderColour]} />
+      <Path d={PROHIBITORY_SIGN_INNER_CIRCLE_PATH} fill={roadSignColorValues[effectiveBackgroundColour]} />
+      {symbol &&
+        prohibitorySignSymbolPaths[symbol].map((path) => {
+          const d = typeof path === "string" ? path : path.d;
+          const fill = typeof path === "string" ? roadSignColorValues[effectiveSymbolColour] : roadSignColorValues[path.colour];
+          return <Path key={d} d={d} fill={fill} />;
+        })}
+      {firstLineText && (
+        <SvgText
+          x={textCenterX}
+          y={firstLineY}
+          fontSize={firstLineFontSize}
+          fontWeight={roadSignFontWeightValues.heavy}
+          fontFamily="Transport New"
+          letterSpacing={ROAD_SIGN_LETTER_SPACING}
+          textAnchor="middle"
+          alignmentBaseline="central"
+          fill={roadSignColorValues[effectiveSymbolColour]}
+        >
+          {firstLineText}
+        </SvgText>
+      )}
+      {secondLineText && (
+        <SvgText
+          x={textCenterX}
+          y={secondLineY}
+          fontSize={secondLineFontSize}
+          fontWeight={roadSignFontWeightValues.heavy}
+          fontFamily="Transport New"
+          letterSpacing={ROAD_SIGN_LETTER_SPACING}
+          textAnchor="middle"
+          alignmentBaseline="central"
+          fill={roadSignColorValues[effectiveSymbolColour]}
+        >
+          {secondLineText}
+        </SvgText>
+      )}
+      {strikethroughColour && !alternateStrikethroughColour && (
+        <Path d={buildStrikethroughPath(extentRadius)} fill={roadSignColorValues[strikethroughColour]} />
+      )}
+      {alternateStrikethroughColour && (
+        <>
+          <Path d={alt1} fill={roadSignColorValues[alternateStrikethroughColour]} />
+          <Path d={alt2} fill={roadSignColorValues[alternateStrikethroughColour]} />
+        </>
+      )}
+      {endOfProhibition &&
+        PROHIBITORY_SIGN_END_OF_PROHIBITION_STRIPE_PATHS.map((d) => <Path key={d} d={d} fill={roadSignColorValues.black} />)}
+    </G>
+  );
+}
+
+/**
+ * An Icelandic circular prohibitory road sign (class B), built by combining a
+ * reusable circle shape (`prohibitorySignShape.ts`) with an optional symbol
+ * glyph (`prohibitorySignSymbols.ts`) and/or free text, coloured and composed
+ * via props instead of being baked into fixed artwork. See
+ * `ProhibitorySign.stories.tsx` for interactive examples.
+ */
+export function ProhibitorySign({ size = 200, ...contentProps }: ProhibitorySignProps) {
+  const hasSquare = contentProps.squareBackgroundColour !== undefined;
+  const viewBox = getProhibitorySignViewBox(hasSquare);
+
+  return (
     <Svg width={size} height={size} viewBox={viewBox}>
-      <G transform={PROHIBITORY_SIGN_GROUP_TRANSFORM}>
-        {hasSquare && (
-          <Path
-            d={buildSquareBackgroundPath()}
-            fill={roadSignColorValues[effectiveSquareBackgroundColour!]}
-            stroke={effectiveSquareBackgroundBorderColour ? roadSignColorValues[effectiveSquareBackgroundBorderColour] : undefined}
-            strokeWidth={effectiveSquareBackgroundBorderColour ? 8 : 0}
-          />
-        )}
-        <Path d={PROHIBITORY_SIGN_OUTER_CIRCLE_PATH} fill={roadSignColorValues[effectiveBorderColour]} />
-        <Path d={PROHIBITORY_SIGN_INNER_CIRCLE_PATH} fill={roadSignColorValues[effectiveBackgroundColour]} />
-        {symbol &&
-          prohibitorySignSymbolPaths[symbol].map((path) => {
-            const d = typeof path === "string" ? path : path.d;
-            const fill = typeof path === "string" ? roadSignColorValues[effectiveSymbolColour] : roadSignColorValues[path.colour];
-            return <Path key={d} d={d} fill={fill} />;
-          })}
-        {firstLineText && (
-          <SvgText
-            x={textCenterX}
-            y={firstLineY}
-            fontSize={firstLineFontSize}
-            fontWeight={roadSignFontWeightValues.heavy}
-            fontFamily="Transport New"
-            letterSpacing={ROAD_SIGN_LETTER_SPACING}
-            textAnchor="middle"
-            alignmentBaseline="central"
-            fill={roadSignColorValues[effectiveSymbolColour]}
-          >
-            {firstLineText}
-          </SvgText>
-        )}
-        {secondLineText && (
-          <SvgText
-            x={textCenterX}
-            y={secondLineY}
-            fontSize={secondLineFontSize}
-            fontWeight={roadSignFontWeightValues.heavy}
-            fontFamily="Transport New"
-            letterSpacing={ROAD_SIGN_LETTER_SPACING}
-            textAnchor="middle"
-            alignmentBaseline="central"
-            fill={roadSignColorValues[effectiveSymbolColour]}
-          >
-            {secondLineText}
-          </SvgText>
-        )}
-        {strikethroughColour && !alternateStrikethroughColour && (
-          <Path d={buildStrikethroughPath(extentRadius)} fill={roadSignColorValues[strikethroughColour]} />
-        )}
-        {alternateStrikethroughColour && (
-          <>
-            <Path d={alt1} fill={roadSignColorValues[alternateStrikethroughColour]} />
-            <Path d={alt2} fill={roadSignColorValues[alternateStrikethroughColour]} />
-          </>
-        )}
-        {endOfProhibition &&
-          PROHIBITORY_SIGN_END_OF_PROHIBITION_STRIPE_PATHS.map((d) => <Path key={d} d={d} fill={roadSignColorValues.black} />)}
-      </G>
+      <ProhibitorySignGroup {...contentProps} />
     </Svg>
   );
 }
