@@ -148,7 +148,7 @@ export const AxleWeightLimit: Story = {
 export const MinimumSpaceBetweenVehicles: Story = {
   args: {
     symbol: "MinimumSpaceBetweenVehicles",
-    firstLineText: "50",
+    firstLineText: "20",
     secondLineText: "m",
   },
 };
