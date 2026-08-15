@@ -9,7 +9,7 @@ const meta = {
   tags: ["autodocs"],
   args: {
     backgroundColour: "white",
-    backgroundBorderColour: "blue",
+    backgroundBorderColour: "capitalBlue",
     borderColour: "black",
     iconColour: "black",
     symbol: "PetrolStation",

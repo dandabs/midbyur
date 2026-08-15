@@ -7,7 +7,7 @@ const meta = {
   component: DirectionSign,
   tags: ["autodocs"],
   args: {
-    backgroundColour: "blue",
+    backgroundColour: "capitalBlue",
     backgroundBorderColour: "white",
     borderColour: "black",
     arrowColour: "white",

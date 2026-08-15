@@ -8,7 +8,7 @@ const meta = {
   component: MandatorySign,
   tags: ["autodocs"],
   args: {
-    backgroundColour: "blue",
+    backgroundColour: "capitalBlue",
     backgroundBorderColour: "white",
     borderColour: "black",
     symbolColour: "white",

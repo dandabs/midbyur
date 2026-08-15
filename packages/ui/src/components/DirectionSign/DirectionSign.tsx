@@ -32,7 +32,6 @@ import {
   DIRECTION_SIGN_MERGE_OVERLAY_HEIGHT_RATIO,
   DIRECTION_SIGN_MERGE_OVERLAY_WIDTH_RATIO,
   DIRECTION_SIGN_MODIFIER_LANE_WIDTH_RATIO,
-  DIRECTION_SIGN_REFERENCE_BLUE,
   DIRECTION_SIGN_SINGLE_LANE_WIDTH_RATIO,
 } from "./directionSignShape";
 
@@ -164,7 +163,7 @@ export type DirectionSignProps = Readonly<{
   lanes: readonly DirectionSignLane[];
   /** Colour of the arrow pictograms. Defaults to "white". */
   arrowColour?: RoadSignColour;
-  /** Colour of the main board background. Defaults to "blue". */
+  /** Colour of the main board background. Defaults to "capitalBlue", the brighter alternate blue used by the reference artwork for this sign class (see `roadSignColors.ts`). */
   backgroundColour?: RoadSignColour;
   /** Colour of the frame between the outer border and the background. Defaults to "white". */
   backgroundBorderColour?: RoadSignColour;
@@ -432,7 +431,7 @@ function laneWidthRatio(lane: DirectionSignLane): number {
 export function DirectionSign({
   lanes,
   arrowColour = "white",
-  backgroundColour = "blue",
+  backgroundColour = "capitalBlue",
   backgroundBorderColour = "white",
   borderColour = "black",
   size = 200,
@@ -524,7 +523,7 @@ export function DirectionSign({
   const width = laneCount > 1 ? requiredWidth : Math.max(size, requiredWidth);
   const startX = sidePadding + Math.max(0, width - requiredWidth) / 2;
 
-  const backgroundFill = backgroundColour === "blue" ? DIRECTION_SIGN_REFERENCE_BLUE : roadSignColorValues[backgroundColour];
+  const backgroundFill = roadSignColorValues[backgroundColour];
 
   const outerFramePath = buildRoundedRectPath(borderWidth / 2, borderWidth / 2, width - borderWidth, size - borderWidth, cornerRadius);
   const innerFillPath = buildRoundedRectPath(

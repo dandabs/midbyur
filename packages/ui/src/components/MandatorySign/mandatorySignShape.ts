@@ -20,19 +20,6 @@
  */
 export const MANDATORY_SIGN_VIEW_BOX = "0 0 600.17537 600.17537";
 
-/**
- * The mandatory sign class's own blue, as used in the reference artwork
- * (`#2163AD`) -- the same reference blue used by `ServiceSign`
- * (`SERVICE_SIGN_REFERENCE_BLUE`), and noticeably brighter than the shared
- * `RoadSignColour` "blue" (`#0039A6`, taken from the class A/B warning/
- * prohibitory signs). `MandatorySign`'s `backgroundColour` prop still
- * defaults to (and can be set to) the shared `RoadSignColour` palette for
- * consistency with the rest of the sign components, but when left at its
- * default value ("blue"), the component renders the circle using this
- * reference hex instead of the shared palette's `#0039A6`, to match the
- * real signs.
- */
-export const MANDATORY_SIGN_REFERENCE_BLUE = "#2163AD";
 
 /** Local centre point shared by every mandatory sign shape/symbol. */
 export const MANDATORY_SIGN_CENTER = { x: 300.087, y: 300.086 } as const;

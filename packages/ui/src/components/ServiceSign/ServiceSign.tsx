@@ -10,7 +10,6 @@ import {
   SERVICE_SIGN_BORDER_WIDTH,
   SERVICE_SIGN_FRAME_PATH,
   SERVICE_SIGN_ICON_SLOT,
-  SERVICE_SIGN_REFERENCE_BLUE,
   SERVICE_SIGN_VIEW_BOX,
 } from "./serviceSignShape";
 import type { ServiceSignSymbol } from "./serviceSignSymbols";
@@ -54,12 +53,8 @@ export type ServiceSignProps = Readonly<{
   backgroundColour?: RoadSignColour;
   /**
    * Colour of the frame between the board's outer edge and the icon slot.
-   * Defaults to "blue", but at that default value renders using the
-   * service sign class's own reference blue (`#2163AD`, slightly brighter
-   * than the shared `RoadSignColour` "blue") instead of the shared
-   * palette's `#0039A6` -- see `SERVICE_SIGN_REFERENCE_BLUE` in
-   * `serviceSignShape.ts`. Any other `RoadSignColour` renders using the
-   * shared palette as usual.
+   * Defaults to "capitalBlue", the brighter alternate blue used by the
+   * reference artwork for this sign class (see `roadSignColors.ts`).
    */
   backgroundBorderColour?: RoadSignColour;
   /** Colour of the board's thin outer outline. Defaults to "black". */
@@ -94,7 +89,7 @@ export function ServiceSign({
   symbol,
   iconColour = "black",
   backgroundColour = "white",
-  backgroundBorderColour = "blue",
+  backgroundBorderColour = "capitalBlue",
   borderColour = "black",
   firstLineText,
   secondLineText,
@@ -104,10 +99,7 @@ export function ServiceSign({
   const isRadioStation = symbol === "RadioStation";
   const slot = SERVICE_SIGN_ICON_SLOT;
   const slotCenterX = slot.x + slot.width / 2;
-  // The reference artwork's frame blue doesn't match the shared palette's
-  // "blue" -- render the more accurate reference hex at the default value,
-  // but fall back to the shared palette for any other colour choice.
-  const frameFill = backgroundBorderColour === "blue" ? SERVICE_SIGN_REFERENCE_BLUE : roadSignColorValues[backgroundBorderColour];
+  const frameFill = roadSignColorValues[backgroundBorderColour];
 
   // "Radio station" has no pictogram in the reference artwork -- it bakes in
   // the station name and FM frequency as text instead, so render two lines

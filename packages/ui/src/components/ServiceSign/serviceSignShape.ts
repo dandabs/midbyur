@@ -10,19 +10,14 @@
  * The frame colour in the reference artwork is `#2163AD`, which is
  * noticeably different from the shared `blue` in `roadSignColors.ts`
  * (`#0039A6`, taken from the class A/B warning/prohibitory signs) -- service
- * signs use their own, slightly brighter blue. `ServiceSign`'s
- * `backgroundBorderColour` prop still defaults to (and can be set to) the
- * shared `RoadSignColour` palette for consistency with the rest of the
- * sign components, but when left at its default value ("blue"), the
- * component renders the frame using `SERVICE_SIGN_REFERENCE_BLUE` below
- * instead of the shared palette's `#0039A6`, to match the real signs.
+ * signs use the shared palette's `capitalBlue` (`#2163AD`) instead.
+ * `ServiceSign`'s `backgroundBorderColour` prop defaults to `"capitalBlue"`
+ * to match the real signs, but can be set to any other `RoadSignColour`.
  */
 export const SERVICE_SIGN_VIEW_BOX = "0 0 600.79077 671.07422";
 
 export const SERVICE_SIGN_CENTER = { x: 300.395, y: 335.537 } as const;
 
-/** The service sign class's own blue, as used in the reference artwork -- slightly brighter than the shared `RoadSignColour` "blue" (`#0039A6`). */
-export const SERVICE_SIGN_REFERENCE_BLUE = "#2163AD";
 
 /** Outer board outline (white board + thin black stroke). */
 export const SERVICE_SIGN_BORDER_PATH =

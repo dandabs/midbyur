@@ -14,9 +14,6 @@
  * fixed/minimum dimension.
  */
 
-/** Reference blue used by the real Icelandic artwork -- see `MandatorySign`/`ServiceSign` for the same override pattern. */
-export const DIRECTION_SIGN_REFERENCE_BLUE = "#2163AD";
-
 /** Corner radius of the outer white frame and inner blue fill, as a fraction of `size`. */
 export const DIRECTION_SIGN_CORNER_RADIUS_RATIO = 0.04;
 

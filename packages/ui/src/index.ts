@@ -111,7 +111,14 @@ export type { DirectionSignVehicleIcon } from "./components/DirectionSign/direct
 export { RouteSignRoadNumber } from "./components/RouteSign/RouteSignRoadNumber";
 export type { RouteSignRoadNumberBorderStyle, RouteSignRoadNumberProps } from "./components/RouteSign/RouteSignRoadNumber";
 export { DestinationSign } from "./components/RouteSign/DestinationSign";
-export type { DestinationSignArrow, DestinationSignProps, DestinationSignRoadNumber } from "./components/RouteSign/DestinationSign";
+export type {
+  DestinationSignArrow,
+  DestinationSignIcon,
+  DestinationSignProps,
+  DestinationSignRoadNumber,
+  DestinationSignRoadNumberIcon,
+  DestinationSignRoadNumberSlot,
+} from "./components/RouteSign/DestinationSign";
 export { GAP_SIZE_VALUES } from "./spacing";
 export type { GapSize, GapValue } from "./spacing";
 export { DeleteIcon } from "./icons";

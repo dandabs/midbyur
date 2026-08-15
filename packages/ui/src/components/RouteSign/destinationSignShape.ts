@@ -48,3 +48,18 @@ export const DESTINATION_SIGN_TEXT_END_PADDING_RATIO = 0.24;
 
 /** Height of the `arrow`, as a fraction of a single `rowHeight` -- fixed regardless of how many `roadNumbers`/text rows are stacked, so the arrow stays a consistent size instead of growing on a taller multi-row sign (matching the same size it renders at with no road numbers/single-line text). */
 export const DESTINATION_SIGN_ARROW_HEIGHT_RATIO = 0.92;
+
+/** Height (and width, since it's square) of a per-row `icons` box, as a fraction of `rowHeight` -- matches the small pictogram box drawn beside a road/destination name in the reference artwork (e.g. `F11.51.svg`), sized a little smaller than the full row so it doesn't touch its neighbours vertically. */
+export const DESTINATION_SIGN_ICON_SIZE_RATIO = 0.82;
+
+/** Corner radius of an `icons` box, as a fraction of its own (square) size. */
+export const DESTINATION_SIGN_ICON_CORNER_RADIUS_RATIO = 0.16;
+
+/** Outline stroke width of an `icons` box, as a fraction of its own (square) size. */
+export const DESTINATION_SIGN_ICON_BORDER_WIDTH_RATIO = 0.07;
+
+/** Padding between an `icons` box's inner edge and its pictogram, as a fraction of the box's own (square) size. */
+export const DESTINATION_SIGN_ICON_PADDING_RATIO = 0.14;
+
+/** Gap between the `icons` column and its neighbouring `roadNumbers` column/destination text, as a fraction of `rowHeight`. */
+export const DESTINATION_SIGN_ICON_GAP_RATIO = 0.32;

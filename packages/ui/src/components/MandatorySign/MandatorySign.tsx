@@ -9,7 +9,6 @@ import {
   MANDATORY_SIGN_INNER_CIRCLE_PATH,
   MANDATORY_SIGN_INNER_RADIUS,
   MANDATORY_SIGN_OUTER_CIRCLE_PATH,
-  MANDATORY_SIGN_REFERENCE_BLUE,
   MANDATORY_SIGN_VIEW_BOX,
 } from "./mandatorySignShape";
 import type { MandatorySignSymbol } from "./mandatorySignSymbols";
@@ -25,7 +24,7 @@ export type MandatorySignProps = Readonly<{
   symbol?: MandatorySignSymbol;
   /** Colour of the symbol pictogram(s). Defaults to "white". */
   symbolColour?: RoadSignColour;
-  /** Colour of the main circle background. Defaults to "blue". */
+  /** Colour of the main circle background. Defaults to "capitalBlue", the brighter alternate blue used by the reference artwork for this sign class (see `roadSignColors.ts`). */
   backgroundColour?: RoadSignColour;
   /** Colour of the ring between the outer border and the background circle. Defaults to "white". */
   backgroundBorderColour?: RoadSignColour;
@@ -83,7 +82,7 @@ function buildFitTransform(
 export function MandatorySign({
   symbol,
   symbolColour = "white",
-  backgroundColour = "blue",
+  backgroundColour = "capitalBlue",
   backgroundBorderColour = "white",
   borderColour = "black",
   secondSymbol,
@@ -99,10 +98,7 @@ export function MandatorySign({
   // pictogram than a smaller padding produces -- 0.30 * radius matches the
   // real signs' icon-to-edge margin.
   const padding = radius * 0.3;
-  // The reference artwork's circle blue doesn't match the shared palette's
-  // "blue" -- render the more accurate reference hex at the default value,
-  // but fall back to the shared palette for any other colour choice.
-  const backgroundFill = backgroundColour === "blue" ? MANDATORY_SIGN_REFERENCE_BLUE : roadSignColorValues[backgroundColour];
+  const backgroundFill = roadSignColorValues[backgroundColour];
 
   let symbolTransform: string | undefined;
   let secondSymbolTransform: string | undefined;
