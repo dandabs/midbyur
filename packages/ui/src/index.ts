@@ -108,6 +108,10 @@ export type {
 } from "./components/DirectionSign/DirectionSign";
 export { DIRECTION_SIGN_VEHICLE_ICON_OPTIONS } from "./components/DirectionSign/directionSignArrows";
 export type { DirectionSignVehicleIcon } from "./components/DirectionSign/directionSignArrows";
+export { RouteSignRoadNumber } from "./components/RouteSign/RouteSignRoadNumber";
+export type { RouteSignRoadNumberBorderStyle, RouteSignRoadNumberProps } from "./components/RouteSign/RouteSignRoadNumber";
+export { DestinationSign } from "./components/RouteSign/DestinationSign";
+export type { DestinationSignArrow, DestinationSignProps, DestinationSignRoadNumber } from "./components/RouteSign/DestinationSign";
 export { GAP_SIZE_VALUES } from "./spacing";
 export type { GapSize, GapValue } from "./spacing";
 export { DeleteIcon } from "./icons";
