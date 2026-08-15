@@ -21,6 +21,21 @@ import {
   serviceSignSymbolPaths,
 } from "./serviceSignSymbols";
 
+/**
+ * `Car`, `Snowmobile`, `Bike` and `Boat` are vehicle-only icons extracted
+ * from the reference "rental" signs, where they're drawn below the "key"
+ * glyph rather than centred in the icon slot -- so their raw path data only
+ * occupies the lower portion of the slot. When one of these is used on its
+ * own (`rental` not set), fit-scale and centre it in the whole slot instead
+ * of drawing it at its raw rental position.
+ */
+const SERVICE_SIGN_STANDALONE_VEHICLE_SYMBOLS: ReadonlySet<ServiceSignSymbol> = new Set([
+  "Car",
+  "Snowmobile",
+  "Bike",
+  "Boat",
+]);
+
 export type { RoadSignColour, ServiceSignSymbol };
 
 const SERVICE_SIGN_ASPECT_RATIO = 671.07422 / 600.79077;
@@ -110,30 +125,48 @@ export function ServiceSign({
   const firstLineY = slot.y + slot.height * 0.35;
   const secondLineY = slot.y + slot.height * 0.7;
 
+  // Uniformly scale (preserving aspect ratio) and translate a symbol's raw
+  // path bounding box so it's centred within an arbitrary target box, with
+  // a little padding on every side so the icon doesn't touch the box's
+  // edges. Used both for fitting a standalone vehicle icon into the whole
+  // slot, and for fitting a rental icon into the space below the key.
+  const buildFitTransform = (
+    bbox: Readonly<{ minX: number; minY: number; maxX: number; maxY: number }>,
+    box: Readonly<{ x: number; y: number; width: number; height: number }>,
+    padding: number,
+  ): string => {
+    const availableWidth = box.width - padding * 2;
+    const availableHeight = box.height - padding * 2;
+    const symbolWidth = bbox.maxX - bbox.minX;
+    const symbolHeight = bbox.maxY - bbox.minY;
+    const scale = Math.min(availableWidth / symbolWidth, availableHeight / symbolHeight);
+    const targetCenterX = box.x + box.width / 2;
+    const targetCenterY = box.y + box.height / 2;
+    const symbolCenterX = (bbox.minX + bbox.maxX) / 2;
+    const symbolCenterY = (bbox.minY + bbox.maxY) / 2;
+    return `translate(${targetCenterX} ${targetCenterY}) scale(${scale}) translate(${-symbolCenterX} ${-symbolCenterY})`;
+  };
+
   // "Rental" signs draw a shared key glyph in the upper part of the slot,
-  // then fit-scale the selected symbol's icon (uniformly, preserving aspect
-  // ratio) into the remaining space below it, with a little padding on
-  // every side so the icon doesn't touch the slot's edges.
+  // then fit-scale the selected symbol's icon into the remaining space
+  // below it. Otherwise, `Car`/`Snowmobile`/`Bike`/`Boat` (whose raw path
+  // data only occupies the lower portion of the slot, since in the
+  // reference artwork they're drawn below the rental key) are instead
+  // fit-scaled and centred within the whole slot.
   const keyBBox = SERVICE_SIGN_RENTAL_KEY_BBOX;
   const symbolBBox = symbol ? SERVICE_SIGN_SYMBOL_BBOX[symbol] : undefined;
-  const rentalPadding = slot.width * 0.06;
-  const rentalAvailableWidth = slot.width - rentalPadding * 2;
-  const rentalAvailableTop = keyBBox.maxY + rentalPadding;
-  const rentalAvailableBottom = slot.y + slot.height - rentalPadding;
-  const rentalAvailableHeight = rentalAvailableBottom - rentalAvailableTop;
-  const rentalTransform =
-    rental && symbolBBox
-      ? (() => {
-          const symbolWidth = symbolBBox.maxX - symbolBBox.minX;
-          const symbolHeight = symbolBBox.maxY - symbolBBox.minY;
-          const scale = Math.min(rentalAvailableWidth / symbolWidth, rentalAvailableHeight / symbolHeight);
-          const targetCenterX = slotCenterX;
-          const targetCenterY = rentalAvailableTop + rentalAvailableHeight / 2;
-          const symbolCenterX = (symbolBBox.minX + symbolBBox.maxX) / 2;
-          const symbolCenterY = (symbolBBox.minY + symbolBBox.maxY) / 2;
-          return `translate(${targetCenterX} ${targetCenterY}) scale(${scale}) translate(${-symbolCenterX} ${-symbolCenterY})`;
-        })()
-      : undefined;
+  const slotPadding = slot.width * 0.06;
+  const isStandaloneVehicle = !rental && !!symbol && SERVICE_SIGN_STANDALONE_VEHICLE_SYMBOLS.has(symbol);
+  let symbolTransform: string | undefined;
+  if (rental && symbolBBox) {
+    symbolTransform = buildFitTransform(
+      symbolBBox,
+      { x: slot.x, y: keyBBox.maxY, width: slot.width, height: slot.y + slot.height - keyBBox.maxY },
+      slotPadding,
+    );
+  } else if (isStandaloneVehicle && symbolBBox) {
+    symbolTransform = buildFitTransform(symbolBBox, slot, slotPadding);
+  }
 
   return (
     <Svg width={size} height={size * SERVICE_SIGN_ASPECT_RATIO} viewBox={SERVICE_SIGN_VIEW_BOX}>
@@ -149,7 +182,7 @@ export function ServiceSign({
         <Path d={SERVICE_SIGN_RENTAL_KEY_PATH} fill={roadSignColorValues[iconColour]} />
       )}
       {symbol && !isRadioStation && (
-        <G transform={rentalTransform}>
+        <G transform={symbolTransform}>
           {serviceSignSymbolPaths[symbol].map((path) => {
             const d = typeof path === "string" ? path : path.d;
             const fill = typeof path === "string" ? roadSignColorValues[iconColour] : roadSignColorValues[path.colour];
