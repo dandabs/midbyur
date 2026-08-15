@@ -119,6 +119,8 @@ export type {
   DestinationSignRoadNumberIcon,
   DestinationSignRoadNumberSlot,
 } from "./components/RouteSign/DestinationSign";
+export { DistanceSign } from "./components/RouteSign/DistanceSign";
+export type { DistanceSignLocation, DistanceSignProps, DistanceSignRoadNumber } from "./components/RouteSign/DistanceSign";
 export { GAP_SIZE_VALUES } from "./spacing";
 export type { GapSize, GapValue } from "./spacing";
 export { DeleteIcon } from "./icons";
