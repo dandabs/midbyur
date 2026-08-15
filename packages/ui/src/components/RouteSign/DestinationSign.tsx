@@ -13,6 +13,8 @@ import {
   DESTINATION_SIGN_ARROW_HEIGHT_RATIO,
   DESTINATION_SIGN_BORDER_WIDTH_RATIO,
   DESTINATION_SIGN_CORNER_RADIUS_RATIO,
+  DESTINATION_SIGN_DISTANCE_NUMBER_END_PADDING_RATIO,
+  DESTINATION_SIGN_DISTANCE_NUMBER_GAP_RATIO,
   DESTINATION_SIGN_ICON_BORDER_WIDTH_RATIO,
   DESTINATION_SIGN_ICON_CORNER_RADIUS_RATIO,
   DESTINATION_SIGN_ICON_GAP_RATIO,
@@ -20,6 +22,7 @@ import {
   DESTINATION_SIGN_ICON_SIZE_RATIO,
   DESTINATION_SIGN_PADDING_X_RATIO,
   DESTINATION_SIGN_PADDING_Y_RATIO,
+  DESTINATION_SIGN_POINT_LENGTH_RATIO,
   DESTINATION_SIGN_ROAD_NUMBER_GAP_RATIO,
   DESTINATION_SIGN_ROW_GAP_RATIO,
   DESTINATION_SIGN_TEXT_AVERAGE_CHAR_WIDTH_RATIO,
@@ -150,6 +153,43 @@ export type DestinationSignProps = Readonly<{
   arrow?: DestinationSignArrow;
   /** Which side(s) of the content row the arrow is drawn on -- "start" draws it before the road numbers/text, "end" draws it after, "both" draws one copy on each side. Defaults to "end". Ignored when `arrow` is omitted. */
   arrowPosition?: "start" | "end" | "both";
+  /**
+   * Shapes the board's own outline into a point on the given side(s),
+   * instead of the normal rounded corners there -- e.g. `"end"` draws a
+   * sideways-arrow-shaped board pointing right, matching
+   * https://upload.wikimedia.org/wikipedia/commons/1/11/F01.11.svg. `"both"`
+   * points on both sides. Omit for a normal rounded-rectangle board on
+   * every side.
+   */
+  pointed?: "start" | "end" | "both";
+  /**
+   * When `pointed`, whether the point protrudes past the board's normal
+   * rounded-rectangle silhouette (the default, `false`), or is instead
+   * "filled in" so the overall board stays a plain rounded rectangle --
+   * only the `backgroundColour` fill comes to a point, inset within the
+   * board, with the corner(s) it would otherwise round off filled solid
+   * with `borderColour` instead, matching
+   * https://upload.wikimedia.org/wikipedia/commons/e/ea/F03.51.svg. Has no
+   * effect when `pointed` is omitted.
+   */
+  pointFilled?: boolean;
+  /**
+   * A small distance number (e.g. `"7"` for 7 km) drawn after `text`, near
+   * a `pointed` `"end"`/`"both"` tip -- matching the numeral before the
+   * arrow tip in https://upload.wikimedia.org/wikipedia/commons/e/ea/F03.51.svg.
+   * Rendered in `textColour` at the same size as `text`, vertically
+   * centred across the whole board rather than lining up with any single
+   * row. Omit for no distance number.
+   */
+  distanceNumber?: string;
+  /**
+   * Extra width reserved after the end of the longest `text` line, in
+   * pixels, on top of the normal `DESTINATION_SIGN_TEXT_END_PADDING_RATIO`-derived
+   * gap -- keeps the text from butting directly up against whatever comes
+   * after it (a `distanceNumber`, arrow, or the board's own inner edge/point).
+   * Defaults to 0.
+   */
+  textEndPadding?: number;
   /** Height of one road-number-box/text row, in pixels -- also the unit every other dimension (padding, gaps, font size) scales from. Defaults to 90. */
   rowHeight?: number;
 }>;
@@ -179,6 +219,130 @@ function computeBlockTop(rowCount: number, totalRows: number, rowHeight: number,
 }
 
 /**
+ * Build an SVG path `d` string for `DestinationSign`'s own board outline --
+ * a rounded rectangle, except on a `pointStart`/`pointEnd` side, where the
+ * two corners on that side are replaced by a single sharp point extending
+ * `pointLength` past that edge, with its apex at vertical centre (see
+ * `DESTINATION_SIGN_POINT_LENGTH_RATIO`).
+ */
+function buildBoardPath(
+  box: Readonly<{ x: number; y: number; width: number; height: number; cornerRadius: number }>,
+  point: Readonly<{ start: boolean; end: boolean; length: number }>,
+): string {
+  const left = box.x;
+  const right = box.x + box.width;
+  const top = box.y;
+  const bottom = box.y + box.height;
+  const midY = box.y + box.height / 2;
+  const r = box.cornerRadius;
+
+  const topRight = point.end
+    ? [`L ${right},${top}`, `L ${right + point.length},${midY}`, `L ${right},${bottom}`]
+    : [`L ${right - r},${top}`, `A ${r},${r} 0 0 1 ${right},${top + r}`, `L ${right},${bottom - r}`, `A ${r},${r} 0 0 1 ${right - r},${bottom}`];
+  const bottomLeft = point.start
+    ? [`L ${left},${bottom}`, `L ${left - point.length},${midY}`, `L ${left},${top}`]
+    : [`L ${left + r},${bottom}`, `A ${r},${r} 0 0 1 ${left},${bottom - r}`, `L ${left},${top + r}`, `A ${r},${r} 0 0 1 ${left + r},${top}`];
+
+  return [point.start ? `M ${left},${top}` : `M ${left + r},${top}`, ...topRight, ...bottomLeft, "Z"].join(" ");
+}
+
+/** Resolve `DestinationSign`'s `pointed` prop into which side(s) point. */
+function resolvePointedSides(pointed: "start" | "end" | "both" | undefined): Readonly<{ pointStart: boolean; pointEnd: boolean }> {
+  return { pointStart: pointed === "start" || pointed === "both", pointEnd: pointed === "end" || pointed === "both" };
+}
+
+/**
+ * Compute `DestinationSign`'s own board outline -- normally a plain rounded
+ * rectangle, `bodyWidth` wide. When `pointed`, either the whole board (fill
+ * and stroked border alike) protrudes into a sharp point past its normal
+ * edge on that side (the default), or -- when `pointFilled` -- the board's
+ * outer silhouette stays that same plain rounded rectangle and only the
+ * `backgroundColour` fill is drawn pointed, inset within it, with a second,
+ * `borderColour`-filled rounded rectangle underneath standing in for both
+ * the normal stroked border and the solid corner(s) next to the point that
+ * a plain rounded rectangle would otherwise round off.
+ */
+function computeBoardGeometry(
+  pointed: "start" | "end" | "both" | undefined,
+  pointFilled: boolean,
+  bodyWidth: number,
+  height: number,
+  cornerRadius: number,
+  borderWidth: number,
+): Readonly<{ bodyX: number; width: number; backgroundPath: string; borderPath: string; borderRenderMode: "stroke" | "fill" }> {
+  const { pointStart, pointEnd } = resolvePointedSides(pointed);
+
+  if (pointFilled) {
+    const pointLength = height * DESTINATION_SIGN_POINT_LENGTH_RATIO;
+    const innerCornerRadius = Math.max(cornerRadius - borderWidth, 0);
+    const innerX = borderWidth + (pointStart ? pointLength : 0);
+    const innerWidth = bodyWidth - borderWidth * 2 - (pointStart ? pointLength : 0) - (pointEnd ? pointLength : 0);
+    const backgroundPath = buildBoardPath(
+      { x: innerX, y: borderWidth, width: innerWidth, height: height - borderWidth * 2, cornerRadius: innerCornerRadius },
+      { start: pointStart, end: pointEnd, length: pointLength },
+    );
+    const borderPath = buildRoundedRectPath(0, 0, bodyWidth, height, cornerRadius);
+    return { bodyX: 0, width: bodyWidth, backgroundPath, borderPath, borderRenderMode: "fill" };
+  }
+
+  const pointLength = height * DESTINATION_SIGN_POINT_LENGTH_RATIO;
+  const bodyX = pointStart ? pointLength : 0;
+  const width = bodyWidth + (pointStart ? pointLength : 0) + (pointEnd ? pointLength : 0);
+  const backgroundPath = buildBoardPath({ x: bodyX, y: 0, width: bodyWidth, height, cornerRadius }, { start: pointStart, end: pointEnd, length: pointLength });
+  const borderPath = buildBoardPath(
+    { x: bodyX + borderWidth / 2, y: borderWidth / 2, width: bodyWidth - borderWidth, height: height - borderWidth, cornerRadius },
+    { start: pointStart, end: pointEnd, length: Math.max(pointLength - borderWidth / 2, 0) },
+  );
+  return { bodyX, width, backgroundPath, borderPath, borderRenderMode: "stroke" };
+}
+
+type DestinationSignSegmentKind = "roadNumbers" | "icons" | "text" | "distanceNumber" | "arrowStart" | "arrowEnd";
+
+function isArrowSegmentKind(kind: DestinationSignSegmentKind): boolean {
+  return kind === "arrowStart" || kind === "arrowEnd";
+}
+
+/** Gap that should precede segment `index` in `DestinationSign`'s content row -- widest around an arrow, then an icon or distance number, falling back to the (narrowest) gap used between road-number-ish content otherwise. */
+function computeSegmentGap(
+  segments: readonly Readonly<{ kind: DestinationSignSegmentKind; width: number }>[],
+  index: number,
+  gaps: Readonly<{ roadNumberGap: number; iconGap: number; arrowGap: number; distanceNumberGap: number }>,
+): number {
+  if (index === 0) return 0;
+  const kind = segments[index].kind;
+  const prevKind = segments[index - 1].kind;
+  if (isArrowSegmentKind(kind) || isArrowSegmentKind(prevKind)) return gaps.arrowGap;
+  if (kind === "icons" || prevKind === "icons") return gaps.iconGap;
+  if (kind === "distanceNumber" || prevKind === "distanceNumber") return gaps.distanceNumberGap;
+  return gaps.roadNumberGap;
+}
+
+/** Build the ordered list of content segments (road numbers, icons, text, distance number, arrows) `DestinationSign` lays out left-to-right, omitting any that have no content -- extracted from the component body purely to keep its own Cognitive Complexity down. */
+function buildDestinationSignSegments(
+  args: Readonly<{
+    showArrowAtStart: boolean;
+    showArrowAtEnd: boolean;
+    roadNumberColumnWidth: number;
+    hasIcons: boolean;
+    iconSize: number;
+    textRows: number;
+    textMaxWidth: number;
+    distanceNumber: string | undefined;
+    distanceNumberWidth: number;
+    arrowWidth: number;
+  }>,
+): { kind: DestinationSignSegmentKind; width: number }[] {
+  const segments: { kind: DestinationSignSegmentKind; width: number }[] = [];
+  if (args.showArrowAtStart) segments.push({ kind: "arrowStart", width: args.arrowWidth });
+  if (args.roadNumberColumnWidth > 0) segments.push({ kind: "roadNumbers", width: args.roadNumberColumnWidth });
+  if (args.hasIcons) segments.push({ kind: "icons", width: args.iconSize });
+  if (args.textRows > 0) segments.push({ kind: "text", width: args.textMaxWidth });
+  if (args.distanceNumber) segments.push({ kind: "distanceNumber", width: args.distanceNumberWidth });
+  if (args.showArrowAtEnd) segments.push({ kind: "arrowEnd", width: args.arrowWidth });
+  return segments;
+}
+
+/**
  * An Icelandic route-destination sign (e.g.
  * https://upload.wikimedia.org/wikipedia/commons/0/0a/F05.51.svg) -- a
  * yellow board pairing one or more stacked `roadNumbers` boxes
@@ -197,6 +361,10 @@ export function DestinationSign({
   icons,
   arrow,
   arrowPosition = "end",
+  pointed,
+  pointFilled = false,
+  distanceNumber,
+  textEndPadding: extraTextEndPadding = 0,
   rowHeight = 90,
 }: DestinationSignProps) {
   const roadNumberRows = roadNumbers.length;
@@ -216,7 +384,7 @@ export function DestinationSign({
   const iconPadding = iconSize * DESTINATION_SIGN_ICON_PADDING_RATIO;
 
   const fontSize = rowHeight * DESTINATION_SIGN_TEXT_FONT_HEIGHT_RATIO;
-  const textEndPadding = rowHeight * DESTINATION_SIGN_TEXT_END_PADDING_RATIO;
+  const textEndPadding = rowHeight * DESTINATION_SIGN_TEXT_END_PADDING_RATIO + extraTextEndPadding;
   const letterSpacingWidth = fontSize * DESTINATION_SIGN_TEXT_LETTER_SPACING_RATIO;
   const textMaxWidth =
     textRows > 0
@@ -231,23 +399,29 @@ export function DestinationSign({
   const showArrowAtStart = !!resolvedArrow && (arrowPosition === "start" || arrowPosition === "both");
   const showArrowAtEnd = !!resolvedArrow && (arrowPosition === "end" || arrowPosition === "both");
 
-  const segments: { kind: "roadNumbers" | "icons" | "text" | "arrowStart" | "arrowEnd"; width: number }[] = [];
-  if (showArrowAtStart) segments.push({ kind: "arrowStart", width: arrowWidth });
-  if (roadNumberColumnWidth > 0) segments.push({ kind: "roadNumbers", width: roadNumberColumnWidth });
-  if (hasIcons) segments.push({ kind: "icons", width: iconSize });
-  if (textRows > 0) segments.push({ kind: "text", width: textMaxWidth });
-  if (showArrowAtEnd) segments.push({ kind: "arrowEnd", width: arrowWidth });
+  const distanceNumberWidth = distanceNumber
+    ? distanceNumber.length * fontSize * DESTINATION_SIGN_TEXT_AVERAGE_CHAR_WIDTH_RATIO + rowHeight * DESTINATION_SIGN_DISTANCE_NUMBER_END_PADDING_RATIO
+    : 0;
+
+  const segments = buildDestinationSignSegments({
+    showArrowAtStart,
+    showArrowAtEnd,
+    roadNumberColumnWidth,
+    hasIcons,
+    iconSize,
+    textRows,
+    textMaxWidth,
+    distanceNumber,
+    distanceNumberWidth,
+    arrowWidth,
+  });
 
   const roadNumberGap = rowHeight * DESTINATION_SIGN_ROAD_NUMBER_GAP_RATIO;
   const iconGap = rowHeight * DESTINATION_SIGN_ICON_GAP_RATIO;
   const arrowGap = rowHeight * DESTINATION_SIGN_ARROW_GAP_RATIO;
-  const isArrow = (kind: (typeof segments)[number]["kind"]): boolean => kind === "arrowStart" || kind === "arrowEnd";
-  const gapBefore = (index: number): number => {
-    if (index === 0) return 0;
-    if (isArrow(segments[index].kind) || isArrow(segments[index - 1].kind)) return arrowGap;
-    if (segments[index].kind === "icons" || segments[index - 1].kind === "icons") return iconGap;
-    return roadNumberGap;
-  };
+  const distanceNumberGap = rowHeight * DESTINATION_SIGN_DISTANCE_NUMBER_GAP_RATIO;
+  const gapBefore = (index: number): number =>
+    computeSegmentGap(segments, index, { roadNumberGap, iconGap, arrowGap, distanceNumberGap });
   const innerWidth = segments.reduce((total, segment, index) => total + gapBefore(index) + segment.width, 0);
 
   const paddingX = rowHeight * DESTINATION_SIGN_PADDING_X_RATIO;
@@ -255,14 +429,19 @@ export function DestinationSign({
   const cornerRadius = rowHeight * DESTINATION_SIGN_CORNER_RADIUS_RATIO;
   const borderWidth = rowHeight * DESTINATION_SIGN_BORDER_WIDTH_RATIO;
 
-  const width = paddingX * 2 + innerWidth;
+  const bodyWidth = paddingX * 2 + innerWidth;
   const height = paddingY * 2 + contentHeight;
+  const { bodyX, width, backgroundPath: boxPath, borderPath, borderRenderMode } = computeBoardGeometry(
+    pointed,
+    pointFilled,
+    bodyWidth,
+    height,
+    cornerRadius,
+    borderWidth,
+  );
 
-  const boxPath = buildRoundedRectPath(0, 0, width, height, cornerRadius);
-  const borderPath = buildRoundedRectPath(borderWidth / 2, borderWidth / 2, width - borderWidth, height - borderWidth, cornerRadius);
-
-  const segmentPositions: Partial<Record<"roadNumbers" | "icons" | "text" | "arrowStart" | "arrowEnd", number>> = {};
-  let cursorX = paddingX;
+  const segmentPositions: Partial<Record<DestinationSignSegmentKind, number>> = {};
+  let cursorX = bodyX + paddingX;
   segments.forEach((segment, index) => {
     cursorX += gapBefore(index);
     segmentPositions[segment.kind] = cursorX;
@@ -271,6 +450,7 @@ export function DestinationSign({
   const roadNumberX = segmentPositions.roadNumbers;
   const iconX = segmentPositions.icons;
   const textX = segmentPositions.text;
+  const distanceNumberX = segmentPositions.distanceNumber;
   const arrowStartX = segmentPositions.arrowStart;
   const arrowEndX = segmentPositions.arrowEnd;
 
@@ -304,8 +484,17 @@ export function DestinationSign({
 
   return (
     <Svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
-      <Path d={boxPath} fill={roadSignColorValues[backgroundColour]} />
-      <Path d={borderPath} fill="none" stroke={roadSignColorValues[borderColour]} strokeWidth={borderWidth} />
+      {borderRenderMode === "fill" ? (
+        <>
+          <Path d={borderPath} fill={roadSignColorValues[borderColour]} />
+          <Path d={boxPath} fill={roadSignColorValues[backgroundColour]} />
+        </>
+      ) : (
+        <>
+          <Path d={boxPath} fill={roadSignColorValues[backgroundColour]} />
+          <Path d={borderPath} fill="none" stroke={roadSignColorValues[borderColour]} strokeWidth={borderWidth} />
+        </>
+      )}
       {roadNumbers.map((roadNumber, index) => {
         const y = paddingY + roadNumberBlockTop + index * (rowHeight + rowGap);
         if (isRoadNumberIcon(roadNumber)) {
@@ -385,6 +574,19 @@ export function DestinationSign({
           {line}
         </SvgText>
       ))}
+      {distanceNumber && (
+        <SvgText
+          x={distanceNumberX}
+          y={paddingY + contentHeight / 2 + fontSize * 0.36}
+          fontFamily={ROAD_SIGN_FONT_FAMILY}
+          fontWeight={roadSignFontWeightValues.heavy}
+          fontSize={fontSize}
+          letterSpacing={DESTINATION_SIGN_TEXT_LETTER_SPACING}
+          fill={roadSignColorValues[textColour]}
+        >
+          {distanceNumber}
+        </SvgText>
+      )}
       {resolvedArrow && arrowBBox && showArrowAtStart && (
         <Path
           d={destinationSignArrowPaths[resolvedArrow.base]}

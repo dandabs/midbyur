@@ -40,6 +40,16 @@ const meta = {
       control: "select",
       options: ["start", "end", "both"],
     },
+    pointed: {
+      control: "select",
+      options: [undefined, "start", "end", "both"],
+    },
+    pointFilled: {
+      control: "boolean",
+    },
+    textEndPadding: {
+      control: { type: "number", min: 0, max: 100, step: 5 },
+    },
     rowHeight: {
       control: { type: "number", min: 50, max: 200, step: 10 },
     },
@@ -85,12 +95,67 @@ export const MultipleLines: Story = {
 
 /** A left-pointing arrow, mirrored from the same base shape as `right`. */
 export const LeftArrow: Story = {
-  args: { arrow: "left", roadNumbers: [] },
+  args: {
+    arrow: "left",
+    roadNumbers: [],
+    arrowPosition: "start"
+  },
 };
 
 /** Arrow drawn before the road numbers/text instead of after. */
 export const ArrowAtStart: Story = {
   args: { arrow: "left", arrowPosition: "start" },
+};
+
+/**
+ * The board's own outline points instead of drawing a separate arrow,
+ * matching https://upload.wikimedia.org/wikipedia/commons/1/11/F01.11.svg.
+ */
+export const PointedEnd: Story = {
+  args: {
+    text: ["Vatnsnes"],
+    roadNumbers: [{ text: "711" }],
+    arrow: undefined,
+    pointed: "end",
+  },
+};
+
+/**
+ * `pointed` with `pointFilled` -- the board's own outline stays a plain
+ * rounded rectangle, and only the `backgroundColour` fill comes to a point,
+ * with the corner(s) it would otherwise round off filled solid with
+ * `borderColour` instead. Paired with `distanceNumber`, matching
+ * https://upload.wikimedia.org/wikipedia/commons/e/ea/F03.51.svg.
+ */
+export const PointedFilledEnd: Story = {
+  args: {
+    text: ["Mosfellsbær"],
+    roadNumbers: [{ text: "1" }],
+    arrow: undefined,
+    pointed: "end",
+    pointFilled: true,
+    distanceNumber: "7",
+  },
+};
+
+/**
+ * A `PointOfInterest` icon box in place of the `roadNumbers` column, with a
+ * red border/text and white background, matching
+ * https://upload.wikimedia.org/wikipedia/commons/3/3d/F04.11.svg.
+ */
+export const PointOfInterestPointedEnd: Story = {
+  args: {
+    text: ["Árbæjarsafn"],
+    textColour: "red",
+    backgroundColour: "white",
+    borderColour: "red",
+    roadNumbers: [],
+    icons: [{ symbol: "PointOfInterest" }],
+    arrow: undefined,
+    pointed: "end",
+    pointFilled: true,
+    textEndPadding: 100
+  },
 };
 
 /** One arrow drawn on each side of the content. */
