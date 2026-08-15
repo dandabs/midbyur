@@ -91,6 +91,10 @@ export { PROHIBITORY_SIGN_SYMBOL_OPTIONS } from "./components/ProhibitorySign/pr
 export type { ProhibitorySignSymbol } from "./components/ProhibitorySign/prohibitorySignSymbols";
 export { StopSign } from "./components/StopSign/StopSign";
 export type { StopSignProps } from "./components/StopSign/StopSign";
+export { ServiceSign } from "./components/ServiceSign/ServiceSign";
+export type { ServiceSignProps } from "./components/ServiceSign/ServiceSign";
+export { SERVICE_SIGN_SYMBOL_OPTIONS } from "./components/ServiceSign/serviceSignSymbols";
+export type { ServiceSignSymbol } from "./components/ServiceSign/serviceSignSymbols";
 export { GAP_SIZE_VALUES } from "./spacing";
 export type { GapSize, GapValue } from "./spacing";
 export { DeleteIcon } from "./icons";
